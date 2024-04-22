@@ -1,0 +1,401 @@
+{
+	"info": {
+		"_postman_id": "7c2d2674-5625-461a-8593-ac5103c754bf",
+		"name": "WebMagnet",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24004437"
+	},
+	"item": [
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Index",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"product_name\": \"Product 1\",\r\n    \"attributes\": [\r\n            {\"name\": \"Color\", \"value\": \"Red\"},\r\n            {\"name\": \"size\", \"value\": \"Medium\"},\r\n            {\"name\": \"sku\", \"value\": \"0324234\"}\r\n        ],\r\n    \"price\": \"400\",\r\n    \"price_with_vat\": \"410\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/products",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"product_name\": \"Product 3\",\r\n    \"attributes\": [\r\n            {\"name\": \"Color\", \"value\": \"Red\"},\r\n            {\"name\": \"size\", \"value\": \"Medium\"},\r\n            {\"name\": \"sku\", \"value\": \"0324234\"}\r\n        ],\r\n    \"price\": \"400\",\r\n    \"price_with_vat\": \"410\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/products",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"product_name\": \"Product 1\",\r\n    \"attributes\": [\r\n            {\"name\": \"Color\", \"value\": \"Red\"},\r\n            {\"name\": \"size\", \"value\": \"Medium\"},\r\n            {\"name\": \"sku\", \"value\": \"0324234\"}\r\n        ],\r\n    \"price\": \"400\",\r\n    \"price_with_vat\": \"410\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/products/8",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"products",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"product_name\": \"Product 1\",\r\n    \"attributes\": [\r\n            {\"name\": \"Color\", \"value\": \"Blue\"},\r\n            {\"name\": \"size\", \"value\": \"Medium\"},\r\n            {\"name\": \"sku\", \"value\": \"0324234\"}\r\n        ],\r\n    \"price\": \"400\",\r\n    \"price_with_vat\": \"410\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/products/8",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"products",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"product_name\": \"Product 1\",\r\n    \"attributes\": [\r\n            {\"name\": \"Color\", \"value\": \"Red\"},\r\n            {\"name\": \"size\", \"value\": \"Medium\"},\r\n            {\"name\": \"sku\", \"value\": \"0324234\"}\r\n        ],\r\n    \"price\": \"400\",\r\n    \"price_with_vat\": \"410\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/products/8",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"products",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Restore",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"product_name\": \"Product 1\",\r\n    \"attributes\": [\r\n            {\"name\": \"Color\", \"value\": \"Red\"},\r\n            {\"name\": \"size\", \"value\": \"Medium\"},\r\n            {\"name\": \"sku\", \"value\": \"0324234\"}\r\n        ],\r\n    \"price\": \"400\",\r\n    \"price_with_vat\": \"410\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/products/8/restore",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"products",
+								"8",
+								"restore"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Force delete",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"product_name\": \"Product 1\",\r\n    \"attributes\": [\r\n            {\"name\": \"Color\", \"value\": \"Red\"},\r\n            {\"name\": \"size\", \"value\": \"Medium\"},\r\n            {\"name\": \"sku\", \"value\": \"0324234\"}\r\n        ],\r\n    \"price\": \"400\",\r\n    \"price_with_vat\": \"410\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/products/8/deleted",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"products",
+								"8",
+								"deleted"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login Request",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"shobujlingdu@gmail.com\",\r\n    \"password\": \"sdkShobuj91\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/login",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User profile",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"shobujlingdu@gmail.com\",\r\n    \"password\": \"sdkShobuj91\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/user",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "2|Jyvf3AsaN8SMZ1M2AtVXSxoI6UGUPRfb4W9qOgVN",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "API_URL",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

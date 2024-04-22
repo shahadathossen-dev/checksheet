@@ -1,0 +1,74 @@
+1- Header
+  -> logo, categories
+
+==================================
+
+2 - Hero
+  -> Heading, sub heading, Trending - text and keywords, image
+
+==================================
+
+3 - Section - Browse Top Categories
+  -> Title, subtitle
+  -> Categories list
+     -> Top categories
+     -> Category Item ( image, category name)
+
+===================================
+
+4 - Section - Gigs you may like
+  -> Title, subtitle
+  -> Gigs List - 12 limit
+      -> Gig Item (image, title, reviews (avg, total), price, rank, user profile image, name, work field)
+
+====================================
+
+5 - Section - Explore the marketplace
+   -> Title, subtitle
+   -> Categories list 
+   -> Top categories and their sub categories ( limit 3 ) + number of gigs in each sub category
+
+====================================
+
+6 - Section - Grow Business
+  -> Logo title, subtitle
+  -> Items limit 3 
+	-> Item - title, description (max 2 lines)
+  -> Image
+
+====================================
+
+7 - Section - Recently Completed Gigs
+  -> Title
+  -> Items 12 max
+  -> Item
+    -> User - name, work field, image
+    -> Title
+    -> Description - ( max 2 lines)
+    -> Time
+
+====================================
+
+8 - Section - Testimonials
+  -> Title
+  -> Items 12 max
+  -> Item
+    -> User - name, work field, image
+    -> Description - ( max 5 lines)
+
+====================================
+
+9 - Section - Download Our App
+  -> Title
+  -> Description - ( max 5 lines)
+  -> Links - google play, apple store
+  -> Image
+
+====================================
+
+10 - Footer
+  -> Logo
+  -> Description - ( max 5 lines)
+  -> Categories (top categories)
+  -> Social Links ( facebook, twitter, instagram, linkedin )
+  -> Copyright - text
