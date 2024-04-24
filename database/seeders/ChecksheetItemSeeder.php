@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Task;
+use App\Models\ChecksheetItem;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-class TaskSeeder extends Seeder
+class ChecksheetItemSeeder extends Seeder
 {
     use WithoutModelEvents;
 
@@ -17,6 +17,6 @@ class TaskSeeder extends Seeder
      */
     public function run()
     {
-        Task::factory(50)->create();
+        ChecksheetItem::factory(50)->create();
     }
 }

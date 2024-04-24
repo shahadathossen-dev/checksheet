@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Enums\CheckSheetType;
+use App\Models\CheckSheet;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -18,7 +20,6 @@ class UserSeeder extends Seeder
     public function run()
     {
         User::factory(10)->create();
-        // User::factory()->count(10)->make();;
 
         // User::factory()->create([
         //     'name' => 'Test User',

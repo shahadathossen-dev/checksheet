@@ -69,7 +69,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $with = ['roles', 'country'];
+    protected $with = ['roles'];
 
 
     /**
@@ -94,14 +94,33 @@ class User extends Authenticatable
     public static $permissions = ['view', 'view-any', 'create', 'update', 'delete'];
 
     /**
-     * Get the human readable name of the resource
+     * Determines one-to-many relation
      *
-     * @return string
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public static function readableName()
+    public function checksheets()
     {
-        $string = Str::kebab((new \ReflectionClass(get_called_class()))->getShortName());
-        return Str::plural($string);
+        return $this->hasMany(CheckSheet::class, 'user_id')->where('user_id', $this->id);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function checksheetTemplates()
+    {
+        return $this->hasMany(CheckSheet::class, 'created_by');
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function tasklists()
+    {
+        return $this->hasMany(TaskList::class, 'submitted_by');
     }
 
     /**
@@ -179,5 +198,16 @@ class User extends Authenticatable
     public function getTimezoneAttribute()
     {
         return $this->country ? $this->country->zoneName : 'Asia/Dhaka';
+    }
+
+    /**
+     * Get the human readable name of the resource
+     *
+     * @return string
+     */
+    public static function readableName()
+    {
+        $string = Str::kebab((new \ReflectionClass(get_called_class()))->getShortName());
+        return Str::plural($string);
     }
 }

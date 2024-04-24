@@ -15,11 +15,11 @@ return new class extends Migration
     {
         Schema::create('task_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('task_id');
+            $table->unsignedBigInteger('checksheet_item_id');
             $table->unsignedBigInteger('tasklist_id');
             $table->string('note')->nullable();
-            $table->boolean('checked')->default(0);
-            $table->foreign('task_id')->references('id')->on('tasks')->onDelete('cascade');
+            $table->boolean('done')->default(0);
+            $table->foreign('checksheet_item_id')->references('id')->on('checksheet_items')->onDelete('cascade');
             $table->foreign('tasklist_id')->references('id')->on('task_lists')->onDelete('cascade');
             $table->timestamps();
         });

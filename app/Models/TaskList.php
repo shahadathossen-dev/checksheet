@@ -18,11 +18,10 @@ class TaskList extends Model
      * @var string[]
      */
     protected $fillable = [
-        'title',
-        'description',
+        'checksheet_id',
+        'submitted_by',
         'due_date',
-        'user_id',
-        'created_by',
+        'submit_date',
         'status',
     ];
 
@@ -42,6 +41,7 @@ class TaskList extends Model
      */
     protected $casts = [
         'due_date' => 'date',
+        'submit_date' => 'date',
     ];
 
     /**
@@ -52,7 +52,7 @@ class TaskList extends Model
     protected $appends = [
         // 'attachments',
         'createdAtFormatted', 'updatedAtFormatted',
-        'dueDateFormatted',
+        'dueDateFormatted', 'submitDateFormatted',
     ];
 
     /**
@@ -61,8 +61,8 @@ class TaskList extends Model
      * @var array
      */
     protected $with = [
-        'author',
-        'assignee'
+        'checksheet',
+        'user'
     ];
 
     /**
@@ -86,14 +86,25 @@ class TaskList extends Model
      */
     public static $permissions = ['view', 'view-any', 'create', 'update'];
 
-    public static function boot(): void
-    {
-        parent::boot();
+    // public static function boot(): void
+    // {
+    //     parent::boot();
 
-        // Will fire everytime an User is created
-        static::creating(fn (Model $model) =>
-            $model->created_by = auth()->id(),
-        );
+    //     // Will fire everytime an User is created
+    //     static::creating(function (Model $model) {
+    //         $model->submitted_by = auth()->id();
+    //         return $model;
+    //     });
+    // }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function checksheet()
+    {
+        return $this->belongsTo(User::class, 'checksheet_id');
     }
 
     /**
@@ -101,19 +112,20 @@ class TaskList extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function assignee()
+    public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'submitted_by');
     }
+
 
     /**
      * Determines one-to-many relation
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function author()
+    public function items()
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->hasMany(TaskItem::class);
     }
 
     /**
@@ -144,6 +156,16 @@ class TaskList extends Model
     public function getDueDateFormattedAttribute()
     {
         return $this->dueDate->format('d, M Y');
+    }
+
+    /**
+     * Format the update at with client timezone
+     *
+     * @return string
+     */
+    public function getSubmitDateFormattedAttribute()
+    {
+        return $this->submitDate->format('d, M Y');
     }
 
     /**

@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tasks', function (Blueprint $table) {
+        Schema::create('checksheet_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('checksheet_id');
             $table->string('title')->index('title_index');
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tasks');
+        Schema::dropIfExists('checksheet_items');
     }
 };

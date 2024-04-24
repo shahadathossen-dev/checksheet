@@ -22,8 +22,8 @@ class CheckSheet extends Model
         'description',
         'due_by',
         'user_id',
-        'created_by',
         'type',
+        'created_by'
     ];
 
     /**
@@ -60,8 +60,9 @@ class CheckSheet extends Model
      * @var array
      */
     protected $with = [
-        'author',
-        'assignee'
+        'assignee',
+        // 'author',
+        // 'checksheetItems',
     ];
 
     /**
@@ -91,8 +92,18 @@ class CheckSheet extends Model
 
         // Will fire everytime an User is created
         static::creating(fn (Model $model) =>
-            $model->created_by = auth()->id(),
+            $model->created_by = auth()->id()
         );
+    }
+    
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     /**
@@ -110,9 +121,19 @@ class CheckSheet extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function author()
+    public function checksheetItems()
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->hasMany(ChecksheetItem::class, 'checksheet_id');
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function tasklists()
+    {
+        return $this->hasMany(TaskList::class);
     }
 
     /**

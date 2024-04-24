@@ -22,9 +22,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             DelegateSeeder::class,
             CheckSheetSeeder::class,
-            TaskSeeder::class,
-            TaskListSeeder::class,
-            TaskItemSeeder::class,
+            // TaskListSeeder::class,
         ]);
     }
 }

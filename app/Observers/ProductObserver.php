@@ -10,7 +10,7 @@ use App\Jobs\ProductForceDeleted;
 use App\Jobs\ProductRestored;
 use App\Jobs\ProductUpdated;
 
-class DelegateObserver
+class ProductObserver
 {
     /**
      * Handle the Product "created" event.

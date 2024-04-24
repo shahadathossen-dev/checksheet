@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Task extends Model
+class ChecksheetItem extends Model
 {
     use HasFactory, CamelCasing, Filterable, Sortable;
 
@@ -57,8 +57,7 @@ class Task extends Model
      * @var array
      */
     protected $with = [
-        'author',
-        'assignee'
+        'checksheet'
     ];
 
     /**

@@ -27,7 +27,9 @@ class RolesAndPermissionsSeeder extends Seeder
             \App\Models\Role::class,
             \App\Models\User::class,
             \App\Models\CheckSheet::class,
-            \App\Models\Task::class,
+            \App\Models\ChecksheetItem::class,
+            \App\Models\TaskList::class,
+            \App\Models\TaskItem::class,
 
 
         ];

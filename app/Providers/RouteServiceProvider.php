@@ -48,15 +48,15 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
 
-            if (request()->headers->get('origin') === env('FRONTEND_URL', 'localhost:3000')) {
-                Route::group([
-                    'middleware' => ['guest:delegates'],
-                    'prefix' => config('fortify.prefix'),
-                ], function () {
-                    Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])
-                        ->name('password.reset');
-                });
-            }
+            // if (request()->headers->get('origin') === env('FRONTEND_URL', 'localhost:3000')) {
+            //     Route::group([
+            //         'middleware' => ['guest:delegates'],
+            //         'prefix' => config('fortify.prefix'),
+            //     ], function () {
+            //         Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])
+            //             ->name('password.reset');
+            //     });
+            // }
 
             Route::get('/', function () {
                 return redirect(self::LOGIN);

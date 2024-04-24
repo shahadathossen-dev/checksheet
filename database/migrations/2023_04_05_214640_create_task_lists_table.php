@@ -18,14 +18,13 @@ return new class extends Migration
     {
         Schema::create('task_lists', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->index('title_index');
-            $table->text('description');
-            $table->date('due_date')->default(Carbon::today());
             $table->unsignedBigInteger('checksheet_id');
             $table->foreign('checksheet_id')->references('id')->on('check_sheets');
-            $table->unsignedBigInteger('submitted_by')->nullable();
+            $table->unsignedBigInteger('submitted_by');
             $table->foreign('submitted_by')->references('id')->on('users');
             $table->enum('status', CheckSheetStatus::toArray())->default(CheckSheetStatus::PENDING());
+            $table->date('due_date')->default(Carbon::today())->index('due_date_index');
+            $table->date('submit_date')->default(Carbon::today())->index('submit_date_index');
             $table->timestamps();
             $table->softDeletes();
         });

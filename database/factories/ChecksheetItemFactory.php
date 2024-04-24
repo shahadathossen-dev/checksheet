@@ -2,18 +2,19 @@
 
 namespace Database\Factories;
 
+use App\Models\CheckSheet;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\Task;
+use App\Models\ChecksheetItem;
 use App\Models\User;
 
-class TaskFactory extends Factory
+class ChecksheetItemFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Task::class;
+    protected $model = ChecksheetItem::class;
 
     /**
      * Define the model's default state.
@@ -24,10 +25,8 @@ class TaskFactory extends Factory
     {
         return [
             'title' => $this->faker->sentence(),
-            'description' => $this->faker->text(100),
-            'due_date' => $this->faker->dateTimeThisMonth('+12 days'),
-            'user_id' => $this->faker->randomElement(User::withoutSuperAdmin()->pluck('id')->toArray()),
-            'created_by' => User::superAdmin()->first()->id,
+            'required' => $this->faker->randomElement([0, 1]),
+            'checksheet_id' => $this->faker->randomElement(CheckSheet::pluck('id')->toArray()),
         ];
     }
 }
