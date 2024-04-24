@@ -17,7 +17,7 @@ use Illuminate\Support\Arr;
 
 class TaskListSeeder extends Seeder
 {
-    // use WithoutModelEvents;
+    use WithoutModelEvents;
 
     /**
      * Run the database seeds.
@@ -57,12 +57,13 @@ class TaskListSeeder extends Seeder
                         $today);
                 }
                 
-                $startDate = $dueDate->setDays(30)->yesterday();
-                $endDate = $dueDate->setDays(30)->tomorrow();
+                $startDate = $dueDate->copy()->subDay();
+                $endDate = $dueDate->copy()->addDay();
                 $submitDates = CarbonPeriod::create($startDate, $endDate)->toArray();
                 $index = array_rand($submitDates);
                 $submitDate = $submitDates[$index];
-                $status = $submitDate->format('Y-m-d') > $dueDate->format('Y-m-d') ?
+
+                $status = $submitDate > $dueDate ?
                     CheckSheetStatus::DUE() :
                     CheckSheetStatus::DONE();
 

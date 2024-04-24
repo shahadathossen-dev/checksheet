@@ -17,12 +17,12 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            CountrySeeder::class,
+            // CountrySeeder::class,
+            // DelegateSeeder::class,
             RolesAndPermissionsSeeder::class,
             UserSeeder::class,
-            DelegateSeeder::class,
             CheckSheetSeeder::class,
-            // TaskListSeeder::class,
+            TaskListSeeder::class,
         ]);
     }
 }

@@ -86,16 +86,16 @@ class TaskList extends Model
      */
     public static $permissions = ['view', 'view-any', 'create', 'update'];
 
-    // public static function boot(): void
-    // {
-    //     parent::boot();
+    public static function boot(): void
+    {
+        parent::boot();
 
-    //     // Will fire everytime an User is created
-    //     static::creating(function (Model $model) {
-    //         $model->submitted_by = auth()->id();
-    //         return $model;
-    //     });
-    // }
+        // Will fire everytime an User is created
+        static::creating(function (Model $model) {
+            $model->submitted_by = auth()->id();
+            return $model;
+        });
+    }
 
     /**
      * Determines one-to-many relation
