@@ -1,6 +1,6 @@
 <template>
 	<app-layout :title="title">
-		<div class="flex flex-col sm:flex-row justify-between sm:items-center mb-5">
+		<div class="flex flex-col sm:flex-row justify-between sm:items-center mb-3">
 			<h1 class="font-bold text-2xl">{{title}}</h1>
 		</div>
 		<slot></slot>

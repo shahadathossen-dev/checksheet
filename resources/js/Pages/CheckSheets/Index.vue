@@ -26,28 +26,35 @@
 			<!--Table Rows -->
 			<template #default="{rows}">
 				<table v-if="rows.length">
-					<thead>
+					<colgroup>
+						<col class="w-1/5">
+						<col class="w-1/4">
+						<col class="">
+						<col class="">
+						<col class="">
+						<col class="">
+						<col class="">
+					</colgroup>
+					<thead class="sticky top-0">
 						<tr>
-							<th>#</th>
-							<th>Due Date</th>
-							<th>Title</th>
-							<th>Description</th>
+							<th class="w-1/5">Title</th>
+							<th class="w-1/5">Description</th>
+							<th>Due By</th>
 							<th>Assignee</th>
 							<th>Author</th>
-							<th>Status</th>
+							<th>Type</th>
 							<th>Action</th>
 						</tr>
 
 					</thead>
-					<tbody>
+					<tbody class="max-h-36 overflow-auto">
 						<tr v-for="(row, index) in rows" :key="index">
-							<td>{{ row.index }}</td>
-							<td>{{ row.dueDate}}</td>
 							<td>{{ row.title }}</td>
 							<td>{{ row.description }}</td>
-							<td>{{ row.assignee.name }}</td>
-							<td>{{ row.author.name }}</td>
-							<td>{{ row.status }}</td>
+							<td>{{ row.dueBy }}</td>
+							<td>{{ row.assignee?.name }}</td>
+							<td>{{ row.author?.name }}</td>
+							<td>{{ row.type }}</td>
 
 							<td class="flex">
 
