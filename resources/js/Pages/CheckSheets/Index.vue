@@ -34,7 +34,7 @@
 					<col class="">
 					<col class="">
 				</colgroup>
-				<thead class="sticky -top-1 z-10">
+				<thead class="sticky -top-1 z-10 border-b border-gray-500">
 					<tr>
 						<th>Title</th>
 						<th>Description</th>
