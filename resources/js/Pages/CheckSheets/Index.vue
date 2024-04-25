@@ -1,79 +1,74 @@
 <template>
+<index-view title="Check Sheets">
+	<datatable :data="checksheets" searchRoute="checksheets.index" class="" :filters="filters">
+		<!-- Left Header -->
+		<template #left-header>
+			<search-input v-model="filters.search"></search-input>
+		</template>
 
-	<index-view title="Check Sheets">
-		<datatable :data="checksheets" searchRoute="checksheets.index" :filters="filters">
-			<!-- Left Header -->
-			<template #left-header>
-				<search-input v-model="filters.search"></search-input>
-			</template>
+		<template #right-header>
+			<!-- Downloads -->
+			<download-dropdown class="mr-4">
+				<pdf-download-button :href="route('checksheets.pdf', searchQuery)"></pdf-download-button>
+				<excel-download-button :href="route('checksheets.excel', searchQuery)"></excel-download-button>
+			</download-dropdown>
 
-			<template #right-header>
-				<!-- Downloads -->
-                <download-dropdown class="mr-4">
-                    <pdf-download-button :href="route('checksheets.pdf', searchQuery)"></pdf-download-button>
-                    <excel-download-button :href="route('checksheets.excel', searchQuery)"></excel-download-button>
-                </download-dropdown>
+			<!-- Filters -->
+			<filter-dropdown v-model="filters" @reset="reset">
+				<slot name="filter">
+					<label class="mb-2 px-2 font-semibold" for="status" value="Status">Status</label>
+					<select-list id="status" track="value" v-model="filters.status" class="w-full rounded-md" :options="statusOptions" />
+				</slot>
+			</filter-dropdown>
+		</template>
 
-                <!-- Filters -->
-                <filter-dropdown v-model="filters" @reset="reset">
-                    <slot name="filter">
-                        <label class="mb-2 px-2 font-semibold" for="status" value="Status">Status</label>
-                        <select-list id="status" track="value" v-model="filters.status" class="w-full rounded-md" :options="statusOptions" />
-                    </slot>
-                </filter-dropdown>
-			</template>
+		<!--Table Rows -->
+		<template #default="{rows}">
+			<table v-if="rows.length" class="h-full">
+				<colgroup>
+					<col class="w-1/5">
+					<col class="w-1/4">
+					<col class="">
+					<col class="">
+					<col class="">
+					<col class="">
+					<col class="">
+				</colgroup>
+				<thead class="sticky -top-1 z-10">
+					<tr>
+						<th>Title</th>
+						<th>Description</th>
+						<th>Due By</th>
+						<th>Assignee</th>
+						<th>Author</th>
+						<th>Type</th>
+						<th>Action</th>
+					</tr>
 
-			<!--Table Rows -->
-			<template #default="{rows}">
-				<table v-if="rows.length">
-					<colgroup>
-						<col class="w-1/5">
-						<col class="w-1/4">
-						<col class="">
-						<col class="">
-						<col class="">
-						<col class="">
-						<col class="">
-					</colgroup>
-					<thead class="sticky top-0">
-						<tr>
-							<th class="w-1/5">Title</th>
-							<th class="w-1/5">Description</th>
-							<th>Due By</th>
-							<th>Assignee</th>
-							<th>Author</th>
-							<th>Type</th>
-							<th>Action</th>
-						</tr>
+				</thead>
+				<tbody class="h-full overflow-auto">
+					<tr v-for="(row, index) in rows" :key="index">
+						<td>{{ row.title }}</td>
+						<td>{{ row.description }}</td>
+						<td>{{ row.dueBy }}</td>
+						<td>{{ row.assignee?.name }}</td>
+						<td>{{ row.author?.name }}</td>
+						<td>{{ row.type }}</td>
 
-					</thead>
-					<tbody class="max-h-36 overflow-auto">
-						<tr v-for="(row, index) in rows" :key="index">
-							<td>{{ row.title }}</td>
-							<td>{{ row.description }}</td>
-							<td>{{ row.dueBy }}</td>
-							<td>{{ row.assignee?.name }}</td>
-							<td>{{ row.author?.name }}</td>
-							<td>{{ row.type }}</td>
-
-							<td class="flex">
-
-								<div>
-									<Link class="btn btn-success mr-2" title="Details" :href="route('checksheets.show', row.id)">
+						<td class="flex">
+							<div>
+								<Link class="btn btn-success mr-2" title="Details" :href="route('checksheets.show', row.id)">
 									<detail-icon></detail-icon>
-									</Link>
-								</div>
-
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</template>
-			<template #nodata>No checksheets Found</template>
-
-		</datatable>
-	</index-view>
-
+								</Link>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</template>
+		<template #nodata>No checksheets Found</template>
+	</datatable>
+</index-view>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-	<div class="h-[93%] overflow-auto">
+	<div class="data-table w-full h-[94%] overflow-auto relative">
 		<!-- search & add product -->
 		<div class="flex flex-col md:flex-row justify-between md:items-center mb-4">
 			<div>
@@ -14,7 +14,7 @@
 		</div>
 
 		<!-- Table section -->
-		<div class="bg-white rounded-primary shadow h-[82%] overflow-auto">
+		<div class="bg-white rounded-lg shadow h-[85%] overflow-auto relative border border-gray-400">
 			<slot :rows="data.data" v-if="data.data.length"></slot>
 			<div class="flex justify-center items-center text-gray-600 h-32" v-else>
 				<span>

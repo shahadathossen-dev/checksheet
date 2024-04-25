@@ -13,7 +13,7 @@ table {
         @apply bg-white;
 
         th {
-            @apply px-6 py-5 text-left text-sm text-black uppercase font-bold;
+            @apply p-2 text-left text-sm text-black uppercase font-bold  border-y border-gray-500;
         }
     }
 
@@ -21,7 +21,7 @@ table {
         @apply bg-white divide-y divide-gray-200;
 
         td {
-            @apply px-6 py-4 whitespace-nowrap;
+            @apply p-2 whitespace-nowrap;
         }
     }
 }
