@@ -16,16 +16,10 @@
 			<!-- Filters -->
 			<filter-dropdown v-model="filters" @reset="reset">
 				<slot name="filter">
-					<label class="mb-2 px-2 font-semibold" for="type" value="Type">Type</label>
-					<select-list id="type" track="value" v-model="filters.type" class="w-full rounded-md" :options="checksheetTypes" />
+					<label class="mb-2 px-2 font-semibold" for="status" value="Status">Status</label>
+					<select-list id="status" track="value" v-model="filters.status" class="w-full rounded-md" :options="statusOptions" />
 				</slot>
 			</filter-dropdown>
-
-			<!-- Add New-->
-			<button-link class="px-6 py-3 ml-4" :href="route('checksheets.create')" v-if="$page.props.can.createCheckSheets">
-				<span class="mr-2">+ Add</span>
-				<span class="hidden md:inline">checksheets</span>
-			</button-link>
 		</template>
 
 		<!--Table Rows -->
@@ -46,7 +40,7 @@
 						<th>Due By</th>
 						<th>Assignee</th>
 						<th>Author</th>
-						<th>Type</th>
+						<th>Status</th>
 						<th>Action</th>
 					</tr>
 
@@ -58,7 +52,7 @@
 						<td>{{ row.dueBy }}</td>
 						<td>{{ row.assignee?.name }}</td>
 						<td>{{ row.author?.name }}</td>
-						<td>{{ row.type }}</td>
+						<td>{{ row.status }}</td>
 						<td class="actions">
 							<div class="flex items-center gap-2 h-full">
 								<Link class="btn btn-success" title="Details" :href="route('checksheets.show', row.id)">
@@ -95,7 +89,7 @@ export default {
 	props: {
 		query: Object,
 		checksheets: Object,
-        checksheetTypes: Array,
+        statusOptions: Array,
 	},
 
 	components: {
@@ -118,7 +112,7 @@ export default {
         return {
             filters: {
                 search: this.query.search,
-                type: this.query.type,
+                status: this.query.status,
             },
             breadcrumb: [
                 { label: "Home", route: this.route("dashboard") },

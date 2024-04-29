@@ -13,7 +13,7 @@
 					<slot name="filter"></slot>
 				</filter-dropdown>
 
-				<!-- Admin -->
+				<!-- Add New-->
 				<button-link class="px-6 py-3 ml-4" :href="route('users.create')" v-if="$page.props.can.createUsers">
 					<span class="mr-2">+ Add</span>
 					<span class="hidden md:inline">users</span>

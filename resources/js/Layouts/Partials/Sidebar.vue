@@ -95,6 +95,19 @@ const isActive = (routes) => routes.some((currentRoute) => route().current(curre
         Check Sheets
       </SidebarItem>
 
+      <SidebarItem
+        title="Task List"
+        :active="isActive(['tasklists.*'])"
+        :href="route('tasklists.index')"
+        :collapsed="collapsed"
+        v-if="hasPermissions(['viewAnyTaskList'])"
+      >
+        <template #icon>
+          <i class="ti-user" title="Task List"></i>
+        </template>
+        Task List
+      </SidebarItem>
+
       <!-- Delegates -->
       <SidebarItem
         title="Delegates"

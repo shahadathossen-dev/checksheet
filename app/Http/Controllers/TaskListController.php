@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\CheckSheetStatus;
-use App\Enums\CheckSheetType;
-use App\Exports\CheckSheetExport;
-use App\Models\CheckSheet;
+use App\Models\User;
 use Inertia\Inertia;
+use App\Models\TaskList;
 use Illuminate\Http\Request;
+use App\Enums\TaskListStatus;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Exports\CheckSheetExport;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CheckSheetRequest;
-use App\Models\User;
-use Barryvdh\DomPDF\Facade\Pdf;
 
-class CheckSheetController extends Controller
+class TaskListController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -23,17 +22,17 @@ class CheckSheetController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->user()->cannot('viewAny', CheckSheet::class)) {
+        if ($request->user()->cannot('viewAny', TaskList::class)) {
             abort(403);
         }
         // Start from here ...
         return Inertia::render('CheckSheets/Index', [
-            'checksheets' => CheckSheet::filter($request->all())
+            'checksheets' => TaskList::filter($request->all())
                 ->sorted()
                 ->paginate()
                 ->withQueryString(),
             'query'  => $request->all(),
-            'checksheetTypes' => CheckSheetType::toSelectOptions(),
+            'checksheetTypes' => TaskListStatus::toSelectOptions(),
         ]);
     }
 
@@ -45,12 +44,12 @@ class CheckSheetController extends Controller
      */
     public function create(Request $request)
     {
-        if ($request->user()->cannot('create', CheckSheet::class)) {
+        if ($request->user()->cannot('create', TaskList::class)) {
             abort(403);
         }
         // Start from here ...
-        return Inertia::render('CheckSheets/Create', [
-            'checksheetTypes' => CheckSheetType::toSelectOptions(),
+        return Inertia::render('Users/Create', [
+            'checksheetTypes' => TaskListStatus::toSelectOptions(),
             'users' => User::withoutSuperAdmin()->select('id', 'name')->get()
         ]);
     }
@@ -63,12 +62,12 @@ class CheckSheetController extends Controller
      */
     public function store(CheckSheetRequest $request)
     {
-        if ($request->user()->cannot('create', CheckSheet::class)) {
+        if ($request->user()->cannot('create', TaskList::class)) {
             abort(403);
         }
 
         DB::transaction(function () use ($request) {
-            $checksheet = CheckSheet::create($request->only('title', 'description', 'due_by', 'user_id', 'type'));
+            $checksheet = TaskList::create($request->only('title', 'description', 'due_by', 'user_id', 'type'));
         });
 
         session()->flash('flash.banner', 'Created successfully.');
@@ -83,10 +82,10 @@ class CheckSheetController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\CheckSheet  $checksheet
+     * @param  \App\Models\TaskList  $checksheet
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Request $request, CheckSheet $checksheet)
+    public function show(Request $request, TaskList $checksheet)
     {
         if ($request->user()->cannot('view', $checksheet)) {
             abort(403);
@@ -101,10 +100,10 @@ class CheckSheetController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\CheckSheet  $checksheet
+     * @param  \App\Models\TaskList  $checksheet
      * @return \Illuminate\Http\JsonResponse
      */
-    public function edit(Request $request, CheckSheet $checksheet)
+    public function edit(Request $request, TaskList $checksheet)
     {
         if ($request->user()->cannot('update', $checksheet)) {
             abort(403);
@@ -113,7 +112,7 @@ class CheckSheetController extends Controller
         // Start from here ...
         return Inertia::render('CheckSheets/Edit', [
             'checksheet'  => $checksheet,
-            'checksheetTypes' => CheckSheetType::toSelectOptions(),
+            'checksheetTypes' => TaskListStatus::toSelectOptions(),
             'users' => User::withoutSuperAdmin()->select('id', 'name')->get()
         ]);
     }
@@ -122,10 +121,10 @@ class CheckSheetController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\CheckSheetRequest  $request
-     * @param  \App\Models\CheckSheet  $checksheet
+     * @param  \App\Models\TaskList  $checksheet
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(CheckSheetRequest $request, CheckSheet $checksheet)
+    public function update(CheckSheetRequest $request, TaskList $checksheet)
     {
         if ($request->user()->cannot('update', $checksheet)) {
             abort(403);
@@ -148,10 +147,10 @@ class CheckSheetController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\CheckSheet  $checksheet
+     * @param  \App\Models\TaskList  $checksheet
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Request $request, CheckSheet $checksheet)
+    public function destroy(Request $request, TaskList $checksheet)
     {
         if ($request->user()->cannot('delete', $checksheet)) {
             abort(403);
@@ -166,16 +165,16 @@ class CheckSheetController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Models\CheckSheet  $checksheet
+     * @param  \App\Models\TaskList  $checksheet
      * @return \Illuminate\Http\JsonResponse
      */
-    public function updateStatus(CheckSheet $checksheet)
+    public function updateStatus(TaskList $checksheet)
     {
         if (request()->user()->cannot('update', $checksheet)) {
             abort(403);
         }
 
-        $checksheet->update(['status' => CheckSheetStatus::DONE()]);
+        $checksheet->update(['status' => TaskListStatus::DONE()]);
         session()->flash('flash.banner', 'Check Sheet udpated successfully.');
         session()->flash('flash.bannerStyle', 'success');
 
@@ -202,7 +201,7 @@ class CheckSheetController extends Controller
     public function exportPdf(Request $request)
     {
         return Pdf::loadView('exports.checksheets.pdf', [
-                'models' => CheckSheet::filter($request->all())->orderBy('id', 'desc')->get()
+                'models' => TaskList::filter($request->all())->orderBy('id', 'desc')->get()
             ])->download('checksheets.pdf');
     }
 }

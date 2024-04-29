@@ -11,17 +11,19 @@ table {
 
     thead {
         @apply bg-white;
-
-        th {
-            @apply px-3 py-2 text-left text-sm text-black uppercase font-bold;
+        tr {
+            th {
+                @apply px-3 py-2 text-left text-sm text-black uppercase font-bold;
+            }
         }
     }
 
     tbody {
         @apply bg-white divide-y divide-gray-200;
-
-        td {
-            @apply px-3 py-2 whitespace-nowrap;
+        tr {
+            td {
+                @apply px-3 py-2;
+            }
         }
     }
 }

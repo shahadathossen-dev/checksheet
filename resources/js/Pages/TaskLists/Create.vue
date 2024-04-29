@@ -5,38 +5,11 @@
 			<form-group class="border-b">
 				<jet-label class="md:w-1/4 mt-2" for="title" value="Title" required />
 				<div class="w-full mt-1">
-					<jet-input v-model="form.title" id="title" type="text" class="w-full" autocomplete="title" required />
+					<jet-input v-model="form.title" id="title" type="text" class="w-full" autocomplete="title" />
 					<jet-input-error :message="form.errors.title" class="mt-2" />
 				</div>
 			</form-group>
-
-			<!-- Type -->
-			<form-group class="border-b">
-				<jet-label class="md:w-1/4 mt-2" for="type" value="Type" required />
-				<div class="w-full mt-1">
-					<jet-select v-model="form.type" id="type" class="w-full" :options="checksheetTypes" autocomplete="type" required />
-					<jet-input-error :message="form.errors.type" class="mt-2" />
-				</div>
-			</form-group>
-
-			<!-- Assignee -->
-			<form-group class="border-b">
-				<jet-label class="md:w-1/4 mt-2" for="user_id" value="Assignee" required />
-				<div class="w-full mt-1">
-					<jet-select v-model="form.user_id" id="user_id" class="w-full" :options="users" autocomplete="user_id" required />
-					<jet-input-error :message="form.errors.user_id" class="mt-2" />
-				</div>
-			</form-group>
-
-			<!-- Due By -->
-			<form-group class="border-b">
-				<jet-label class="md:w-1/4 mt-2" for="due_by" value="Due By" />
-				<div class="w-full mt-1">
-					<jet-input v-model="form.due_by" id="due_by" type="number" max="30" class="w-full" autocomplete="due_by" />
-					<jet-input-error :message="form.errors.due_by" class="mt-2" />
-				</div>
-			</form-group>
-
+			
 			<!-- Description -->
 			<form-group class="border-b">
 				<jet-label class="md:w-1/4 mt-2" for="description" value="Description" />
@@ -46,6 +19,32 @@
 				</div>
 			</form-group>
 
+			<!-- Due Date -->
+			<form-group class="border-b">
+				<jet-label class="md:w-1/4 mt-2" for="due_date" value="Due Date" required />
+				<div class="w-full mt-1">
+					<jet-input v-model="form.dueDate" id="due_date" type="date" class="w-full" autocomplete="due_date" />
+					<jet-input-error :message="form.errors.dueDate" class="mt-2" />
+				</div>
+			</form-group>
+
+			<!-- Assignee -->
+			<form-group class="border-b">
+				<jet-label class="md:w-1/4 mt-2" for="userId" value="Assignee" required />
+				<div class="w-full mt-1">
+					<jet-select v-model="form.userId" id="userId" class="w-full" :options="users" autocomplete="userId" />
+					<jet-input-error :message="form.errors.userId" class="mt-2" />
+				</div>
+			</form-group>
+
+			<!-- Status -->
+			<form-group class="border-b">
+				<jet-label class="md:w-1/4 mt-2" for="status" value="Status" required />
+				<div class="w-full mt-1">
+					<jet-select v-model="form.status" id="status" class="w-full" :options="statusOptions" autocomplete="status" />
+					<jet-input-error :message="form.errors.status" class="mt-2" />
+				</div>
+			</form-group>
 		</template>
 
 		<template #actions>
@@ -72,7 +71,7 @@ export default {
 	title: "create-user",
 	props: {
 		users: Array,
-		checksheetTypes: Array,
+		statusOptions: Array,
 	},
 
 	components: {
@@ -97,9 +96,9 @@ export default {
 			form: this.$inertia.form({
 				title: null,
 				description: null,
-				due_by: null,
-				user_id: null,
-				type: null,
+				dueDate: null,
+				userId: null,
+				status: null,
 			}),
 
 		};
