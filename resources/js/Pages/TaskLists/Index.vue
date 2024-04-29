@@ -1,6 +1,6 @@
 <template>
 <index-view title="Check Sheets">
-	<datatable :data="checksheets" searchRoute="checksheets.index" class="" :filters="filters">
+	<datatable :data="tasklists" searchRoute="tasklists.index" class="" :filters="filters">
 		<!-- Left Header -->
 		<template #left-header>
 			<search-input v-model="filters.search"></search-input>
@@ -9,17 +9,23 @@
 		<template #right-header>
 			<!-- Downloads -->
 			<download-dropdown class="mr-4">
-				<pdf-download-button :href="route('checksheets.pdf', searchQuery)"></pdf-download-button>
-				<excel-download-button :href="route('checksheets.excel', searchQuery)"></excel-download-button>
+				<pdf-download-button :href="route('tasklists.pdf', searchQuery)"></pdf-download-button>
+				<excel-download-button :href="route('tasklists.excel', searchQuery)"></excel-download-button>
 			</download-dropdown>
 
 			<!-- Filters -->
 			<filter-dropdown v-model="filters" @reset="reset">
 				<slot name="filter">
-					<label class="mb-2 px-2 font-semibold" for="status" value="Status">Status</label>
-					<select-list id="status" track="value" v-model="filters.status" class="w-full rounded-md" :options="statusOptions" />
+					<label class="mb-2 px-2 font-semibold" for="type" value="Type">Type</label>
+					<select-list id="type" track="value" v-model="filters.type" class="w-full rounded-md" :options="statusOptions" />
 				</slot>
 			</filter-dropdown>
+
+			<!-- Add New-->
+			<button-link class="px-6 py-3 ml-4" :href="route('tasklists.create')" v-if="$page.props.can.createTaskLists">
+				<span class="mr-2">+ Add</span>
+				<span class="hidden md:inline">tasklists</span>
+			</button-link>
 		</template>
 
 		<!--Table Rows -->
@@ -37,9 +43,9 @@
 					<tr>
 						<th>Title</th>
 						<th>Description</th>
-						<th>Due By</th>
+						<th>Due Date</th>
+						<th>Submit Date</th>
 						<th>Assignee</th>
-						<th>Author</th>
 						<th>Status</th>
 						<th>Action</th>
 					</tr>
@@ -47,16 +53,21 @@
 				</thead>
 				<tbody class="h-full overflow-auto">
 					<tr v-for="(row, index) in rows" :key="index">
-						<td>{{ row.title }}</td>
-						<td>{{ row.description }}</td>
-						<td>{{ row.dueBy }}</td>
+						<td>{{ row.checksheet?.title }}</td>
+						<td>{{ row.checksheet?.description }}</td>
+						<td>{{ row.dueDateFormatted }}</td>
+						<td>{{ row.submitDateFormatted }}</td>
 						<td>{{ row.assignee?.name }}</td>
-						<td>{{ row.author?.name }}</td>
 						<td>{{ row.status }}</td>
 						<td class="actions">
 							<div class="flex items-center gap-2 h-full">
-								<Link class="btn btn-success" title="Details" :href="route('checksheets.show', row.id)">
+								<Link class="btn btn-success" title="Details" :href="route('tasklists.show', row.id)">
 									<detail-icon></detail-icon>
+								</Link>
+							</div>
+							<div class="flex items-center gap-2 h-full">
+								<Link class="btn btn-purple" title="Edit" :href="route('tasklists.edit', row.id)">
+									<i class="ti-pencil-alt"></i>
 								</Link>
 							</div>
 						</td>
@@ -64,7 +75,7 @@
 				</tbody>
 			</table>
 		</template>
-		<template #nodata>No checksheets Found</template>
+		<template #nodata>No tasklists Found</template>
 	</datatable>
 </index-view>
 </template>
@@ -84,11 +95,11 @@ import DownloadDropdown from "@/Components/DownloadDropdown.vue";
 import ExcelDownloadButton from "@/Components/ExcelDownloadButton.vue";
 import PdfDownloadButton from "@/Components/PdfDownloadButton.vue";
 export default {
-	name: "checksheets",
+	name: "tasklists",
 
 	props: {
 		query: Object,
-		checksheets: Object,
+		tasklists: Object,
         statusOptions: Array,
 	},
 
@@ -112,7 +123,7 @@ export default {
         return {
             filters: {
                 search: this.query.search,
-                status: this.query.status,
+                type: this.query.type,
             },
             breadcrumb: [
                 { label: "Home", route: this.route("dashboard") },
@@ -136,7 +147,7 @@ export default {
                 .then((result) => {
                     if (result.isConfirmed) {
                         this.$inertia.post(
-                            this.route("checksheets.update-status", id)
+                            this.route("tasklists.update-status", id)
                         );
                     }
                 });

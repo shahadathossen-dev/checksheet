@@ -7,6 +7,7 @@
       focus:ring
       focus:ring-primary-200
       focus:ring-opacity-50
+      rounded-md
       shadow-sm
     "
     v-bind="$attrs"

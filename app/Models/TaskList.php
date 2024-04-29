@@ -62,7 +62,8 @@ class TaskList extends Model
      */
     protected $with = [
         'checksheet',
-        'user'
+        'assignee',
+        'items'
     ];
 
     /**
@@ -104,7 +105,7 @@ class TaskList extends Model
      */
     public function checksheet()
     {
-        return $this->belongsTo(User::class, 'checksheet_id');
+        return $this->belongsTo(CheckSheet::class, 'checksheet_id');
     }
 
     /**
@@ -112,7 +113,7 @@ class TaskList extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user()
+    public function assignee()
     {
         return $this->belongsTo(User::class, 'submitted_by');
     }
@@ -125,7 +126,7 @@ class TaskList extends Model
      */
     public function items()
     {
-        return $this->hasMany(TaskItem::class);
+        return $this->hasMany(TaskItem::class, 'tasklist_id');
     }
 
     /**

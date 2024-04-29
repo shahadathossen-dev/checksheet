@@ -19,7 +19,7 @@ return new class extends Migration
         Schema::create('check_sheets', function (Blueprint $table) {
             $table->id();
             $table->string('title')->index('title_index');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->integer('due_by')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');

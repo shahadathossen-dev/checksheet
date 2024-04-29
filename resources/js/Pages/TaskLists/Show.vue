@@ -1,43 +1,38 @@
 <template>
-	<detail-view title="Check Sheet Details">
+	<detail-view title="Task List Details">
 
 		<!-- Title -->
-		<detail-section class="border-b" label="Title" :value="checksheet.title"></detail-section>
-		<detail-section class="border-b" label="Description" :value="checksheet.description"></detail-section>
-		<!-- Country -->
-		<detail-section class="border-b" label="Assignee" :value="checksheet.assignee.name"></detail-section>
-		<detail-section class="border-b" label="Author" :value="checksheet.author.name"></detail-section>
+		<detail-section class="border-b" label="Title" :value="tasklist.checksheet.title"></detail-section>
+		<detail-section class="border-b" label="Description" :value="tasklist.checksheet.description"></detail-section>
 		<!-- Date -->
-		<detail-section class="border-b" label="Due Date" :value="checksheet.dueDateFormatted"></detail-section>
-		<detail-section class="border-b" label="Status" :value="checksheet.status"></detail-section>
+		<detail-section class="border-b" label="Due Date" :value="tasklist.dueDate"></detail-section>
+		<detail-section class="border-b" label="Submit Date" :value="tasklist.submitDate"></detail-section>
+		<!-- Author -->
+		<!-- <detail-section class="border-b" label="Assignee" :value="tasklist.assignee.name"></detail-section> -->
+		<!-- <detail-section class="border-b" label="Author" :value="tasklist.author.name"></detail-section> -->
+		
+		<detail-section class="border-b" label="Type" :value="tasklist.status"></detail-section>
 
-
-		<!-- <template #secondary-view>
+		<template #secondary-view>
 			<div class="mt-8">
-				<h1 class="font-bold text-xl">Subscription list</h1>
-				<datatable :data="subscriptions">
+				<h1 class="font-bold text-xl">Task Items</h1>
+				<datatable :data="{data: tasklist.items}">
 					<template #default="{rows}">
 						<table v-if="rows.length">
 							<thead>
 								<tr>
-									<th>Id</th>
-									<th>Date</th>
-									<th>Package Name</th>
-									<th>Category</th>
-									<th>Price</th>
-									<th>Type</th>
-									<th>Payment Method</th>
+									<th>#</th>
+									<th>Title</th>
+									<th>Note</th>
+									<th>Status</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr v-for="(row, index) in rows" :key="index">
-									<td>{{row.id}}</td>
-									<td>{{row.dateFormatted}}</td>
-									<td>{{row.package.name}}</td>
-                                    <td>{{row.package.category.name}}</td>
-									<td>${{row.package.price}}</td>
-									<td>{{row.package.type}}</td>
-									<td>{{row.paymentMethod}}</td>
+									<td>{{index + 1}}</td>
+									<td>{{row.checksheetItem.title}}</td>
+									<td>{{row.note}}</td>
+									<td>{{row.done ? 'Done' : 'Not done'}}</td>
 								</tr>
 							</tbody>
 						</table>
@@ -45,10 +40,8 @@
 					<template #nodata>No Subscriptions Found</template>
 				</datatable>
 			</div>
-		</template> -->
-
+		</template>
 	</detail-view>
-
 </template>
 
 <script>
@@ -59,10 +52,9 @@ import { Link } from "@inertiajs/inertia-vue3";
 import Datatable from "@/Components/Datatable.vue";
 
 export default {
-	name: "order-details",
+	name: "tasklist-details",
 	props: {
-		checksheet: Object,
-
+		tasklist: Object,
 	},
 
 	components: {

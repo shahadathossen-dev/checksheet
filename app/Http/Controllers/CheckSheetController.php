@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\CheckSheetStatus;
 use App\Enums\CheckSheetType;
+use App\Enums\TaskListStatus;
 use App\Exports\CheckSheetExport;
 use App\Models\CheckSheet;
 use Inertia\Inertia;
@@ -13,6 +14,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CheckSheetRequest;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Response;
 
 class CheckSheetController extends Controller
 {
@@ -69,6 +71,10 @@ class CheckSheetController extends Controller
 
         DB::transaction(function () use ($request) {
             $checksheet = CheckSheet::create($request->only('title', 'description', 'due_by', 'user_id', 'type'));
+
+            // Collect Check Sheet items from request and sync
+            $checksheetItems = collect($request->input('check_sheet_items'))->values();
+            $checksheet->checksheetItems()->createMany($checksheetItems->toArray());
         });
 
         session()->flash('flash.banner', 'Created successfully.');
@@ -77,7 +83,7 @@ class CheckSheetController extends Controller
         if ($request->saveAndContinue) {
             return back();
         }
-        return redirect()->route('checkshets.index');
+        return redirect()->route('checksheets.index');
     }
 
     /**
@@ -133,7 +139,20 @@ class CheckSheetController extends Controller
 
         // Start from here ...
         DB::transaction(function () use ($request, $checksheet) {
-            $checksheet = $checksheet->update($request->only('title', 'description', 'due_by', 'user_id', 'type'));
+            // Update check sheet
+            $checksheet->update($request->only('title', 'description', 'due_by', 'user_id', 'type'));
+
+            // Collect check sheet attributes from request
+            $checksheetItems = collect($request->input('check_sheet_items'))->values();
+
+            // Clean removed check sheet items except new added items
+            $checksheet->checksheetItems()->whereNotIn('id', $checksheetItems->pluck('id')->reject(fn ($id) => empty($id)))->delete();
+
+            // Update or create check sheet items
+            $checksheetItems->each(function ($attribute) use ($checksheet) {
+                $checksheet->checksheetItems()->updateOrCreate(['title' => $attribute['title']], ['required' => $attribute['required']]);
+            });
+
         });
 
         session()->flash('flash.banner', 'Updated successfully.');
@@ -142,7 +161,7 @@ class CheckSheetController extends Controller
         if ($request->updateAndContinue) {
             return back();
         }
-        return redirect()->route('checkshets.index');
+        return redirect()->route('checksheets.index');
     }
 
     /**
@@ -175,7 +194,7 @@ class CheckSheetController extends Controller
             abort(403);
         }
 
-        $checksheet->update(['status' => CheckSheetStatus::DONE()]);
+        $checksheet->update(['status' => TaskListStatus::DONE()]);
         session()->flash('flash.banner', 'Check Sheet udpated successfully.');
         session()->flash('flash.bannerStyle', 'success');
 
@@ -204,5 +223,13 @@ class CheckSheetController extends Controller
         return Pdf::loadView('exports.checksheets.pdf', [
                 'models' => CheckSheet::filter($request->all())->orderBy('id', 'desc')->get()
             ])->download('checksheets.pdf');
+    }
+
+    public function getDetails(Request $request, $type)
+    {
+        // $authId = auth()->id();
+        $authId = 1;
+        $checksheet = CheckSheet::where(['type' => $type, 'user_id' => $authId])->firstOrFail();
+        return response()->json($checksheet, Response::HTTP_OK);
     }
 }

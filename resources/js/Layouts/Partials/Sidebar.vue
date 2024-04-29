@@ -96,11 +96,11 @@ const isActive = (routes) => routes.some((currentRoute) => route().current(curre
       </SidebarItem>
 
       <SidebarItem
-        title="Task List"
+        title="Task Lists"
         :active="isActive(['tasklists.*'])"
         :href="route('tasklists.index')"
         :collapsed="collapsed"
-        v-if="hasPermissions(['viewAnyTaskList'])"
+        v-if="hasPermissions(['viewAnyTaskLists'])"
       >
         <template #icon>
           <i class="ti-user" title="Task List"></i>
@@ -109,7 +109,7 @@ const isActive = (routes) => routes.some((currentRoute) => route().current(curre
       </SidebarItem>
 
       <!-- Delegates -->
-      <SidebarItem
+      <!-- <SidebarItem
         title="Delegates"
         :active="isActive(['delegates.*'])"
         :href="route('delegates.index')"
@@ -120,7 +120,7 @@ const isActive = (routes) => routes.some((currentRoute) => route().current(curre
           <i class="ti-user" title="Delegates"></i>
         </template>
         Delegates
-      </SidebarItem>
+      </SidebarItem> -->
     </div>
   </div>
 </template>

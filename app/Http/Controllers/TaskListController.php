@@ -26,13 +26,13 @@ class TaskListController extends Controller
             abort(403);
         }
         // Start from here ...
-        return Inertia::render('CheckSheets/Index', [
-            'checksheets' => TaskList::filter($request->all())
+        return Inertia::render('TaskLists/Index', [
+            'tasklists' => TaskList::filter($request->all())
                 ->sorted()
                 ->paginate()
                 ->withQueryString(),
             'query'  => $request->all(),
-            'checksheetTypes' => TaskListStatus::toSelectOptions(),
+            'statusOptions' => TaskListStatus::toSelectOptions(),
         ]);
     }
 
@@ -48,8 +48,8 @@ class TaskListController extends Controller
             abort(403);
         }
         // Start from here ...
-        return Inertia::render('Users/Create', [
-            'checksheetTypes' => TaskListStatus::toSelectOptions(),
+        return Inertia::render('TaskLists/Create', [
+            'statusOptions' => TaskListStatus::toSelectOptions(),
             'users' => User::withoutSuperAdmin()->select('id', 'name')->get()
         ]);
     }
@@ -67,7 +67,7 @@ class TaskListController extends Controller
         }
 
         DB::transaction(function () use ($request) {
-            $checksheet = TaskList::create($request->only('title', 'description', 'due_by', 'user_id', 'type'));
+            $tasklist = TaskList::create($request->only('title', 'description', 'due_by', 'user_id', 'type'));
         });
 
         session()->flash('flash.banner', 'Created successfully.');
@@ -76,43 +76,43 @@ class TaskListController extends Controller
         if ($request->saveAndContinue) {
             return back();
         }
-        return redirect()->route('checkshets.index');
+        return redirect()->route('tasklists.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\TaskList  $checksheet
+     * @param  \App\Models\TaskList  $tasklist
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Request $request, TaskList $checksheet)
+    public function show(Request $request, TaskList $tasklist)
     {
-        if ($request->user()->cannot('view', $checksheet)) {
+        if ($request->user()->cannot('view', $tasklist)) {
             abort(403);
         }
 
         // Start from here ...
-        return Inertia::render('CheckSheets/Show', [
-            'checksheet' => $checksheet,
+        return Inertia::render('TaskLists/Show', [
+            'tasklist' => $tasklist,
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\TaskList  $checksheet
+     * @param  \App\Models\TaskList  $tasklist
      * @return \Illuminate\Http\JsonResponse
      */
-    public function edit(Request $request, TaskList $checksheet)
+    public function edit(Request $request, TaskList $tasklist)
     {
-        if ($request->user()->cannot('update', $checksheet)) {
+        if ($request->user()->cannot('update', $tasklist)) {
             abort(403);
         }
 
         // Start from here ...
-        return Inertia::render('CheckSheets/Edit', [
-            'checksheet'  => $checksheet,
-            'checksheetTypes' => TaskListStatus::toSelectOptions(),
+        return Inertia::render('TaskLists/Edit', [
+            'tasklist'  => $tasklist,
+            'statusOptions' => TaskListStatus::toSelectOptions(),
             'users' => User::withoutSuperAdmin()->select('id', 'name')->get()
         ]);
     }
@@ -121,18 +121,18 @@ class TaskListController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\CheckSheetRequest  $request
-     * @param  \App\Models\TaskList  $checksheet
+     * @param  \App\Models\TaskList  $tasklist
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(CheckSheetRequest $request, TaskList $checksheet)
+    public function update(CheckSheetRequest $request, TaskList $tasklist)
     {
-        if ($request->user()->cannot('update', $checksheet)) {
+        if ($request->user()->cannot('update', $tasklist)) {
             abort(403);
         }
 
         // Start from here ...
-        DB::transaction(function () use ($request, $checksheet) {
-            $checksheet = $checksheet->update($request->only('title', 'description', 'due_by', 'user_id', 'type'));
+        DB::transaction(function () use ($request, $tasklist) {
+            $tasklist = $tasklist->update($request->only('title', 'description', 'due_by', 'user_id', 'type'));
         });
 
         session()->flash('flash.banner', 'Updated successfully.');
@@ -141,23 +141,23 @@ class TaskListController extends Controller
         if ($request->updateAndContinue) {
             return back();
         }
-        return redirect()->route('checkshets.index');
+        return redirect()->route('tasklists.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\TaskList  $checksheet
+     * @param  \App\Models\TaskList  $tasklist
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Request $request, TaskList $checksheet)
+    public function destroy(Request $request, TaskList $tasklist)
     {
-        if ($request->user()->cannot('delete', $checksheet)) {
+        if ($request->user()->cannot('delete', $tasklist)) {
             abort(403);
         }
 
-        DB::transaction(function () use ($request, $checksheet) {
-            $checksheet->delete();
+        DB::transaction(function () use ($request, $tasklist) {
+            $tasklist->delete();
         });
     }
 
@@ -165,16 +165,16 @@ class TaskListController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Models\TaskList  $checksheet
+     * @param  \App\Models\TaskList  $tasklist
      * @return \Illuminate\Http\JsonResponse
      */
-    public function updateStatus(TaskList $checksheet)
+    public function updateStatus(TaskList $tasklist)
     {
-        if (request()->user()->cannot('update', $checksheet)) {
+        if (request()->user()->cannot('update', $tasklist)) {
             abort(403);
         }
 
-        $checksheet->update(['status' => TaskListStatus::DONE()]);
+        $tasklist->update(['status' => TaskListStatus::DONE()]);
         session()->flash('flash.banner', 'Check Sheet udpated successfully.');
         session()->flash('flash.bannerStyle', 'success');
 
@@ -189,7 +189,7 @@ class TaskListController extends Controller
      */
     public function exportExcel(Request $request)
     {
-        return (new CheckSheetExport($request->all()))->download('checksheets.xlsx');
+        return (new CheckSheetExport($request->all()))->download('tasklists.xlsx');
     }
 
     /**
@@ -200,8 +200,8 @@ class TaskListController extends Controller
      */
     public function exportPdf(Request $request)
     {
-        return Pdf::loadView('exports.checksheets.pdf', [
+        return Pdf::loadView('exports.tasklists.pdf', [
                 'models' => TaskList::filter($request->all())->orderBy('id', 'desc')->get()
-            ])->download('checksheets.pdf');
+            ])->download('tasklists.pdf');
     }
 }

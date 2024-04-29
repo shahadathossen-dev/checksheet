@@ -48,7 +48,7 @@
 							<td class="flex">
 								<div>
 									<Link class="btn btn-purple mr-2" title="Edit" :href="route('categories.edit', row.id)" v-if="$page.props.can.updateCategories">
-									<i class="ti-pencil-alt"></i>
+										<i class="ti-pencil-alt"></i>
 									</Link>
 
 									<jet-danger-button title="Delete" @click="deleteResource(route('categories.destroy', row.id))" v-if="$page.props.can.deleteCategories">

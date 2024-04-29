@@ -3,41 +3,33 @@
 
 		<!-- Title -->
 		<detail-section class="border-b" label="Title" :value="checksheet.title"></detail-section>
-		<detail-section class="border-b" label="Description" :value="checksheet.description"></detail-section>
-		<!-- Country -->
+		<!-- Date -->
+		<detail-section class="border-b" label="Type" :value="checksheet.type"></detail-section>
+		<detail-section class="border-b" label="Due By" :value="checksheet.dueBy"></detail-section>
+		<!-- Author -->
 		<detail-section class="border-b" label="Assignee" :value="checksheet.assignee.name"></detail-section>
 		<detail-section class="border-b" label="Author" :value="checksheet.author.name"></detail-section>
-		<!-- Date -->
-		<detail-section class="border-b" label="Due Date" :value="checksheet.dueDateFormatted"></detail-section>
-		<detail-section class="border-b" label="Status" :value="checksheet.status"></detail-section>
+		
+		<detail-section class="border-b" label="Description" :value="checksheet.description"></detail-section>
 
-
-		<!-- <template #secondary-view>
+		<template #secondary-view>
 			<div class="mt-8">
-				<h1 class="font-bold text-xl">Subscription list</h1>
-				<datatable :data="subscriptions">
+				<h1 class="font-bold text-xl">Task Items</h1>
+				<datatable :data="{data: checksheet.checksheetItems}">
 					<template #default="{rows}">
 						<table v-if="rows.length">
 							<thead>
 								<tr>
-									<th>Id</th>
-									<th>Date</th>
-									<th>Package Name</th>
-									<th>Category</th>
-									<th>Price</th>
+									<th>#</th>
+									<th>Title</th>
 									<th>Type</th>
-									<th>Payment Method</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr v-for="(row, index) in rows" :key="index">
-									<td>{{row.id}}</td>
-									<td>{{row.dateFormatted}}</td>
-									<td>{{row.package.name}}</td>
-                                    <td>{{row.package.category.name}}</td>
-									<td>${{row.package.price}}</td>
-									<td>{{row.package.type}}</td>
-									<td>{{row.paymentMethod}}</td>
+									<td>{{index + 1}}</td>
+									<td>{{row.title}}</td>
+									<td>{{row.required ? 'Required' : 'Not required'}}</td>
 								</tr>
 							</tbody>
 						</table>
@@ -45,10 +37,8 @@
 					<template #nodata>No Subscriptions Found</template>
 				</datatable>
 			</div>
-		</template> -->
-
+		</template>
 	</detail-view>
-
 </template>
 
 <script>
@@ -59,10 +49,9 @@ import { Link } from "@inertiajs/inertia-vue3";
 import Datatable from "@/Components/Datatable.vue";
 
 export default {
-	name: "order-details",
+	name: "checksheet-details",
 	props: {
 		checksheet: Object,
-
 	},
 
 	components: {

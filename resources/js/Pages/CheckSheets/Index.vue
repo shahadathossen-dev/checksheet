@@ -64,6 +64,10 @@
 								<Link class="btn btn-success" title="Details" :href="route('checksheets.show', row.id)">
 									<detail-icon></detail-icon>
 								</Link>
+
+								<Link class="btn btn-purple mr-2" title="Edit" :href="route('checksheets.edit', row.id)" v-if="$page.props.can.updateCheckSheets">
+									<i class="ti-pencil-alt"></i>
+								</Link>
 							</div>
 						</td>
 					</tr>

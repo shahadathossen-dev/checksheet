@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\CheckSheetStatus;
 use App\Enums\CheckSheetType;
 use Carbon\Carbon;
-use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
 
@@ -36,20 +35,26 @@ class CheckSheetRequest extends FormRequest
             case 'POST': {
                     return [
                         'title'      => ['required', 'multi_space',  'string', 'max:100'],
-                        'description'      => ['required', 'multi_space',  'string', 'max:100'],
-                        'type'      => ['nullable', new Enum(CheckSheetType::class)],
+                        'description'      => ['nullable', 'multi_space',  'string', 'max:100'],
+                        'type'      => ['required', Rule::in(CheckSheetType::toArray())],
                         'due_by'  => ['nullable', 'integer'],
-                        'user_id'  => ['nullable', 'integer', 'exists:users,id']
+                        'user_id'  => ['nullable', 'integer', 'exists:users,id'],
+                        'check_sheet_items'    => 'nullable|array',
+                        'check_sheet_items.*.title'    => 'required|string',
+                        'check_sheet_items.*.required'    => 'nullable|boolean',
                     ];
                 }
             case 'PUT':
             case 'PATCH': {
                     return [
                         'title'      => ['required', 'multi_space',  'string', 'max:100'],
-                        'description'      => ['required', 'multi_space',  'string', 'max:100'],
-                        'type'      => ['nullable', new Enum(CheckSheetType::class)],
+                        'description'      => ['nullable', 'multi_space',  'string', 'max:100'],
+                        'type'      => ['required', Rule::in(CheckSheetType::toArray())],
                         'due_by'  => ['nullable', 'integer'],
-                        'user_id'  => ['nullable', 'integer', 'exists:users,id']
+                        'user_id'  => ['nullable', 'integer', 'exists:users,id'],
+                        'check_sheet_items'    => 'nullable|array',
+                        'check_sheet_items.*.title'    => 'required|string',
+                        'check_sheet_items.*.required'    => 'nullable|boolean',
                     ];
                 }
             default:

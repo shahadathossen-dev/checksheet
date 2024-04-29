@@ -38,19 +38,15 @@
 							<td class="truncate" style="max-width: 300px">{{ row.description }}</td>
 
 							<td class="flex">
-
-								<div>
-									<Link class="btn btn-success mr-2" title="Details" :href="route('roles.show', row.id)" v-if="$page.props.can.viewRoles">
-									<detail-icon></detail-icon>
-									</Link>
-									<Link class="btn btn-purple mr-2" title="Edit" :href="route('roles.edit', row.id)" v-if="$page.props.can.updateRoles">
-									<i class="ti-pencil-alt"></i>
-									</Link>
-									<jet-danger-button title="Delete" @click="deleteResource(route('roles.destroy', row.id))" v-if="$page.props.can.deleteRoles">
-										<i class="ti-trash"></i>
-									</jet-danger-button>
-								</div>
-
+								<Link class="btn btn-success mr-2" title="Details" :href="route('roles.show', row.id)" v-if="$page.props.can.viewRoles">
+								<detail-icon></detail-icon>
+								</Link>
+								<Link class="btn btn-purple mr-2" title="Edit" :href="route('roles.edit', row.id)" v-if="$page.props.can.updateRoles">
+								<i class="ti-pencil-alt"></i>
+								</Link>
+								<jet-danger-button title="Delete" @click="deleteResource(route('roles.destroy', row.id))" v-if="$page.props.can.deleteRoles">
+									<i class="ti-trash"></i>
+								</jet-danger-button>
 							</td>
 						</tr>
 					</tbody>

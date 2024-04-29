@@ -45,22 +45,17 @@
 							</td>
 
 							<td class="flex">
+								<Link class="btn btn-success mr-2" title="Details" :href="route('users.show', row.id)" v-if="$page.props.can.viewUsers">
+								<detail-icon></detail-icon>
+								</Link>
 
-								<div>
-									<Link class="btn btn-success mr-2" title="Details" :href="route('users.show', row.id)" v-if="$page.props.can.viewUsers">
-									<detail-icon></detail-icon>
-									</Link>
+								<Link class="btn btn-purple mr-2" title="Edit" :href="route('users.edit', row.id)" v-if="$page.props.can.updateUsers">
+								<i class="ti-pencil-alt"></i>
+								</Link>
 
-									<Link class="btn btn-purple mr-2" title="Edit" :href="route('users.edit', row.id)" v-if="$page.props.can.updateUsers">
-									<i class="ti-pencil-alt"></i>
-									</Link>
-
-									<jet-danger-button title="Delete" @click="deleteResource(route('users.destroy', row.id))" v-if="$page.props.can.deleteUsers">
-										<i class="ti-trash"></i>
-									</jet-danger-button>
-
-								</div>
-
+								<jet-danger-button title="Delete" @click="deleteResource(route('users.destroy', row.id))" v-if="$page.props.can.deleteUsers">
+									<i class="ti-trash"></i>
+								</jet-danger-button>
 							</td>
 						</tr>
 					</tbody>

@@ -23,7 +23,7 @@
 			</div>
 		</div>
 			<!-- 	Pagination -->
-		<div class="flex flex-col sm:flex-row justify-between items-center mt-3" v-if="data.data.length">
+		<div class="flex flex-col sm:flex-row justify-between items-center mt-3" v-if="data.data.length && data.total">
 			<div class="text-gray-600 text-sm mb-4 sm:mb-0">Showing {{data.from}}-{{data.to}} of {{data.total}} data</div>
 			<pagination :links="data.links" />
 		</div>
