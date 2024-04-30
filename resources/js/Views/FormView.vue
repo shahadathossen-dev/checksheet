@@ -5,7 +5,7 @@
     </div>
     <form @submit.prevent="$emit('submitted')">
       <div
-        class="bg-white shadow w-full overflow-hidden"
+        class="bg-white shadow w-full overflow-hidden p-2"
         :class="
           hasActions
             ? 'rounded-tl-primary rounded-tr-primary'

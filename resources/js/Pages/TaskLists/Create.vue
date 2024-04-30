@@ -1,6 +1,6 @@
 <template>
-	<form-view v-if="checksheet" @submitted="update('tasklists.create', checksheet.id)" title="Create Task List" :breadcrumb="breadcrumb">
-		<template #form>
+	<form-view @submitted="update('tasklists.create', checksheet.id)" title="Create Task List" :breadcrumb="breadcrumb">
+		<template #form v-if="checksheet">
 			<!-- Title -->
 			<detail-section class="border-b" label="Title" :value="checksheet.title"></detail-section>
 			<!-- Date -->
@@ -8,29 +8,26 @@
 			<detail-section class="border-b" label="Due By" :value="checksheet.dueBy"></detail-section>
 			<!-- Author -->
 			<detail-section class="border-b" label="Assignee" :value="checksheet.assignee.name"></detail-section>
-			<detail-section class="border-b" label="Author" :value="checksheet.author.name"></detail-section>
+			<detail-section class="border-b" label="Author" :value="checksheet.author?.name"></detail-section>
 			
 			<detail-section class="border-b" label="Description" :value="checksheet.description"></detail-section>
 
 			<!-- Attributes -->
-            <form-group class="border-b md:flex-col" v-bind="checksheet.check_sheet_items">
-				<jet-label class="md:w-1/4" value="Check Sheet Items" />
-                <div class="w-full">
-                    <div class="w-full flex items-center gap-5 block mb-2" v-for="(attribute, index) in checksheet.check_sheet_items" :key="index">
-						<div class="task-item">
-							<jet-label class="md:w-1/4" :for="`Note-${index}`" :value="attribute.title" />
+            <form-group class="border-b md:flex-col">
+				<jet-label class="w-full" value="Check Sheet Items" />
+                    <div class="w-full flex items-center gap-5 block mb-2" v-for="(attribute, index) in checksheet.checksheetItems" :key="index">
+						<div class="task-item flex-grow">
+							<jet-label class="w-full" :for="`Note-${index}`" :value="attribute.title" />
 
-							<jet-text-input v-model="attribute.title" :id="`Note-${index}`" type="text" class="mt-1 block w-full" placeholder="Title" required />
+							<jet-text-input v-model="attribute.note" :id="`Note-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="attribute.required" />
 						</div>
-						<jet-label class="md:w-1/4" :for="`Done-${index}`">
+						<jet-label class="" :for="`Done-${index}`">
                         	<jet-check-box v-model="attribute.done" :id="`Done-${index}`" :checked="!!attribute.done" />
 							<span class="px-2 align-middle">Done</span>
 						</jet-label>
                     </div>
-                </div>
                 <jet-input-error :message="form.errors.check_sheet_items" class="mt-2" />
 			</form-group>
-
 		</template>
 
 		<template #actions>
@@ -62,7 +59,7 @@ export default {
 		users: Array,
 		checksheetTypes: Array,
 	},
-
+	preserveState: false,
 	components: {
 		Link,
 		FormView,
@@ -95,17 +92,12 @@ export default {
 			}),
 		};
 	},
-	mounted() {
+	beforeCreate() {
 		// console.log(this.filters);
 		const self = this;
 		try {
 			axios.get(route('checksheets.details', 'daily'))
-				.then(({data}) => {
-					console.log(data);
-					self.checksheet = data;
-					console.log(data);
-
-				});
+				.then(({data}) => this.checksheet = data);
 			
 		} catch (error) {
 			console.log(error);

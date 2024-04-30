@@ -1,5 +1,5 @@
 <template>
-	<div class="w-full  px-4 py-5">
+	<div class="w-full  px-4 py-3">
 		<div class="flex flex-col sm:flex-row lg:w-10/12 xl:w-9/12">
 			<div class="w-full sm:w-1/4">
 				<slot name="label">
