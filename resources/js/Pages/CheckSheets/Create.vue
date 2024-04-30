@@ -52,7 +52,7 @@
             <form-group class="border-b md:flex-col">
 				<jet-label class="md:w-1/4" for="Note-0" value="Check Sheet Items" />
                 <div class="w-full">
-                    <div class="w-full flex items-center gap-5 block mb-2" v-for="(attribute, index) in form.check_sheet_items" :key="index">
+                    <div class="w-full flex items-center gap-5 block my-2" v-for="(attribute, index) in form.check_sheet_items" :key="index">
                         <jet-text-input v-model="attribute.title" :id="`Note-${index}`" type="text" class="mt-1 block w-full" autocomplete="priceWithVat" placeholder="Title" required />
 						<jet-label class="md:w-1/4" :for="`Required-${index}`">
                         	<jet-check-box v-model="attribute.required" :id="`Required-${index}`" class="" autocomplete="priceWithVat" />

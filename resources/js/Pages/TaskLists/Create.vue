@@ -15,7 +15,7 @@
 			<!-- Attributes -->
             <form-group class="border-b md:flex-col">
 				<jet-label class="w-full" value="Check Sheet Items" />
-                    <div class="w-full flex items-center gap-5 block mb-2" v-for="(attribute, index) in checksheet.checksheetItems" :key="index">
+                    <div class="w-full flex items-center gap-5 block my-2" v-for="(attribute, index) in checksheet.checksheetItems" :key="index">
 						<div class="task-item flex-grow">
 							<jet-label class="w-full" :for="`Note-${index}`" :value="attribute.title" />
 
