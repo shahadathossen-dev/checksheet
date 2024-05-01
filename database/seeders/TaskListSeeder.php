@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Enums\TaskListStatus;
 use App\Enums\CheckSheetType;
 use App\Enums\TaskListStatus;
 use App\Models\CheckSheet;
@@ -70,9 +69,11 @@ class TaskListSeeder extends Seeder
 
                 $tasklist = TaskList::create([
                         'checksheet_id' => $checksheet->id,
-                        'submitted_by' => $checksheet->user_id,
-                        'submit_date' => $submitDate->format('Y-m-d'),
+                        'type' => $checksheet->type,
+                        'user_id' => $checksheet->user_id,
                         'due_date' => $dueDate->format('Y-m-d'),
+                        'submit_date' => $submitDate->format('Y-m-d'),
+                        'submitted_by' => $checksheet->user_id,
                         'status' => $status,
                     ]);
 

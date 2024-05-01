@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CheckSheetType;
 use App\Models\User;
 use Inertia\Inertia;
 use App\Models\TaskList;
@@ -12,6 +13,8 @@ use App\Exports\CheckSheetExport;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CheckSheetRequest;
+use App\Models\CheckSheet;
+use Illuminate\Http\Response;
 
 class TaskListController extends Controller
 {
@@ -49,6 +52,7 @@ class TaskListController extends Controller
         }
         // Start from here ...
         return Inertia::render('TaskLists/Create', [
+            'checksheetTypes' => CheckSheetType::toSelectOptions(),
             'statusOptions' => TaskListStatus::toSelectOptions(),
             'users' => User::withoutSuperAdmin()->select('id', 'name')->get()
         ]);
@@ -67,7 +71,11 @@ class TaskListController extends Controller
         }
 
         DB::transaction(function () use ($request) {
-            $tasklist = TaskList::create($request->only('title', 'description', 'due_by', 'user_id', 'type'));
+            $tasklist = TaskList::create($request->only('checksheet_id', 'description', 'due_date', 'user_id', 'type'));
+            
+            // Collect Check Sheet items from request and sync
+            $taskItems = collect($request->input('items'))->values();
+            $tasklist->items()->createMany($taskItems->toArray());
         });
 
         session()->flash('flash.banner', 'Created successfully.');
@@ -112,6 +120,7 @@ class TaskListController extends Controller
         // Start from here ...
         return Inertia::render('TaskLists/Edit', [
             'tasklist'  => $tasklist,
+            'checksheetTypes' => CheckSheetType::toSelectOptions(),
             'statusOptions' => TaskListStatus::toSelectOptions(),
             'users' => User::withoutSuperAdmin()->select('id', 'name')->get()
         ]);
@@ -132,7 +141,17 @@ class TaskListController extends Controller
 
         // Start from here ...
         DB::transaction(function () use ($request, $tasklist) {
-            $tasklist = $tasklist->update($request->only('title', 'description', 'due_by', 'user_id', 'type'));
+            $tasklist->update($request->only('checksheet_id', 'description', 'due_date', 'user_id', 'type'));
+            // Collect check sheet attributes from request
+            $taskItems = collect($request->input('items'))->values();
+
+            // Clean removed check sheet items except new added items
+            $tasklist->items()->whereNotIn('id', $taskItems->pluck('id')->reject(fn ($id) => empty($id)))->delete();
+
+            // Update or create check sheet items
+            $taskItems->each(function ($attribute) use ($tasklist) {
+                $tasklist->items()->updateOrCreate(['title' => $attribute['title']], ['required' => $attribute['required']]);
+            });
         });
 
         session()->flash('flash.banner', 'Updated successfully.');
@@ -203,5 +222,63 @@ class TaskListController extends Controller
         return Pdf::loadView('exports.tasklists.pdf', [
                 'models' => TaskList::filter($request->all())->orderBy('id', 'desc')->get()
             ])->download('tasklists.pdf');
+    }
+
+    /**
+     * Get the specified resource in storage.
+     *
+     * @param  \App\Models\TaskList  $tasklist
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getDetails(Request $request, $type)
+    {
+        $userId = request('user_id') ?? auth()->id();
+        $dueDate = request('due_date') ?? today();
+
+        $tasklist = TaskList::where(['type' => $type, 'user_id' => $userId])
+            ->when($type == CheckSheetType::DAILY(),
+                fn($q) => $q->whereDate('due_date', $dueDate),
+                fn($q) => $q->whereDate('due_date', '>=', $dueDate),
+            )
+            ->latest()->first();
+        if($tasklist) {
+            $tasklist->model = 'tasklist';
+            $tasklist->checksheet_id = $tasklist->checksheet->id;
+            $tasklist->due_date = $tasklist->dueDate;
+            $tasklist->title = $tasklist->checksheet->title;
+            $tasklist->description = $tasklist->checksheet->description;
+            $tasklist->items->map(fn($item) => $item->title = $item->checksheetItem->title);
+        } else {
+            $tasklist = CheckSheet::where(['type' => $type, 'user_id' => $userId])->first();
+
+            if(!$tasklist) return response()->json(['message' => 'Resource not found!'], Response::HTTP_NOT_FOUND);
+
+            $today = today();
+            if(!request('due_date')) {
+                if ($tasklist->due_by != null) {
+                    $dueDate = $tasklist->type == CheckSheetType::MONTHLY() ?
+                        $today->setDays($tasklist->due_by) :
+                        ($tasklist->type == CheckSheetType::WEEKLY() ?
+                        $today->startOfWeek()->addDays($tasklist->due_by) :
+                        $today);
+                } else {
+                    $dueDate = $tasklist->type == CheckSheetType::MONTHLY() ? $today->endOfMonth() :
+                        ($tasklist->type == CheckSheetType::WEEKLY() ? $today->endOfWeek() :
+                        $today);
+                }
+            }
+            
+            $tasklist->model = 'checksheet';
+            $tasklist->checksheet_id = $tasklist->id;
+            $tasklist->due_date = $dueDate;
+            $tasklist->dueDateFormatted = $dueDate->format('d, M Y');
+            
+            $tasklist->items = $tasklist->checksheetItems->map(function($item) {
+                $item->done = null; $item->note = null;
+                return $item;
+            });
+        }
+
+        return response()->json($tasklist, Response::HTTP_OK);
     }
 }

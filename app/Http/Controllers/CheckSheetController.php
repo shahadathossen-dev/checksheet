@@ -73,7 +73,7 @@ class CheckSheetController extends Controller
             $checksheet = CheckSheet::create($request->only('title', 'description', 'due_by', 'user_id', 'type'));
 
             // Collect Check Sheet items from request and sync
-            $checksheetItems = collect($request->input('check_sheet_items'))->values();
+            $checksheetItems = collect($request->input('checksheetItems'))->values();
             $checksheet->checksheetItems()->createMany($checksheetItems->toArray());
         });
 
@@ -143,7 +143,7 @@ class CheckSheetController extends Controller
             $checksheet->update($request->only('title', 'description', 'due_by', 'user_id', 'type'));
 
             // Collect check sheet attributes from request
-            $checksheetItems = collect($request->input('check_sheet_items'))->values();
+            $checksheetItems = collect($request->input('checksheetItems'))->values();
 
             // Clean removed check sheet items except new added items
             $checksheet->checksheetItems()->whereNotIn('id', $checksheetItems->pluck('id')->reject(fn ($id) => empty($id)))->delete();
@@ -227,9 +227,8 @@ class CheckSheetController extends Controller
 
     public function getDetails(Request $request, $type)
     {
-        // $authId = auth()->id();
-        $authId = 1;
-        $checksheet = CheckSheet::where(['type' => $type, 'user_id' => $authId])->firstOrFail();
+        $userId = request('user_id') ?? auth()->id();
+        $checksheet = CheckSheet::where(['type' => $type, 'user_id' => $userId])->firstOrFail();
         return response()->json($checksheet, Response::HTTP_OK);
     }
 }

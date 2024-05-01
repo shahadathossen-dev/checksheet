@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\CheckSheetController;
 use App\Http\Controllers\DelegateController;
+use App\Http\Controllers\TaskListController;
 use App\Models\CheckSheet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,7 +24,8 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
-    Route::get('/checksheets/{type}/details', [CheckSheetController::class, 'getDetails'])->name('checksheets.details');
+    Route::get('/checksheets/details/{type}', [CheckSheetController::class, 'getDetails'])->name('checksheets.details');
+    Route::get('/tasklists/details/{type}', [TaskListController::class, 'getDetails'])->name('tasklists.details');
     // Route::apiResource('products', ProductController::class);
     // Route::put('/products/{id}/restore', [ProductController::class, 'restore'])->name('rest.products.restore');
     // Route::get('/products/{id}/deleted', [ProductController::class, 'forceDelete'])->name('rest.products.force-delete');

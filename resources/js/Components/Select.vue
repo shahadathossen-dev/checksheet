@@ -13,7 +13,7 @@
     v-bind="$attrs"
     :value="modelValue"
     @click.stop="'javascript:void(0)'"
-    @input="$emit('update:modelValue', $event.target.value)"
+    @input="$emit('update:modelValue', $event.target.value), $emit('change', $event.target.value)"
     ref="select"
     :disabled="disabled"
   >
@@ -70,7 +70,7 @@ export default {
     },
   },
 
-  emits: ["update:modelValue"],
+  emits: ["update:modelValue", "change"],
 
   data() {
     return {};

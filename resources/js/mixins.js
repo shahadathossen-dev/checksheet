@@ -81,5 +81,12 @@ export default {
             );
             return checkedPermissions;
         },
+        hasRoles(roles) {
+            const $vue = this;
+            const foundRoles = roles.some(
+                (r) => $vue.$page.props.user.roles.find(role => role.name == r)
+            );
+            return foundRoles;
+        },
     }
 }

@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Enums\CheckSheetStatus;
 use App\Enums\CheckSheetType;
+use App\Enums\TaskListStatus;
 use App\Models\CheckSheet;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\TaskList;
@@ -28,7 +29,6 @@ class TaskListFactory extends Factory
     public function definition()
     {
         $today = $dueDate = Carbon::today();
-        $status = CheckSheetStatus::PENDING();
         $checksheet = $this->faker->randomElement(CheckSheet::all());
         $period = CarbonPeriod::create('2018-06-14', '2018-06-20');
         if ($checksheet->due_by != null) {
@@ -41,14 +41,16 @@ class TaskListFactory extends Factory
             $dueDate = $checksheet->type == CheckSheetType::MONTHLY() ? $today->endOfMonth()->toDateString() : ($checksheet->type == CheckSheetType::WEEKLY() ? $today->endOfWeek()->toDateString() : $today->toDateString());
         }
 
-        $status = $today > $dueDate ? CheckSheetStatus::DUE() : CheckSheetStatus::PENDING();
+        $status = $today > $dueDate ? TaskListStatus::DUE() : TaskListStatus::PENDING();
         $submitDate = $this->faker->dateTimeBetween('-1 day', '+1 day');
         
         return [
             'checksheet_id' => $checksheet->id,
+            'type' => $checksheet->type,
             'due_date' => $dueDate,
-            'submitted_by' => $checksheet->user_id,
+            'user_id' => $checksheet->user_id,
             'submit_date' => $submitDate,
+            'submitted_by' => $checksheet->user_id,
             'status' => $status,
         ];
 

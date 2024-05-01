@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\Sortable;
 use App\Traits\CamelCasing;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,8 +20,10 @@ class TaskList extends Model
      */
     protected $fillable = [
         'checksheet_id',
-        'submitted_by',
+        'type',
+        'user_id',
         'due_date',
+        'submitted_by',
         'submit_date',
         'status',
     ];
@@ -94,6 +97,7 @@ class TaskList extends Model
         // Will fire everytime an User is created
         static::creating(function (Model $model) {
             $model->submitted_by = auth()->id();
+            $model->submit_date = Carbon::today();
             return $model;
         });
     }
@@ -115,9 +119,8 @@ class TaskList extends Model
      */
     public function assignee()
     {
-        return $this->belongsTo(User::class, 'submitted_by');
+        return $this->belongsTo(User::class, 'user_id');
     }
-
 
     /**
      * Determines one-to-many relation
@@ -129,6 +132,16 @@ class TaskList extends Model
         return $this->hasMany(TaskItem::class, 'tasklist_id');
     }
 
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'submitted_by');
+    }
+    
     /**
      * Format the ceated at with client timezone
      *

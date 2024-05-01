@@ -8,7 +8,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
 
-class CheckSheetRequest extends FormRequest
+class TaskListRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -34,33 +34,33 @@ class CheckSheetRequest extends FormRequest
                 }
             case 'POST': {
                     return [
-                        'title'      => ['required', 'multi_space',  'string', 'max:100'],
-                        'description'      => ['nullable', 'multi_space',  'string', 'max:100'],
+                        'checksheet_id'  => ['nullable', 'integer', 'exists:check_sheets,id,user_id,'.$this->input('user_id')],
                         'type'      => ['required',
                             Rule::in(CheckSheetType::toArray()),
-                            Rule::unique('check_sheets', 'type')->where('user_id', $this->input('user_id'))
+                            Rule::unique('task_lists', 'type')->where('user_id', $this->input('user_id'))->where('due_date', $this->input('due_date'))
                         ],
-                        'due_by'  => ['nullable', 'integer'],
+                        'due_date'  => ['nullable', 'date'],
                         'user_id'  => ['nullable', 'integer', 'exists:users,id'],
-                        'checksheetItems'    => 'nullable|array',
-                        'checksheetItems.*.title'    => 'required|string',
-                        'checksheetItems.*.required'    => 'nullable|boolean',
+                        'items'    => 'nullable|array',
+                        'items.*.checksheet_item_id'    => 'required|integer|exists:checksheet_items',
+                        'items.*.note'    => 'required|string',
+                        'items.*.done'    => 'nullable|boolean',
                     ];
                 }
             case 'PUT':
             case 'PATCH': {
                     return [
-                        'title'      => ['required', 'multi_space',  'string', 'max:100'],
-                        'description'      => ['nullable', 'multi_space',  'string', 'max:100'],
+                        'checksheet_id'  => ['nullable', 'integer', 'exists:check_sheets,id,user_id,'.$this->input('user_id')],
                         'type'      => ['required',
                             Rule::in(CheckSheetType::toArray()),
-                            Rule::unique('check_sheets', 'type')->where('user_id', $this->input('user_id'))->ignore($this->checksheet->id)
+                            Rule::unique('check_sheets', 'type')->where('user_id', $this->input('user_id'))->where('due_date', $this->input('due_date'))->ignore($this->tasklist->id)
                         ],
-                        'due_by'  => ['nullable', 'integer'],
+                        'due_date'  => ['nullable', 'date'],
                         'user_id'  => ['nullable', 'integer', 'exists:users,id'],
-                        'checksheetItems'    => 'nullable|array',
-                        'checksheetItems.*.title'    => 'required|string',
-                        'checksheetItems.*.required'    => 'nullable|boolean',
+                        'items'    => 'nullable|array',
+                        'items.*.checksheet_item_id'    => 'required|integer|exists:checksheet_items',
+                        'items.*.note'    => 'required|string',
+                        'items.*.done'    => 'nullable|boolean',
                     ];
                 }
             default:

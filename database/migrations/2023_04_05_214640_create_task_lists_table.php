@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use App\Enums\CheckSheetType;
 use App\Enums\CheckSheetStatus;
+use App\Enums\TaskListStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,14 +20,17 @@ return new class extends Migration
         Schema::create('task_lists', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('checksheet_id');
-            $table->foreign('checksheet_id')->references('id')->on('check_sheets');
-            $table->unsignedBigInteger('submitted_by');
-            $table->foreign('submitted_by')->references('id')->on('users');
-            $table->enum('status', CheckSheetStatus::toArray())->default(CheckSheetStatus::PENDING());
-            $table->date('due_date')->default(Carbon::today())->index('due_date_index');
+            $table->unsignedBigInteger('user_id');
+            $table->enum('type', CheckSheetType::toArray())->default(CheckSheetType::DAILY());
             $table->date('submit_date')->default(Carbon::today())->index('submit_date_index');
+            $table->unsignedBigInteger('submitted_by');
+            $table->date('due_date')->default(Carbon::today())->index('due_date_index');
+            $table->enum('status', TaskListStatus::toArray())->default(TaskListStatus::PENDING());
             $table->timestamps();
             $table->softDeletes();
+            $table->foreign('checksheet_id')->references('id')->on('check_sheets');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('submitted_by')->references('id')->on('users');
         });
     }
 

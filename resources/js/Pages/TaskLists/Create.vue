@@ -1,21 +1,40 @@
 <template>
 	<form-view @submitted="update('tasklists.create', checksheet.id)" title="Create Task List" :breadcrumb="breadcrumb">
-		<template #form v-if="checksheet">
+		<template #form>
+			<form-group class="border-b gap-8">
+				<!-- User -->
+				<div class="col w-1/2" v-if="hasRoles(['Super Admin'])">
+					<jet-label class="md:w-1/4 mb-1" for="user_id" value="User" required />
+					<div class="w-full">
+						<jet-select v-model="form.user_id" @change="getTaskListDetails" id="user_id" class="w-full" :options="users" autocomplete="user_id" required />
+						<jet-input-error :message="form.errors.user_id" class="mt-2" />
+					</div>
+				</div>
+				
+				<!-- Type -->
+				<div class="col w-1/2" :class="{flex: !hasRoles(['Super Admin'])}">
+					<jet-label class="md:w-1/4 mb-1" for="type" value="Type" required />
+					<div class="w-full">
+						<jet-select v-model="form.type" @change="getTaskListDetails" id="type" class="w-full" track="value" :options="checksheetTypes" autocomplete="type" required />
+						<jet-input-error :message="form.errors.type" class="mt-2" />
+					</div>
+				</div>
+			</form-group>
 			<!-- Title -->
-			<detail-section class="border-b" label="Title" :value="checksheet.title"></detail-section>
+			<detail-section class="border-b" label="Title" :value="checksheet?.title"></detail-section>
 			<!-- Date -->
-			<detail-section class="border-b" label="Type" :value="checksheet.type"></detail-section>
-			<detail-section class="border-b" label="Due By" :value="checksheet.dueBy"></detail-section>
+			<detail-section class="border-b" label="Type" :value="checksheet?.type"></detail-section>
+			<detail-section class="border-b" label="Due Date" :value="checksheet?.dueDateFormatted"></detail-section>
 			<!-- Author -->
-			<detail-section class="border-b" label="Assignee" :value="checksheet.assignee.name"></detail-section>
-			<detail-section class="border-b" label="Author" :value="checksheet.author?.name"></detail-section>
+			<detail-section class="border-b" label="Assignee" :value="checksheet?.assignee.name"></detail-section>
+			<!-- <detail-section class="border-b" label="Author" :value="checksheet?.author?.name"></detail-section> -->
 			
-			<detail-section class="border-b" label="Description" :value="checksheet.description"></detail-section>
+			<detail-section class="border-b" label="Description" :value="checksheet?.description"></detail-section>
 
 			<!-- Attributes -->
-            <form-group class="border-b md:flex-col">
+            <form-group class="border-b md:flex-col" v-if="checksheet?.items">
 				<jet-label class="w-full" value="Check Sheet Items" />
-                    <div class="w-full flex items-center gap-5 block my-2" v-for="(attribute, index) in checksheet.checksheetItems" :key="index">
+                    <div class="w-full flex items-center gap-5 block my-2" v-for="(attribute, index) in checksheet?.items" :key="index">
 						<div class="task-item flex-grow">
 							<jet-label class="w-full" :for="`Note-${index}`" :value="attribute.title" />
 
@@ -83,34 +102,37 @@ export default {
 				{ label: "Create", route: null },
 			],
 			filters: {
-				type: 'daily'
 			},
 			checksheet: null,
 			form: this.$inertia.form({
-				checksheet_id: this.checksheet?.id,
-                items: this.checksheet?.checksheetItems.map(item => ({done: null, ...item})),
+				checksheet_id: null,
+                items: [],
+				type: 'daily',
+				user_id: null,
+				// user_id: this.$page.props.user.id,
+				due_date: null,
 			}),
 		};
 	},
-	beforeCreate() {
-		// console.log(this.filters);
-		const self = this;
-		try {
-			axios.get(route('checksheets.details', 'daily'))
-				.then(({data}) => this.checksheet = data);
-			
-		} catch (error) {
-			console.log(error);
-			
-		}
+	beforeMount() {
+		this.getTaskListDetails();
 	},
 	methods: {
-        // addAttribute: function() {
-        //     this.form.check_sheet_items.push({title: '', required: null})
-        // },
-        // removeAttribute: function(position) {
-        //     this.form.check_sheet_items.splice(position, 1)
-        // }
+		getTaskListDetails() {
+			if(!this.form.type) return false;
+
+			try {
+				axios.get(route('tasklists.details', this.form.type), {params: {user_id: this.form.user_id}})
+					.then(({data}) => {
+						this.checksheet = data;
+						Object.assign(this.form, data)
+					});
+				
+			} catch (error) {
+				console.log(error);
+				
+			}
+		},
     }
 };
 </script>

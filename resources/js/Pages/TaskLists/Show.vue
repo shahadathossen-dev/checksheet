@@ -5,8 +5,8 @@
 		<detail-section class="border-b" label="Title" :value="tasklist.checksheet.title"></detail-section>
 		<detail-section class="border-b" label="Description" :value="tasklist.checksheet.description"></detail-section>
 		<!-- Date -->
-		<detail-section class="border-b" label="Due Date" :value="tasklist.dueDate"></detail-section>
-		<detail-section class="border-b" label="Submit Date" :value="tasklist.submitDate"></detail-section>
+		<detail-section class="border-b" label="Due Date" :value="tasklist.dueDateFormatted"></detail-section>
+		<detail-section class="border-b" label="Submit Date" :value="tasklist.submitDateFormatted"></detail-section>
 		<!-- Author -->
 		<!-- <detail-section class="border-b" label="Assignee" :value="tasklist.assignee.name"></detail-section> -->
 		<!-- <detail-section class="border-b" label="Author" :value="tasklist.author.name"></detail-section> -->

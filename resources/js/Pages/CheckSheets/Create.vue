@@ -1,6 +1,26 @@
 <template>
-	<form-view @submitted="save('checksheets.store')" title="Create Check Sheet" :breadcrumb="breadcrumb">
+	<form-view @submitted="form.id ? update('checksheets.update', form.id) : save('checksheets.store')" title="Create Check Sheet" :breadcrumb="breadcrumb">
 		<template #form>
+			<form-group class="border-b gap-8">
+				<!-- User -->
+				<div class="col w-full">
+					<jet-label class="md:w-1/4" for="user_id" value="User" required />
+					<div class="w-full mt-1">
+						<jet-select v-model="form.user_id" @change="getCheckSheet" id="user_id" class="w-full" :options="users" autocomplete="user_id" required />
+						<jet-input-error :message="form.errors.user_id" class="mt-2" />
+					</div>
+				</div>
+				
+				<!-- Type -->
+				<div class="col w-full">
+					<jet-label class="md:w-1/4" for="type" value="Type" required />
+					<div class="w-full mt-1">
+						<jet-select v-model="form.type" @change="getCheckSheet" id="type" class="w-full" track="value" :options="checksheetTypes" autocomplete="type" required />
+						<jet-input-error :message="form.errors.type" class="mt-2" />
+					</div>
+				</div>
+			</form-group>
+
 			<form-group class="border-b gap-8">
 				<!-- Title -->
 				<div class="col w-full">
@@ -8,25 +28,6 @@
 					<div class="w-full mt-1">
 						<jet-input v-model="form.title" id="title" type="text" class="w-full" autocomplete="title" required />
 						<jet-input-error :message="form.errors.title" class="mt-2" />
-					</div>
-				</div>
-				<!-- Type -->
-				<div class="col w-full">
-					<jet-label class="md:w-1/4" for="type" value="Type" required />
-					<div class="w-full mt-1">
-						<jet-select v-model="form.type" id="type" class="w-full" track="value" :options="checksheetTypes" autocomplete="type" required />
-						<jet-input-error :message="form.errors.type" class="mt-2" />
-					</div>
-				</div>
-			</form-group>
-
-			<form-group class="border-b gap-8">
-				<!-- Type -->
-				<div class="col w-full">
-					<jet-label class="md:w-1/4" for="user_id" value="Assignee" required />
-					<div class="w-full mt-1">
-						<jet-select v-model="form.user_id" id="user_id" class="w-full" :options="users" autocomplete="user_id" required />
-						<jet-input-error :message="form.errors.user_id" class="mt-2" />
 					</div>
 				</div>
 				<!-- Due By -->
@@ -52,10 +53,10 @@
             <form-group class="border-b md:flex-col">
 				<jet-label class="md:w-1/4" for="Note-0" value="Check Sheet Items" />
                 <div class="w-full">
-                    <div class="w-full flex items-center gap-5 block my-2" v-for="(attribute, index) in form.check_sheet_items" :key="index">
+                    <div class="w-full flex items-center gap-5 block my-2" v-for="(attribute, index) in form.checksheetItems" :key="index">
                         <jet-text-input v-model="attribute.title" :id="`Note-${index}`" type="text" class="mt-1 block w-full" autocomplete="priceWithVat" placeholder="Title" required />
 						<jet-label class="md:w-1/4" :for="`Required-${index}`">
-                        	<jet-check-box v-model="attribute.required" :id="`Required-${index}`" class="" autocomplete="priceWithVat" />
+                        	<jet-check-box v-model="attribute.required" :id="`Required-${index}`"  :checked="!!attribute.required" autocomplete="priceWithVat" />
 							<span class="px-2 align-middle">Note Required</span>
 						</jet-label>
                         <jet-danger-button title="Remove Task" type="text" @click.prevent="removeAttribute(index)">
@@ -68,7 +69,7 @@
                         </jet-button>
 					</div>
                 </div>
-                <jet-input-error :message="form.errors.check_sheet_items" class="mt-2" />
+                <jet-input-error :message="form.errors.checksheetItems" class="mt-2" />
 			</form-group>
 
 		</template>
@@ -130,18 +131,36 @@ export default {
 				due_by: null,
 				user_id: null,
 				type: null,
-                check_sheet_items: [],
+                checksheetItems: [],
 			}),
 
 		};
 	},
+	computed: {
+		formRoute () {
+			return this.form.hasOwnProperty('id') ? this.update('checksheets.store', this.form.id) : this.save('checksheets.store')
+		},
+	},
 	methods: {
+		getCheckSheet() {
+			if(!(this.form.user_id && this.form.type)) return false;
+
+			try {
+				axios.get(route('checksheets.details', this.form.type), {params: {user_id: this.form.user_id}})
+					.then(({data}) => Object.assign(this.form, data));
+				
+			} catch (error) {
+				console.log(error);
+				
+			}
+		},
         addAttribute: function() {
-            this.form.check_sheet_items.push({title: '', required: null})
+            this.form.checksheetItems.push({title: '', required: null})
         },
         removeAttribute: function(position) {
-            this.form.check_sheet_items.splice(position, 1)
-        }
+            this.form.checksheetItems.splice(position, 1)
+        },
+
     }
 };
 </script>
