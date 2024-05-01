@@ -16,7 +16,7 @@ class StatusNotificationUser extends Notification
      *
      * @return void
      */
-    public function __construct(private $tasklist)
+    public function __construct(public $tasklist)
     {
         //
     }
@@ -42,7 +42,7 @@ class StatusNotificationUser extends Notification
     {
         return (new MailMessage)
                     ->greeting('Hello ' . $notifiable->name)
-                    ->line("This is to inform you that new checksheet has been marked as due todday.")
+                    ->line("We hope this mail finds you well. This is to inform you that new checksheet has been marked as due todday.")
                     ->action('Check Details', route('tasklists.show', $this->tasklist->id))
                     ->line("You are supposed to carefully review this update.")
                     ->line('Thank you for using our application!');

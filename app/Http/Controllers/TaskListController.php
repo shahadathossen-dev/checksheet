@@ -8,13 +8,17 @@ use Inertia\Inertia;
 use App\Models\TaskList;
 use Illuminate\Http\Request;
 use App\Enums\TaskListStatus;
+use App\Events\DueStatusEvent;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Exports\CheckSheetExport;
+use App\Facades\Helper;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CheckSheetRequest;
 use App\Http\Requests\TaskListRequest;
+use App\Jobs\StatusNotificationJob;
 use App\Models\CheckSheet;
+use App\Services\StatusUpdateService;
 use Illuminate\Http\Response;
 
 class TaskListController extends Controller
@@ -72,11 +76,26 @@ class TaskListController extends Controller
         }
 
         DB::transaction(function () use ($request) {
-            $tasklist = TaskList::create($request->only('checksheet_id', 'due_date', 'user_id', 'type'));
-            
+            // $tasklist = TaskList::create($request->only('checksheetId', 'dueDate', 'userId', 'type'));
+            // $tasklistData = Helper::toSnakeCase($request->only('checksheetId', 'dueDate', 'userId', 'type'));
+            // $tasklist = TaskList::create($tasklistData);
+            // dd($request->checksheetId);
+            $tasklist = TaskList::create([
+                'checksheet_id' => $request->checksheetId,
+                'due_date' => $request->dueDate,
+                'user_id' => $request->userId,
+                'type' => $request->type
+            ]);
             // Collect Check Sheet items from request and sync
             $taskItems = collect($request->input('items'))->values();
-            $tasklist->items()->createMany($taskItems->toArray());
+            // $tasklist->items()->createMany($taskItems->toArray());
+            $taskItems->each(fn($item) => $tasklist->items()->create([
+                'checksheet_item_id' => $item['checksheetItemId'],
+                'note' => $item['note'],
+                'done' => $item['done'],
+            ]));
+
+            StatusUpdateService::handle($tasklist->fresh());
         });
 
         session()->flash('flash.banner', 'Created successfully.');
@@ -104,6 +123,12 @@ class TaskListController extends Controller
         return Inertia::render('TaskLists/Show', [
             'tasklist' => $tasklist,
         ]);
+    }
+
+    public function testJob(Request $request, TaskList $tasklist)
+    {
+        DueStatusEvent::dispatch($tasklist);
+        // StatusNotificationJob::dispatchAfterResponse($tasklist);
     }
 
     /**
@@ -142,7 +167,12 @@ class TaskListController extends Controller
 
         // Start from here ...
         DB::transaction(function () use ($request, $tasklist) {
-            $tasklist->update($request->only('checksheet_id', 'due_date', 'user_id', 'type'));
+            $tasklist->update([
+                'checksheet_id' => $request->checksheetId,
+                'due_date' => $request->dueDate,
+                'user_id' => $request->userId,
+                'type' => $request->type
+            ]);
             // Collect check sheet attributes from request
             $taskItems = collect($request->input('items'))->values();
 
@@ -152,13 +182,15 @@ class TaskListController extends Controller
             // Update or create check sheet items
             $taskItems->each(function ($attribute) use ($tasklist) {
                 $tasklist->items()->updateOrCreate(
-                    ['checksheet_id' => $attribute['checksheet_id']],
+                    ['checksheet_item_id' => $attribute['checksheetItemId']],
                     [
                         'note' => $attribute['note'],
                         'done' => $attribute['done'],
                     ]
                 );
             });
+
+            StatusUpdateService::handle($tasklist->fresh());
         });
 
         session()->flash('flash.banner', 'Updated successfully.');
@@ -254,7 +286,11 @@ class TaskListController extends Controller
             $tasklist->due_date = $tasklist->dueDate;
             $tasklist->title = $tasklist->checksheet->title;
             $tasklist->description = $tasklist->checksheet->description;
-            $tasklist->items->map(fn($item) => $item->title = $item->checksheetItem->title);
+            $tasklist->items->map(function($item) {
+                $item->title = $item->checksheetItem->title;
+                $item->required = $item->checksheetItem->required;
+                return $item;
+            });
         } else {
             $tasklist = CheckSheet::where(['type' => $type, 'user_id' => $userId])->first();
 
@@ -281,7 +317,7 @@ class TaskListController extends Controller
             $tasklist->dueDateFormatted = $dueDate->format('d, M Y');
             
             $tasklist->items = $tasklist->checksheetItems->map(function($item) {
-                $item->done = null;
+                $item->done = 0;
                 $item->note = null;
                 $item->checksheet_item_id = $item->id;
                 return $item;

@@ -2,11 +2,12 @@
 
 namespace App\Listeners;
 
+use App\Events\DueStatusEvent;
 use App\Jobs\StatusNotificationJob;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class SendEmailNotification
+class DueStatusEventListener
 {
     /**
      * Create the event listener.
@@ -24,7 +25,7 @@ class SendEmailNotification
      * @param  object  $event
      * @return void
      */
-    public function handle($event)
+    public function handle(DueStatusEvent $event)
     {
         StatusNotificationJob::dispatchAfterResponse($event->tasklist);
     }

@@ -99,7 +99,6 @@ class TaskList extends Model
         static::creating(function (Model $model) {
             $model->submitted_by = auth()->id();
             $model->submit_date = Carbon::today();
-            return $model;
         });
     }
 

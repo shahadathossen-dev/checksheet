@@ -16,7 +16,7 @@ class StatusNotificationAdmin extends Notification
      *
      * @return void
      */
-    public function __construct(private $tasklist)
+    public function __construct(public $tasklist)
     {
         //
     }

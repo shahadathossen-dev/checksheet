@@ -6,12 +6,10 @@ use App\Models\TaskList;
 use App\Notifications\StatusNotificationAdmin;
 use App\Notifications\StatusNotificationUser;
 use Illuminate\Bus\Queueable;
-use App\Notifications\WelcomeMessage;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 
 
 class StatusNotificationJob implements ShouldQueue
@@ -23,9 +21,9 @@ class StatusNotificationJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(private $tasklist)
+    public function __construct(public TaskList $tasklist)
     {
-        //
+        // dd($tasklist);
     }
 
     /**
@@ -36,7 +34,7 @@ class StatusNotificationJob implements ShouldQueue
     public function handle()
     {
         $assignee = $this->tasklist->assignee;
-        $author = $this->tasklist->author;
+        $author = $this->tasklist->checksheet->author;
 
         $assignee->notify(new StatusNotificationUser($this->tasklist));
         $author->notify(new StatusNotificationAdmin($this->tasklist));

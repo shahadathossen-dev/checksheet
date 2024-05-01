@@ -2,13 +2,9 @@
 
 namespace App\Providers;
 
-use App\Events\TaskListDueEvent;
+use App\Events\DueStatusEvent;
 use App\Jobs\NewDelegateRegistered;
-use App\Jobs\ProductCreated;
-use App\Jobs\ProductDeleted;
-use App\Jobs\ProductForceDeleted;
-use App\Jobs\ProductRestored;
-use App\Jobs\ProductUpdated;
+use App\Listeners\DueStatusEventListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -26,8 +22,8 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
 
-        TaskListDueEvent::class => [
-            SendEmailNotification::class,
+        DueStatusEvent::class => [
+            DueStatusEventListener::class,
         ],
     ];
 
@@ -41,11 +37,11 @@ class EventServiceProvider extends ServiceProvider
         App::bindMethod(NewDelegateRegistered::class . '@handle', fn($job) => $job->handle());
 
         // Product events
-        App::bindMethod(ProductCreated::class . '@handle', fn($job) => $job->handle());
-        App::bindMethod(ProductUpdated::class . '@handle', fn($job) => $job->handle());
-        App::bindMethod(ProductDeleted::class . '@handle', fn($job) => $job->handle());
-        App::bindMethod(ProductRestored::class . '@handle', fn($job) => $job->handle());
-        App::bindMethod(ProductForceDeleted::class . '@handle', fn($job) => $job->handle());
+        // App::bindMethod(ProductCreated::class . '@handle', fn($job) => $job->handle());
+        // App::bindMethod(ProductUpdated::class . '@handle', fn($job) => $job->handle());
+        // App::bindMethod(ProductDeleted::class . '@handle', fn($job) => $job->handle());
+        // App::bindMethod(ProductRestored::class . '@handle', fn($job) => $job->handle());
+        // App::bindMethod(ProductForceDeleted::class . '@handle', fn($job) => $job->handle());
     }
 
     /**

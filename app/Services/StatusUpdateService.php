@@ -2,7 +2,8 @@
 
 namespace App\Services;
 
-use App\Events\TaskListDueEvent;
+use App\Events\DueStatusEvent;
+use App\Jobs\StatusNotificationJob;
 
 class StatusUpdateService
 {
@@ -15,7 +16,7 @@ class StatusUpdateService
             $tasklist->markAsDone();
         } else if(today() > $tasklist->dueDate) {
             $tasklist->markAsDue();
-            new TaskListDueEvent($tasklist->fresh());
+            DueStatusEvent::dispatch($tasklist->fresh());
         }
     }
 }

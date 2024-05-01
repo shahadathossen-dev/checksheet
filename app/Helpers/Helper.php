@@ -123,4 +123,32 @@ class Helper
     {
         // return CacheHelper::currency() ? CacheHelper::currency()->data['code'] : "USD";
     }
+
+    /**
+     * Converts a given array of attribute keys to the casing required by CamelCaseModel.
+     *
+     * @param $attributes
+     * @return array
+     */
+    public function toSnakeCase($attributes)
+    {
+        $convertedAttributes = [];
+
+        foreach ($attributes as $key => $value) {
+            $convertedAttributes[$this->getSnakeKey($key)] = $value;
+        }
+
+        return $convertedAttributes;
+    }
+
+    /**
+     * If the field names need to be converted so that they can be accessed by camelCase, then we can do that here.
+     *
+     * @param $key
+     * @return string
+     */
+    protected function getSnakeKey($key)
+    {
+        return Str::snake($key);
+    }
 }

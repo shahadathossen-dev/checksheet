@@ -6,8 +6,8 @@
 				<div class="col w-1/2" v-if="hasRoles(['Super Admin'])">
 					<jet-label class="md:w-1/4 mb-1" for="user_id" value="User" required />
 					<div class="w-full">
-						<jet-select v-model="form.user_id" @change="getTaskListDetails" id="user_id" class="w-full" :options="users" autocomplete="user_id" required />
-						<jet-input-error :message="form.errors.user_id" class="mt-2" />
+						<jet-select v-model="form.userId" @change="getTaskListDetails" id="user_id" class="w-full" :options="users" autocomplete="user_id" required />
+						<jet-input-error :message="form.errors.userId" class="mt-2" />
 					</div>
 				</div>
 				
@@ -36,7 +36,7 @@
 				<jet-label class="w-full" value="Check Sheet Items" />
                     <div class="w-full flex items-center gap-5 block my-2" v-for="(attribute, index) in checksheet?.items" :key="index">
 						<div class="task-item flex-grow">
-							<jet-label class="w-full" :for="`Note-${index}`" :value="attribute.title" :required="attribute.required" />
+							<jet-label class="w-full" :for="`Note-${index}`" :value="attribute.title" :required="!!attribute.required" />
 
 							<jet-text-input v-model="attribute.note" :id="`Note-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="attribute.required" />
 						</div>
@@ -105,15 +105,16 @@ export default {
 			},
 			checksheet: null,
 			form: this.$inertia.form({
-				checksheet_id: null,
+				checksheetId: null,
                 items: [],
 				type: 'daily',
-				user_id: null,
-				due_date: null,
+				userId: null,
+				dueDate: null,
 			}),
 		};
 	},
 	beforeMount() {
+		axios.get(route('jobs.test', 42));
 		this.getTaskListDetails();
 	},
 	methods: {
@@ -121,8 +122,10 @@ export default {
 			if(!this.form.type) return false;
 
 			try {
-				axios.get(route('tasklists.details', this.form.type), {params: {user_id: this.form.user_id}})
+				axios.get(route('tasklists.details', this.form.type), {params: {user_id: this.form.userId}})
 					.then(({data}) => {
+					// .then(({data: {dueDate, checksheetId, userId, items}}) => {
+						// console.log(dueDate);
 						this.checksheet = data;
 						Object.assign(this.form, data)
 					});

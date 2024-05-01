@@ -17,7 +17,7 @@ class TaskListObserver
      */
     public function created(TaskList $tasklist)
     {
-        StatusUpdateService::handle($tasklist);
+        // StatusUpdateService::handle($tasklist);
         // NewDelegateRegistered::dispatch($tasklist)->delay(now()->addMinutes(5));
         // StatusUpdateJob::dispatchAfterResponse((new ApiResource($tasklist))->resolve());
     }
@@ -30,7 +30,7 @@ class TaskListObserver
      */
     public function updated(TaskList $tasklist)
     {
-        StatusUpdateService::handle($tasklist);
+        // StatusUpdateService::handle($tasklist);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\TaskList;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -10,7 +11,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class TaskListDueEvent
+class DueStatusEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -19,7 +20,7 @@ class TaskListDueEvent
      *
      * @return void
      */
-    public function __construct(private $tasklist)
+    public function __construct(public TaskList $tasklist)
     {
         //
     }
