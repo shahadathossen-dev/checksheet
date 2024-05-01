@@ -26,7 +26,7 @@
 			<detail-section class="border-b" label="Type" :value="checksheet?.type"></detail-section>
 			<detail-section class="border-b" label="Due Date" :value="checksheet?.dueDateFormatted"></detail-section>
 			<!-- Author -->
-			<detail-section class="border-b" label="Assignee" :value="checksheet?.assignee.name"></detail-section>
+			<!-- <detail-section class="border-b" label="Assignee" :value="checksheet?.assignee.name"></detail-section> -->
 			<!-- <detail-section class="border-b" label="Author" :value="checksheet?.author?.name"></detail-section> -->
 			
 			<detail-section class="border-b" label="Description" :value="checksheet?.description"></detail-section>
