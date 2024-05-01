@@ -35,7 +35,6 @@ class StatusNotificationJob implements ShouldQueue
      */
     public function handle()
     {
-        dd($this->tasklist->id);
         $assignee = $this->tasklist->assignee;
         $author = $this->tasklist->author;
 
