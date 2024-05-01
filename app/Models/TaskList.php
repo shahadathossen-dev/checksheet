@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TaskListStatus;
 use App\Traits\Sortable;
 use App\Traits\CamelCasing;
 use Carbon\Carbon;
@@ -140,6 +141,28 @@ class TaskList extends Model
     public function author()
     {
         return $this->belongsTo(User::class, 'submitted_by');
+    }
+
+    /**
+     * Update task list status as done
+     *
+     * @return \App\Models\TaskList
+     */
+    public function markAsDone()
+    {
+        $this->update(['status' => TaskListStatus::DONE()]);
+        return $this;
+    }
+
+    /**
+     * Update task list status as done
+     *
+     * @return \App\Models\TaskList
+     */
+    public function markAsDue()
+    {
+        $this->update(['status' => TaskListStatus::DUE()]);
+        return $this;
     }
     
     /**

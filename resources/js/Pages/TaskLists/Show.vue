@@ -8,8 +8,8 @@
 		<detail-section class="border-b" label="Due Date" :value="tasklist.dueDateFormatted"></detail-section>
 		<detail-section class="border-b" label="Submit Date" :value="tasklist.submitDateFormatted"></detail-section>
 		<!-- Author -->
-		<!-- <detail-section class="border-b" label="Assignee" :value="tasklist.assignee.name"></detail-section> -->
-		<!-- <detail-section class="border-b" label="Author" :value="tasklist.author.name"></detail-section> -->
+		<detail-section class="border-b" label="Assignee" :value="tasklist.assignee?.name"></detail-section>
+		<detail-section class="border-b" label="Author" :value="tasklist.author?.name"></detail-section>
 		
 		<detail-section class="border-b" label="Type" :value="tasklist.status"></detail-section>
 

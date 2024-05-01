@@ -13,6 +13,7 @@ use App\Exports\CheckSheetExport;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CheckSheetRequest;
+use App\Http\Requests\TaskListRequest;
 use App\Models\CheckSheet;
 use Illuminate\Http\Response;
 
@@ -64,14 +65,14 @@ class TaskListController extends Controller
      * @param  \App\Http\Requests\CheckSheetRequest  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(CheckSheetRequest $request)
+    public function store(TaskListRequest $request)
     {
         if ($request->user()->cannot('create', TaskList::class)) {
             abort(403);
         }
 
         DB::transaction(function () use ($request) {
-            $tasklist = TaskList::create($request->only('checksheet_id', 'description', 'due_date', 'user_id', 'type'));
+            $tasklist = TaskList::create($request->only('checksheet_id', 'due_date', 'user_id', 'type'));
             
             // Collect Check Sheet items from request and sync
             $taskItems = collect($request->input('items'))->values();
@@ -133,7 +134,7 @@ class TaskListController extends Controller
      * @param  \App\Models\TaskList  $tasklist
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(CheckSheetRequest $request, TaskList $tasklist)
+    public function update(TaskListRequest $request, TaskList $tasklist)
     {
         if ($request->user()->cannot('update', $tasklist)) {
             abort(403);
@@ -141,7 +142,7 @@ class TaskListController extends Controller
 
         // Start from here ...
         DB::transaction(function () use ($request, $tasklist) {
-            $tasklist->update($request->only('checksheet_id', 'description', 'due_date', 'user_id', 'type'));
+            $tasklist->update($request->only('checksheet_id', 'due_date', 'user_id', 'type'));
             // Collect check sheet attributes from request
             $taskItems = collect($request->input('items'))->values();
 
@@ -150,7 +151,13 @@ class TaskListController extends Controller
 
             // Update or create check sheet items
             $taskItems->each(function ($attribute) use ($tasklist) {
-                $tasklist->items()->updateOrCreate(['title' => $attribute['title']], ['required' => $attribute['required']]);
+                $tasklist->items()->updateOrCreate(
+                    ['checksheet_id' => $attribute['checksheet_id']],
+                    [
+                        'note' => $attribute['note'],
+                        'done' => $attribute['done'],
+                    ]
+                );
             });
         });
 
@@ -274,7 +281,9 @@ class TaskListController extends Controller
             $tasklist->dueDateFormatted = $dueDate->format('d, M Y');
             
             $tasklist->items = $tasklist->checksheetItems->map(function($item) {
-                $item->done = null; $item->note = null;
+                $item->done = null;
+                $item->note = null;
+                $item->checksheet_item_id = $item->id;
                 return $item;
             });
         }

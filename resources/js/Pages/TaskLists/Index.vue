@@ -65,11 +65,11 @@
 									<detail-icon></detail-icon>
 								</Link>
 							</div>
-							<div class="flex items-center gap-2 h-full">
+							<!-- <div class="flex items-center gap-2 h-full">
 								<Link class="btn btn-purple" title="Edit" :href="route('tasklists.edit', row.id)">
 									<i class="ti-pencil-alt"></i>
 								</Link>
-							</div>
+							</div> -->
 						</td>
 					</tr>
 				</tbody>

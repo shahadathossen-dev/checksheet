@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Events\TaskListDueEvent;
 use App\Jobs\NewDelegateRegistered;
 use App\Jobs\ProductCreated;
 use App\Jobs\ProductDeleted;
@@ -23,6 +24,10 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
+        ],
+
+        TaskListDueEvent::class => [
+            SendEmailNotification::class,
         ],
     ];
 

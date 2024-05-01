@@ -1,5 +1,5 @@
 <template>
-	<form-view @submitted="update('tasklists.create', checksheet.id)" title="Create Task List" :breadcrumb="breadcrumb">
+	<form-view @submitted="checksheet?.model == 'checksheet' ? save('tasklists.store') : update('tasklists.update', checksheet?.id)" :title="checksheet?.model == 'checksheet' ? 'Create' : 'Update' + ' Task List'" :breadcrumb="breadcrumb">
 		<template #form>
 			<form-group class="border-b gap-8">
 				<!-- User -->
@@ -36,7 +36,7 @@
 				<jet-label class="w-full" value="Check Sheet Items" />
                     <div class="w-full flex items-center gap-5 block my-2" v-for="(attribute, index) in checksheet?.items" :key="index">
 						<div class="task-item flex-grow">
-							<jet-label class="w-full" :for="`Note-${index}`" :value="attribute.title" />
+							<jet-label class="w-full" :for="`Note-${index}`" :value="attribute.title" :required="attribute.required" />
 
 							<jet-text-input v-model="attribute.note" :id="`Note-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="attribute.required" />
 						</div>
@@ -52,7 +52,7 @@
 		<template #actions>
 			<Link :href="route('checksheets.index')" class="xs:mr-4">Cancel</Link>
 			<jet-button @click.prevent="update('checksheets.update', checksheet.id, true)" class="px-6 xs:mr-2 my-2 xs:my-0" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">Save & Continue</jet-button>
-			<jet-button class="px-6" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">Save</jet-button>
+			<jet-button class="px-6" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">{{checksheet?.model == 'checksheet' ? 'Save' : 'Update'}}</jet-button>
 		</template>
 	</form-view>
 </template>
