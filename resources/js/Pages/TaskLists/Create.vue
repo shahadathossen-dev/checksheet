@@ -109,7 +109,6 @@ export default {
                 items: [],
 				type: 'daily',
 				user_id: null,
-				// user_id: this.$page.props.user.id,
 				due_date: null,
 			}),
 		};
