@@ -36,6 +36,7 @@ class CheckSheetController extends Controller
                 ->withQueryString(),
             'query'  => $request->all(),
             'checksheetTypes' => CheckSheetType::toSelectOptions(),
+            'users' => User::withoutSuperAdmin()->select('id', 'name')->get()
         ]);
     }
 

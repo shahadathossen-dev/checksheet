@@ -41,7 +41,7 @@ class CheckSheetFilter extends Filter
     /**
      * Filter by assignee
      */
-    public function userId($value)
+    public function assignee($value)
     {
         $this->where('user_id', $value);
     }
@@ -49,7 +49,7 @@ class CheckSheetFilter extends Filter
     /**
      * Filter by author
      */
-    public function createdBy($value)
+    public function author($value)
     {
         $this->where('created_by', $value);
     }

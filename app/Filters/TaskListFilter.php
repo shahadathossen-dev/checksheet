@@ -20,7 +20,8 @@ class TaskListFilter extends Filter
     */
     public $searchRelations = [
         'checksheet' => ['title'],
-        'user' => ['name'],
+        'assignee' => ['name'],
+        'auhor' => ['name'],
     ];
 
     /**
@@ -33,17 +34,33 @@ class TaskListFilter extends Filter
     /**
      * Filter by checksheet
      */
-    public function checksheetId($value)
+    public function checksheet($value)
     {
         $this->where('checksheet_id', $value);
     }
 
     /**
-     * Filter by user
+     * Filter by author
      */
-    public function submittedBy($value)
+    public function author($value)
     {
         $this->where('submitted_by', $value);
+    }
+
+    /**
+     * Filter by assignee
+     */
+    public function assignee($value)
+    {
+        $this->where('user_id', $value);
+    }
+
+    /**
+     * Filter by type
+     */
+    public function type($value)
+    {
+        $this->where('type', $value);
     }
 
     /**
@@ -52,6 +69,14 @@ class TaskListFilter extends Filter
     public function status($value)
     {
         $this->where('status', $value);
+    }
+
+    /**
+     * Filter by dueDate
+     */
+    public function dueDate($value)
+    {
+        $this->whereDate('due_date', $value);
     }
     
 }

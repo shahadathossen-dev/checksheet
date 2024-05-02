@@ -41,6 +41,8 @@ class TaskListController extends Controller
                 ->withQueryString(),
             'query'  => $request->all(),
             'statusOptions' => TaskListStatus::toSelectOptions(),
+            'checksheetTypes' => CheckSheetType::toSelectOptions(),
+            'users' => User::withoutSuperAdmin()->select('id', 'name')->get()
         ]);
     }
 

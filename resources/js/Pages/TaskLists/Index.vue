@@ -16,8 +16,22 @@
 			<!-- Filters -->
 			<filter-dropdown v-model="filters" @reset="reset">
 				<slot name="filter">
-					<label class="mb-2 px-2 font-semibold" for="type" value="Type">Type</label>
-					<select-list id="type" track="value" v-model="filters.type" class="w-full rounded-md" :options="statusOptions" />
+					<div class="filter">
+						<jet-label class="mb-2 px-2 font-semibold" for="type" value="Type" />
+						<select-list id="type" track="value" v-model="filters.type" class="w-full rounded-md" :options="checksheetTypes" />
+					</div>
+					<div class="filter">
+						<jet-label class="mb-2 px-2 font-semibold" for="status" value="Status" />
+						<select-list id="status" track="value" v-model="filters.status" class="w-full rounded-md" :options="statusOptions" />
+					</div>
+					<div class="filter">
+						<jet-label class="mb-2 px-2 font-semibold" for="assignee" value="Assignee" />
+						<select-list id="assignee" track="id" v-model="filters.assignee" class="w-full rounded-md" :options="users" />
+					</div>
+					<div class="filter">
+						<jet-label class="mb-2 px-2 font-semibold" for="dueDate" value="Due Date" />
+						<jet-input type="date" id="dueDate" v-model="filters.dueDate" class="w-full rounded-md" @click.stop=""/>
+					</div>
 				</slot>
 			</filter-dropdown>
 
@@ -88,8 +102,9 @@ import JetDangerButton from "@/Components/DangerButton.vue";
 import Datatable from "@/Components/Datatable.vue";
 import SearchInput from "@/Components/SearchInput.vue";
 import DetailIcon from "@/Icons/DetailIcon.vue";
-import Label from "@/Components/Label.vue";
+import JetLabel from "@/Components/Label.vue";
 import SelectList from "@/Components/Select.vue";
+import JetInput from "@/Components/Input.vue";
 import FilterDropdown from "@/Components/FilterDropdown.vue";
 import DownloadDropdown from "@/Components/DownloadDropdown.vue";
 import ExcelDownloadButton from "@/Components/ExcelDownloadButton.vue";
@@ -101,6 +116,8 @@ export default {
 		query: Object,
 		tasklists: Object,
         statusOptions: Array,
+        checksheetTypes: Array,
+        users: Array,
 	},
 
 	components: {
@@ -108,7 +125,8 @@ export default {
 		Link,
 		ButtonLink,
         SelectList,
-        Label,
+        JetLabel,
+		JetInput,
 		JetDangerButton,
 		Datatable,
 		SearchInput,
@@ -124,6 +142,9 @@ export default {
             filters: {
                 search: this.query.search,
                 type: this.query.type,
+                status: this.query.status,
+                dueDate: this.query.dueDate,
+                assignee: this.query.assignee,
             },
             breadcrumb: [
                 { label: "Home", route: this.route("dashboard") },
