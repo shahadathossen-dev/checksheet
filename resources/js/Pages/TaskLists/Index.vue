@@ -30,7 +30,7 @@
 					</div>
 					<div class="filter">
 						<jet-label class="mb-2 px-2 font-semibold" for="dueDate" value="Due Date" />
-						<jet-input type="date" id="dueDate" v-model="filters.dueDate" class="w-full rounded-md" @click.stop=""/>
+						<jet-input type="date" id="dueDate" v-model="filters.dueDate" class="w-full rounded-md" />
 					</div>
 				</slot>
 			</filter-dropdown>
