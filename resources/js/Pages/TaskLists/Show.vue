@@ -11,7 +11,8 @@
 		<detail-section class="border-b" label="Assignee" :value="tasklist.assignee?.name"></detail-section>
 		<detail-section class="border-b" label="Author" :value="tasklist.author?.name"></detail-section>
 		
-		<detail-section class="border-b" label="Type" :value="tasklist.status"></detail-section>
+		<detail-section class="border-b" label="Type" :value="tasklist.type"></detail-section>
+		<detail-section class="border-b" label="Status" :value="tasklist.status"></detail-section>
 
 		<template #secondary-view>
 			<div class="mt-8">

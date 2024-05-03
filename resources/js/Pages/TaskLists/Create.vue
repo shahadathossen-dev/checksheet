@@ -2,15 +2,24 @@
 	<form-view @submitted="checksheet?.model == 'checksheet' ? save('tasklists.store') : update('tasklists.update', checksheet?.id)" :title="checksheet?.model == 'checksheet' ? 'Create' : 'Update' + ' Task List'" :breadcrumb="breadcrumb">
 		<template #form>
 			<form-group class="border-b gap-8">
+				<!-- Due Date -->
+				<div class="col w-1/2" v-if="hasRoles(['Super Admin'])">
+					<jet-label class="md:w-1/4 mb-1" for="dueDate" value="User" required />
+					<div class="w-full">
+						<jet-input type="date" v-model="form.dueDate" @input="getTaskListDetails" id="dueDate" class="w-full" required />
+						<jet-input-error :message="form.errors.dueDate" class="mt-2" />
+					</div>
+				</div>
+
 				<!-- User -->
 				<div class="col w-1/2" v-if="hasRoles(['Super Admin'])">
-					<jet-label class="md:w-1/4 mb-1" for="user_id" value="User" required />
+					<jet-label class="md:w-1/4 mb-1" for="userId" value="User" required />
 					<div class="w-full">
-						<jet-select v-model="form.userId" @change="getTaskListDetails" id="user_id" class="w-full" :options="users" autocomplete="user_id" required />
+						<jet-select v-model="form.userId" @change="getTaskListDetails" id="userId" class="w-full" :options="users" autocomplete="user_id" required />
 						<jet-input-error :message="form.errors.userId" class="mt-2" />
 					</div>
 				</div>
-				
+
 				<!-- Type -->
 				<div class="col w-1/2" :class="{flex: !hasRoles(['Super Admin'])}">
 					<jet-label class="md:w-1/4 mb-1" for="type" value="Type" required />
@@ -106,26 +115,23 @@ export default {
 			checksheet: null,
 			form: this.$inertia.form({
 				checksheetId: null,
-                items: [],
 				type: 'daily',
 				userId: null,
-				dueDate: null,
+				dueDate: (new Date()).toISOString().slice(0,10),
+                items: [],
 			}),
 		};
 	},
 	beforeMount() {
-		axios.get(route('jobs.test', 42));
 		this.getTaskListDetails();
 	},
 	methods: {
 		getTaskListDetails() {
-			if(!this.form.type) return false;
+			if(!this.form.type || !this.form.dueDate) return false;
 
 			try {
-				axios.get(route('tasklists.details', this.form.type), {params: {user_id: this.form.userId}})
+				axios.get(route('tasklists.details', this.form.type), {params: {userId: this.form.userId, dueDate: this.form.dueDate}})
 					.then(({data}) => {
-					// .then(({data: {dueDate, checksheetId, userId, items}}) => {
-						// console.log(dueDate);
 						this.checksheet = data;
 						Object.assign(this.form, data)
 					});

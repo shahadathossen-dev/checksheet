@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\TaskListStatus;
+use App\Events\DueStatusEvent;
 use App\Traits\Sortable;
 use App\Traits\CamelCasing;
 use Carbon\Carbon;
@@ -154,7 +155,7 @@ class TaskList extends Model
     }
 
     /**
-     * Update task list status as done
+     * Update task list status as due
      *
      * @return \App\Models\TaskList
      */
@@ -163,6 +164,26 @@ class TaskList extends Model
         $this->update(['status' => TaskListStatus::DUE()]);
         return $this;
     }
+
+    /**
+     * Handles status update
+     *
+     * @return \App\Models\TaskList
+     */
+    public function updateStatus()
+    {
+        $taskItems = $this->items;
+        $totalCount = $taskItems->count();
+        $doneCount = $taskItems->where('done', 1)->count();
+        if($doneCount == $totalCount) {
+            $this->markAsDone();
+        } else if(today()->format('Y-m-d') > $this->dueDate) {
+            $this->markAsDue();
+            DueStatusEvent::dispatch($this->fresh());
+        }
+    }
+
+    
     
     /**
      * Format the ceated at with client timezone
@@ -191,7 +212,17 @@ class TaskList extends Model
      */
     public function getDueDateFormattedAttribute()
     {
-        return $this->dueDate->format('d, M Y');
+        return Carbon::parse($this->dueDate)->format('d, M Y');
+    }
+
+    /**
+     * Format the update at with client timezone
+     *
+     * @return string
+     */
+    public function getDueDateAttribute($value)
+    {
+        return Carbon::parse($value)->format('Y-m-d');
     }
 
     /**

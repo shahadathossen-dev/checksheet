@@ -1,85 +1,67 @@
 <template>
-	<form-view @submitted="update('checksheets.update', checksheet.id)" title="Update Check Sheet" :breadcrumb="breadcrumb">
+	<form-view @submitted="update('tasklists.update', tasklist?.id)" :title="'Update Task List'" :breadcrumb="breadcrumb">
 		<template #form>
 			<form-group class="border-b gap-8">
-				<!-- Title -->
-				<div class="col w-full">
-					<jet-label class="md:w-1/4" for="title" value="Title" required />
-					<div class="w-full mt-1">
-						<jet-input v-model="form.title" id="title" type="text" class="w-full" autocomplete="title" required />
-						<jet-input-error :message="form.errors.title" class="mt-2" />
+				<!-- Due Date -->
+				<div class="col w-1/2" v-if="hasRoles(['Super Admin', 'Admin'])">
+					<jet-label class="md:w-1/4 mb-1" for="dueDate" value="User" required />
+					<div class="w-full">
+						<jet-input type="date" v-model="form.dueDate" @input="getTaskListDetails" id="dueDate" class="w-full" required disabled />
+						<jet-input-error :message="form.errors.dueDate" class="mt-2" />
 					</div>
 				</div>
+
+				<!-- User -->
+				<div class="col w-1/2" v-if="hasRoles(['Super Admin', 'Admin'])">
+					<jet-label class="md:w-1/4 mb-1" for="userId" value="User" required />
+					<div class="w-full">
+						<jet-select v-model="form.userId" @change="getTaskListDetails" id="userId" class="w-full" :options="users" autocomplete="user_id" required disabled />
+						<jet-input-error :message="form.errors.userId" class="mt-2" />
+					</div>
+				</div>
+
 				<!-- Type -->
-				<div class="col w-full">
-					<jet-label class="md:w-1/4" for="type" value="Type" required />
-					<div class="w-full mt-1">
-						<jet-select v-model="form.type" id="type" class="w-full" track="value" :options="checksheetTypes" autocomplete="type" required />
+				<div class="col w-1/2" :class="{flex: !hasRoles(['Super Admin', 'Admin'])}">
+					<jet-label class="md:w-1/4 mb-1" for="type" value="Type" required />
+					<div class="w-full">
+						<jet-select v-model="form.type" @change="getTaskListDetails" id="type" class="w-full" track="value" :options="checksheetTypes" autocomplete="type" required disabled />
 						<jet-input-error :message="form.errors.type" class="mt-2" />
 					</div>
 				</div>
 			</form-group>
-
-			<form-group class="border-b gap-8">
-				<!-- Type -->
-				<div class="col w-full">
-					<jet-label class="md:w-1/4" for="user_id" value="Assignee" required />
-					<div class="w-full mt-1">
-						<jet-select v-model="form.user_id" id="user_id" class="w-full" :options="users" autocomplete="user_id" required />
-						<jet-input-error :message="form.errors.user_id" class="mt-2" />
-					</div>
-				</div>
-				<!-- Due By -->
-				<div class="col w-full">
-					<jet-label class="md:w-1/4" for="due_by" value="Due By" />
-					<div class="w-full mt-1">
-						<jet-input v-model="form.due_by" id="due_by" type="number" max="30" class="w-full" autocomplete="due_by" />
-						<jet-input-error :message="form.errors.due_by" class="mt-2" />
-					</div>
-				</div>
-			</form-group>
-
-			<!-- Description -->
-			<form-group class="border-b md:flex-col">
-				<jet-label class="md:w-1/4" for="description" value="Description" />
-				<div class="w-full mt-1">
-					<jet-text-area v-model="form.description" id="description" type="text" class="w-full" autocomplete="description" />
-					<jet-input-error :message="form.errors.description" class="mt-2" />
-				</div>
-			</form-group>
+			<!-- Title -->
+			<detail-section class="border-b" label="Title" :value="checksheet?.title"></detail-section>
+			<!-- Date -->
+			<detail-section class="border-b" label="Type" :value="checksheet?.type"></detail-section>
+			<detail-section class="border-b" label="Due Date" :value="tasklist?.dueDateFormatted"></detail-section>
+			<!-- Author -->
+			<!-- <detail-section class="border-b" label="Assignee" :value="checksheet?.assignee.name"></detail-section> -->
+			<!-- <detail-section class="border-b" label="Author" :value="checksheet?.author?.name"></detail-section> -->
+			
+			<detail-section class="border-b" label="Description" :value="checksheet?.description"></detail-section>
 
 			<!-- Attributes -->
-            <form-group class="border-b md:flex-col">
-				<jet-label class="md:w-1/4" for="Note-0" value="Check Sheet Items" />
-                <div class="w-full">
-                    <div class="w-full flex items-center gap-5 block mb-2" v-for="(attribute, index) in form.check_sheet_items" :key="index">
-                        <jet-text-input v-model="attribute.title" :id="`Note-${index}`" type="text" class="mt-1 block w-full" placeholder="Title" required />
-						<jet-label class="md:w-1/4" :for="`Required-${index}`">
-                        	<jet-check-box v-model="attribute.required" :id="`Required-${index}`" :checked="!!attribute.required" />
-							<span class="px-2 align-middle">Note Required</span>
+            <form-group class="border-b md:flex-col" v-if="tasklist?.items">
+				<jet-label class="w-full" value="Check Sheet Items" />
+                    <div class="w-full flex items-center gap-5 block my-2" v-for="(attribute, index) in tasklist?.items" :key="index">
+						<div class="task-item flex-grow">
+							<jet-label class="w-full" :for="`Note-${index}`" :value="attribute.title" :required="!!attribute.required" />
+
+							<jet-text-input v-model="attribute.note" :id="`Note-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="attribute.required" />
+						</div>
+						<jet-label class="" :for="`Done-${index}`">
+                        	<jet-check-box v-model="attribute.done" :id="`Done-${index}`" :checked="!!attribute.done" />
+							<span class="px-2 align-middle">Done</span>
 						</jet-label>
-                        <jet-danger-button type="text" title="Remove Task" @click.prevent="removeAttribute(index)">
-                            <i class="ti-minus"></i>
-                        </jet-danger-button>
                     </div>
-					<div class="text-right">
-						<jet-button class="w-full" type="text" title="Add Task" @click.prevent="addAttribute">
-                            <i class="ti-plus"></i>
-                        </jet-button>
-						<Link class="btn btn-purple mr-2" title="Edit" :href="route('tasklists.edit', row.id)" v-if="$page.props.can.updateTaskLists">
-							<i class="ti-pencil-alt"></i>
-						</Link>
-					</div>
-                </div>
                 <jet-input-error :message="form.errors.check_sheet_items" class="mt-2" />
 			</form-group>
-
 		</template>
 
 		<template #actions>
 			<Link :href="route('checksheets.index')" class="xs:mr-4">Cancel</Link>
 			<jet-button @click.prevent="update('checksheets.update', checksheet.id, true)" class="px-6 xs:mr-2 my-2 xs:my-0" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">Save & Continue</jet-button>
-			<jet-button class="px-6" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">Save</jet-button>
+			<jet-button class="px-6" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">{{'Update'}}</jet-button>
 		</template>
 	</form-view>
 </template>
@@ -97,15 +79,17 @@ import FormGroup from "@/Components/FormGroup.vue";
 import JetTextArea from "@/Components/TextArea.vue";
 import JetDangerButton from "@/Components/DangerButton.vue";
 import JetCheckBox from "@/Components/Checkbox.vue";
+import DetailSection from "@/Components/DetailSection.vue";
 
 export default {
 	title: "edit-checksheet",
 	props: {
-		checksheet: Object,
 		users: Array,
+		tasklist: Object,
+		statusOptions: Array,
 		checksheetTypes: Array,
 	},
-
+	preserveState: false,
 	components: {
 		Link,
 		FormView,
@@ -118,37 +102,49 @@ export default {
 		JetButton,
 		JetTextArea,
 		JetDangerButton,
-		JetCheckBox
+		JetCheckBox,
+		DetailSection
 	},
 	data() {
 		return {
 			breadcrumb: [
 				{ label: "Home", route: this.route("dashboard") },
 				{ label: "Check Sheets", route: this.route("checksheets.index") },
-				{
-					label: this.checksheet.title,
-					route: this.route("checksheets.show", this.checksheet.id),
-				},
-				{ label: "Edit", route: null },
+				{ label: "Create", route: null },
 			],
-
+			filters: {
+			},
+			checksheet: null,
 			form: this.$inertia.form({
-				title: this.checksheet.title,
-				description: this.checksheet.description,
-				due_by: this.checksheet.dueBy,
-				type: this.checksheet.type,
-				user_id: this.checksheet.userId,
-                check_sheet_items: this.checksheet.checksheetItems,
+				checksheetId: null,
+				type: 'daily',
+				userId: null,
+				dueDate: (new Date()).toISOString().slice(0,10),
+                items: [],
 			}),
 		};
 	},
+	beforeMount() {
+		// this.getTaskListDetails();
+		this.checksheet = this.tasklist.checksheet;
+		Object.assign(this.form, this.tasklist)
+	},
 	methods: {
-        addAttribute: function() {
-            this.form.check_sheet_items.push({title: '', required: null})
-        },
-        removeAttribute: function(position) {
-            this.form.check_sheet_items.splice(position, 1)
-        }
+		getTaskListDetails() {
+			if(!this.form.type || !this.form.dueDate) return false;
+
+			try {
+				axios.get(route('tasklists.details', this.form.type), {params: {userId: this.form.userId, dueDate: this.form.dueDate}})
+					.then(({data}) => {
+						this.checksheet = data;
+						Object.assign(this.form, data)
+					});
+				
+			} catch (error) {
+				console.log(error);
+				
+			}
+		},
     }
 };
 </script>

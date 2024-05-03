@@ -2,24 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\CheckSheetType;
+use Carbon\Carbon;
 use App\Models\User;
 use Inertia\Inertia;
 use App\Models\TaskList;
+use App\Models\CheckSheet;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Enums\TaskListStatus;
+use App\Enums\CheckSheetType;
 use App\Events\DueStatusEvent;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Exports\CheckSheetExport;
-use App\Facades\Helper;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CheckSheetRequest;
 use App\Http\Requests\TaskListRequest;
-use App\Jobs\StatusNotificationJob;
-use App\Models\CheckSheet;
-use App\Services\StatusUpdateService;
-use Illuminate\Http\Response;
 
 class TaskListController extends Controller
 {
@@ -68,7 +65,7 @@ class TaskListController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\CheckSheetRequest  $request
+     * @param  \App\Http\Requests\TaskListRequest  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(TaskListRequest $request)
@@ -79,9 +76,7 @@ class TaskListController extends Controller
 
         DB::transaction(function () use ($request) {
             // $tasklist = TaskList::create($request->only('checksheetId', 'dueDate', 'userId', 'type'));
-            // $tasklistData = Helper::toSnakeCase($request->only('checksheetId', 'dueDate', 'userId', 'type'));
-            // $tasklist = TaskList::create($tasklistData);
-            // dd($request->checksheetId);
+
             $tasklist = TaskList::create([
                 'checksheet_id' => $request->checksheetId,
                 'due_date' => $request->dueDate,
@@ -97,7 +92,7 @@ class TaskListController extends Controller
                 'done' => $item['done'],
             ]));
 
-            StatusUpdateService::handle($tasklist->fresh());
+            $tasklist->updateStatus();
         });
 
         session()->flash('flash.banner', 'Created successfully.');
@@ -146,6 +141,12 @@ class TaskListController extends Controller
         }
 
         // Start from here ...
+        $tasklist->items->map(function($item) {
+            $item->title = $item->checksheetItem->title;
+            $item->required = $item->checksheetItem->required;
+            return $item;
+        });
+
         return Inertia::render('TaskLists/Edit', [
             'tasklist'  => $tasklist,
             'checksheetTypes' => CheckSheetType::toSelectOptions(),
@@ -157,7 +158,7 @@ class TaskListController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\CheckSheetRequest  $request
+     * @param  \App\Http\Requests\TaskListRequest  $request
      * @param  \App\Models\TaskList  $tasklist
      * @return \Illuminate\Http\JsonResponse
      */
@@ -192,7 +193,7 @@ class TaskListController extends Controller
                 );
             });
 
-            StatusUpdateService::handle($tasklist->fresh());
+            $tasklist->updateStatus();
         });
 
         session()->flash('flash.banner', 'Updated successfully.');
@@ -273,8 +274,8 @@ class TaskListController extends Controller
      */
     public function getDetails(Request $request, $type)
     {
-        $userId = request('user_id') ?? auth()->id();
-        $dueDate = request('due_date') ?? today();
+        $userId = request('userId') ?? auth()->id();
+        $dueDate = request('dueDate') ?? today();
 
         $tasklist = TaskList::where(['type' => $type, 'user_id' => $userId])
             ->when($type == CheckSheetType::DAILY(),
@@ -285,7 +286,6 @@ class TaskListController extends Controller
         if($tasklist) {
             $tasklist->model = 'tasklist';
             $tasklist->checksheet_id = $tasklist->checksheet->id;
-            $tasklist->due_date = $tasklist->dueDate;
             $tasklist->title = $tasklist->checksheet->title;
             $tasklist->description = $tasklist->checksheet->description;
             $tasklist->items->map(function($item) {
@@ -299,7 +299,7 @@ class TaskListController extends Controller
             if(!$tasklist) return response()->json(['message' => 'Resource not found!'], Response::HTTP_NOT_FOUND);
 
             $today = today();
-            if(!request('due_date')) {
+            if(!request('dueDate')) {
                 if ($tasklist->due_by != null) {
                     $dueDate = $tasklist->type == CheckSheetType::MONTHLY() ?
                         $today->setDays($tasklist->due_by) :
@@ -315,8 +315,8 @@ class TaskListController extends Controller
             
             $tasklist->model = 'checksheet';
             $tasklist->checksheet_id = $tasklist->id;
-            $tasklist->due_date = $dueDate;
-            $tasklist->dueDateFormatted = $dueDate->format('d, M Y');
+            $tasklist->due_date = Carbon::parse($dueDate)->format('Y-m-d');
+            $tasklist->dueDateFormatted = Carbon::parse($dueDate)->format('d, M Y');
             
             $tasklist->items = $tasklist->checksheetItems->map(function($item) {
                 $item->done = 0;
