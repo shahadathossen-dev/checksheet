@@ -126,6 +126,7 @@ class RoleController extends Controller
         if ($request->user()->cannot('update', $role)) {
             abort(403);
         }
+
         DB::transaction(function () use ($request, $role) {
             $role->update($request->only('name', 'description'));
 

@@ -6,11 +6,13 @@ use App\Traits\Sortable;
 use App\Traits\CamelCasing;
 use Illuminate\Support\Str;
 use EloquentFilter\Filterable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class CheckSheet extends Model
 {
     use HasFactory, CamelCasing, Filterable, Sortable;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.

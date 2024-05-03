@@ -4,7 +4,7 @@
 			<form-group class="border-b gap-8">
 				<!-- Due Date -->
 				<div class="col w-1/2" v-if="hasRoles(['Super Admin', 'Admin'])">
-					<jet-label class="md:w-1/4 mb-1" for="dueDate" value="User" required />
+					<jet-label class="md:w-1/4 mb-1" for="dueDate" value="Due Date" required />
 					<div class="w-full">
 						<jet-input type="date" v-model="form.dueDate" @input="getTaskListDetails" id="dueDate" class="w-full" required disabled />
 						<jet-input-error :message="form.errors.dueDate" class="mt-2" />

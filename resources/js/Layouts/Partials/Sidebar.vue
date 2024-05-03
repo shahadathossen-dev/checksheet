@@ -67,6 +67,7 @@ const isActive = (routes) => routes.some((currentRoute) => route().current(curre
             :href="route('users.index')"
             :active="isActive(['users.*'])"
             :collapsed="collapsed"
+            v-if="hasPermissions(['viewAnyUsers'])"
           >
             Users
           </SubmenuItem>
@@ -76,7 +77,7 @@ const isActive = (routes) => routes.some((currentRoute) => route().current(curre
       <!-- RESOURCES -->
       <p
         class="px-4 py-3 text-xs font-bold text-gray-400 uppercase"
-        v-if="!collapsed && hasPermissions(['viewAnyProducts', 'viewAnyDelegates'])"
+        v-if="!collapsed && hasPermissions(['viewAnyCheckSheets', 'viewAnyTaskLists'])"
       >
         Resources
       </p>
@@ -106,6 +107,20 @@ const isActive = (routes) => routes.some((currentRoute) => route().current(curre
           <i class="ti-user" title="Task List"></i>
         </template>
         Task List
+      </SidebarItem>
+
+      <!-- Holidays -->
+      <SidebarItem
+        title="Leaves"
+        :active="isActive(['leaves.*'])"
+        :href="route('leaves.index')"
+        :collapsed="collapsed"
+        v-if="hasPermissions(['viewAnyLeaves'])"
+      >
+        <template #icon>
+          <i class="ti-package" title="Leaves"></i>
+        </template>
+        Leaves
       </SidebarItem>
 
       <!-- Delegates -->

@@ -22,12 +22,12 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->integer('due_by')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users');
             $table->unsignedBigInteger('created_by')->nullable();
-            $table->foreign('created_by')->references('id')->on('users');
             $table->enum('type', CheckSheetType::toArray())->default(CheckSheetType::DAILY());
             $table->timestamps();
             $table->softDeletes();
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('created_by')->references('id')->on('users');
         });
     }
 

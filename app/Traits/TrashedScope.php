@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-trait Trashed
+trait TrashedScope
 {
     /**
      * Scope a query to get with transed or only transhed resource.

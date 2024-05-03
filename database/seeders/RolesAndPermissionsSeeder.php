@@ -21,15 +21,13 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $userResources = [
             // web
-            \App\Models\Attribute::class,
-            \App\Models\Delegate::class,
-            \App\Models\Product::class,
             \App\Models\Role::class,
             \App\Models\User::class,
             \App\Models\CheckSheet::class,
             \App\Models\ChecksheetItem::class,
             \App\Models\TaskList::class,
             \App\Models\TaskItem::class,
+            \App\Models\Leave::class,
 
 
         ];
@@ -52,6 +50,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $superAdminRole = Role::firstOrCreate(['name' => Role::SUPER_ADMIN, 'guard_name' => 'web'], ['name' => Role::SUPER_ADMIN, 'guard_name' => 'web']);
         $adminRole = Role::firstOrCreate(['name' => Role::ADMIN, 'guard_name' => 'web'], ['name' => Role::ADMIN, 'guard_name' => 'web']);
+        $executiveRole = Role::firstOrCreate(['name' => Role::SALES_EXECUTIVE, 'guard_name' => 'web'], ['name' => Role::SALES_EXECUTIVE, 'guard_name' => 'web']);
         $superAdminRole->givePermissionTo(Permission::where('guard_name', 'web')->get());
     }
 }

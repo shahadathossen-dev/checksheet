@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\CheckSheetController;
 use App\Http\Controllers\DelegateController;
+use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\TaskListController;
 use App\Models\CheckSheet;
 use Illuminate\Http\Request;
@@ -33,6 +34,7 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
 
     Route::get('/checksheets/details/{type}', [CheckSheetController::class, 'getDetails'])->name('checksheets.details');
     Route::get('/tasklists/details/{type}', [TaskListController::class, 'getDetails'])->name('tasklists.details');
+    Route::get('/leaves/details/{type}', [LeaveController::class, 'getDetails'])->name('leaves.details');
 
     Route::get('/jobs/test/{tasklist}', [TaskListController::class, 'testJob'])->name('jobs.test');
 });

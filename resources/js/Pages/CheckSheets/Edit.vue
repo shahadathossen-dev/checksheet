@@ -23,18 +23,18 @@
 			<form-group class="border-b gap-8">
 				<!-- Type -->
 				<div class="col w-full">
-					<jet-label class="md:w-1/4" for="user_id" value="Assignee" required />
+					<jet-label class="md:w-1/4" for="userId" value="Assignee" required />
 					<div class="w-full mt-1">
-						<jet-select v-model="form.user_id" id="user_id" class="w-full" :options="users" autocomplete="user_id" required />
-						<jet-input-error :message="form.errors.user_id" class="mt-2" />
+						<jet-select v-model="form.userId" id="userId" class="w-full" :options="users" autocomplete="userId" required />
+						<jet-input-error :message="form.errors.userId" class="mt-2" />
 					</div>
 				</div>
 				<!-- Due By -->
 				<div class="col w-full">
-					<jet-label class="md:w-1/4" for="due_by" value="Due By" />
+					<jet-label class="md:w-1/4" for="dueBy" value="Due By" />
 					<div class="w-full mt-1">
-						<jet-input v-model="form.due_by" id="due_by" type="number" max="30" class="w-full" autocomplete="due_by" />
-						<jet-input-error :message="form.errors.due_by" class="mt-2" />
+						<jet-input v-model="form.dueBy" id="dueBy" type="number" max="30" class="w-full" autocomplete="dueBy" />
+						<jet-input-error :message="form.errors.dueBy" class="mt-2" />
 					</div>
 				</div>
 			</form-group>
@@ -52,7 +52,7 @@
             <form-group class="border-b md:flex-col">
 				<jet-label class="md:w-1/4" for="Note-0" value="Check Sheet Items" />
                 <div class="w-full">
-                    <div class="w-full flex items-center gap-5 block my-2" v-for="(attribute, index) in form.check_sheet_items" :key="index">
+                    <div class="w-full flex items-center gap-5 block my-2" v-for="(attribute, index) in form.checksheetItems" :key="index">
                         <jet-text-input v-model="attribute.title" :id="`Note-${index}`" type="text" class="mt-1 block w-full" placeholder="Title" required />
 						<jet-label class="md:w-1/4" :for="`Required-${index}`">
                         	<jet-check-box v-model="attribute.required" :id="`Required-${index}`" :checked="!!attribute.required" />
@@ -68,7 +68,7 @@
                         </jet-button>
 					</div>
                 </div>
-                <jet-input-error :message="form.errors.check_sheet_items" class="mt-2" />
+                <jet-input-error :message="form.errors.checksheetItems" class="mt-2" />
 			</form-group>
 
 		</template>
@@ -130,21 +130,24 @@ export default {
 			],
 
 			form: this.$inertia.form({
-				title: this.checksheet.title,
-				description: this.checksheet.description,
-				due_by: this.checksheet.dueBy,
-				type: this.checksheet.type,
-				user_id: this.checksheet.userId,
-                check_sheet_items: this.checksheet.checksheetItems,
+				title: null,
+				description: null,
+				dueBy: null,
+				type: null,
+				userId: null,
+                checksheetItems: [],
 			}),
 		};
 	},
+	beforeMount() {
+		Object.assign(this.form, this.checksheet);
+	},
 	methods: {
         addAttribute: function() {
-            this.form.check_sheet_items.push({title: '', required: null})
+            this.form.checksheetItems.push({title: '', required: 0})
         },
         removeAttribute: function(position) {
-            this.form.check_sheet_items.splice(position, 1)
+            this.form.checksheetItems.splice(position, 1)
         }
     }
 };

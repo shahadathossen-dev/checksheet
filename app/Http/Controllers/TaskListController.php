@@ -14,6 +14,7 @@ use App\Enums\CheckSheetType;
 use App\Events\DueStatusEvent;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Exports\CheckSheetExport;
+use App\Facades\Helper;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskListRequest;
@@ -75,14 +76,8 @@ class TaskListController extends Controller
         }
 
         DB::transaction(function () use ($request) {
-            // $tasklist = TaskList::create($request->only('checksheetId', 'dueDate', 'userId', 'type'));
+            $tasklist = TaskList::create(Helper::toSnakeCase($request->only('checksheetId', 'dueDate', 'userId', 'type')));
 
-            $tasklist = TaskList::create([
-                'checksheet_id' => $request->checksheetId,
-                'due_date' => $request->dueDate,
-                'user_id' => $request->userId,
-                'type' => $request->type
-            ]);
             // Collect Check Sheet items from request and sync
             $taskItems = collect($request->input('items'))->values();
             // $tasklist->items()->createMany($taskItems->toArray());
@@ -170,12 +165,7 @@ class TaskListController extends Controller
 
         // Start from here ...
         DB::transaction(function () use ($request, $tasklist) {
-            $tasklist->update([
-                'checksheet_id' => $request->checksheetId,
-                'due_date' => $request->dueDate,
-                'user_id' => $request->userId,
-                'type' => $request->type
-            ]);
+
             // Collect check sheet attributes from request
             $taskItems = collect($request->input('items'))->values();
 
@@ -185,10 +175,11 @@ class TaskListController extends Controller
             // Update or create check sheet items
             $taskItems->each(function ($attribute) use ($tasklist) {
                 $tasklist->items()->updateOrCreate(
-                    ['checksheet_item_id' => $attribute['checksheetItemId']],
+                    ['id' => $attribute['id'] ?? null],
                     [
                         'note' => $attribute['note'],
                         'done' => $attribute['done'],
+                        'checksheet_item_id' => $attribute['checksheetItemId'],
                     ]
                 );
             });
@@ -283,6 +274,7 @@ class TaskListController extends Controller
                 fn($q) => $q->whereDate('due_date', '>=', $dueDate),
             )
             ->latest()->first();
+            
         if($tasklist) {
             $tasklist->model = 'tasklist';
             $tasklist->checksheet_id = $tasklist->checksheet->id;
@@ -308,8 +300,7 @@ class TaskListController extends Controller
                         $today);
                 } else {
                     $dueDate = $tasklist->type == CheckSheetType::MONTHLY() ? $today->endOfMonth() :
-                        ($tasklist->type == CheckSheetType::WEEKLY() ? $today->endOfWeek() :
-                        $today);
+                        ($tasklist->type == CheckSheetType::WEEKLY() ? $today->endOfWeek() : $today);
                 }
             }
             

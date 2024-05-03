@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\CheckSheetStatus;
+use App\Models\User;
+use Inertia\Inertia;
+use App\Models\CheckSheet;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Enums\CheckSheetType;
 use App\Enums\TaskListStatus;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Exports\CheckSheetExport;
-use App\Models\CheckSheet;
-use Inertia\Inertia;
-use Illuminate\Http\Request;
+use App\Facades\Helper;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CheckSheetRequest;
-use App\Models\User;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Http\Response;
 
 class CheckSheetController extends Controller
 {
@@ -71,7 +71,7 @@ class CheckSheetController extends Controller
         }
 
         DB::transaction(function () use ($request) {
-            $checksheet = CheckSheet::create($request->only('title', 'description', 'due_by', 'user_id', 'type'));
+            $checksheet = CheckSheet::create(Helper::toSnakeCase($request->only('title', 'description', 'dueBy', 'userId', 'type')));
 
             // Collect Check Sheet items from request and sync
             $checksheetItems = collect($request->input('checksheetItems'))->values();
@@ -141,7 +141,7 @@ class CheckSheetController extends Controller
         // Start from here ...
         DB::transaction(function () use ($request, $checksheet) {
             // Update check sheet
-            $checksheet->update($request->only('title', 'description', 'due_by', 'user_id', 'type'));
+            $checksheet->update(Helper::toSnakeCase($request->only('title', 'description', 'dueBy')));
 
             // Collect check sheet attributes from request
             $checksheetItems = collect($request->input('checksheetItems'))->values();
@@ -151,7 +151,12 @@ class CheckSheetController extends Controller
 
             // Update or create check sheet items
             $checksheetItems->each(function ($attribute) use ($checksheet) {
-                $checksheet->checksheetItems()->updateOrCreate(['title' => $attribute['title']], ['required' => $attribute['required']]);
+                $checksheet->checksheetItems()->updateOrCreate(
+                    ['id' => $attribute['id'] ?? null],
+                    [
+                        'title' => $attribute['title'],
+                        'required' => $attribute['required']
+                    ]);
             });
 
         });

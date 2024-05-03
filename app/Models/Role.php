@@ -15,8 +15,9 @@ class Role extends Base
      *
      * @var string
      */
-    public const ADMIN = 'Admin';
     public const SUPER_ADMIN = 'Super Admin';
+    public const ADMIN = 'Admin';
+    public const SALES_EXECUTIVE = 'Sales Executive';
 
     /**
      * The accessors to append to the model's array form.

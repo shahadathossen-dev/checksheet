@@ -2,17 +2,14 @@
 
 namespace App\Console\Commands;
 
-use App\Enums\CheckSheetStatus;
 use App\Enums\CheckSheetType;
+use App\Enums\LeaveType;
 use App\Models\CheckSheet;
-use App\Models\TaskItem;
+use App\Models\Leave;
 use App\Models\TaskList;
 use App\Models\User;
 use Carbon\Carbon;
-use Carbon\CarbonPeriod;
 use Illuminate\Console\Command;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Artisan;
 
 class GenerateTaskLists extends Command
 {
@@ -50,9 +47,10 @@ class GenerateTaskLists extends Command
         User::withoutSuperAdmin()->whereHas('checksheets')->get()->each(function($user) {
             foreach (CheckSheetType::toArray() as $type)
             {
-                $tasklistExists = TaskList::where(['type' => $type, 'user_id' => $user->id])->pending()->exists();
+                $tasklistPending = TaskList::where(['type' => $type, 'user_id' => $user->id])->pending()->exists();
 
-                if(!$tasklistExists) {
+                // Skip if pending tasklist already exists
+                if(!$tasklistPending) {
                     $today = today();
                     $checksheet = CheckSheet::where(['type' => $type, 'user_id' => $user->d])->first();
                     
@@ -68,16 +66,19 @@ class GenerateTaskLists extends Command
                             $today);
                     }
                     
+                    // Skip weekends and general holidays
+                    // $individualLeave = Leave::whereDate('date', $today)->where('type', LeaveType::INDIVIDUAL())->exists();
+                    $individualLeave = Leave::where([['start_date', '=<', $today], ['end_date', '>=', $today]])
+                        ->where(['user_id' => $user->id, 'type' => LeaveType::INDIVIDUAL()])->exists();
+
+                    if ($type == CheckSheetType::DAILY() && $individualLeave) continue;
+
                     $tasklist = $user->tasklists()->create([
-                        'checksheet_id' => $checksheet->id,
                         'type'  => $type,
+                        'checksheet_id' => $checksheet->id,
+                        // 'created_by' => $admin->id,
                         'due_date'  => Carbon::parse($dueDate)->format('Y-m-d'),
                     ]);
-
-
-                    // $checksheet->checksheetItems->each(fn($item) => $item->taskItems()->create([
-                    //     'tasklist_id' => $tasklist->id
-                    // ]));
 
                     $taskItems = $checksheet->checksheetItems->map(fn($item) => ['checksheet_item_id' => $item->id]);
 

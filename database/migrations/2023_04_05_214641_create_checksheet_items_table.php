@@ -18,8 +18,9 @@ return new class extends Migration
             $table->unsignedBigInteger('checksheet_id');
             $table->string('title')->index('title_index');
             $table->boolean('required')->default(0);
-            $table->foreign('checksheet_id')->references('id')->on('check_sheets')->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes();
+            $table->foreign('checksheet_id')->references('id')->on('check_sheets')->onDelete('cascade');
         });
     }
 

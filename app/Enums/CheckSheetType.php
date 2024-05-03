@@ -3,8 +3,9 @@
 namespace App\Enums;
 
 /**
- * @method static ActiveStatus INACTIVE()
- * @method static ActiveStatus ACTIVE()
+ * @method static ActiveStatus DAILY()
+ * @method static ActiveStatus WEEKLY()
+ * @method static ActiveStatus MONTHLY()
  */
 class CheckSheetType extends Enum
 {

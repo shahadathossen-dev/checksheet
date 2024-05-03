@@ -2,6 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\CheckSheetType;
+use App\Enums\LeaveType;
+use App\Models\Leave;
 use App\Models\TaskList;
 use App\Services\StatusUpdateService;
 use Illuminate\Console\Command;
@@ -41,9 +44,17 @@ class UpdateTaskLists extends Command
     {
         $today = today();
         TaskList::pending()->whereDate('due_date', '<', $today)->get()
-            ->each(fn($tasklist) => StatusUpdateService::update($tasklist));
+            ->each(function($tasklist) {
+                // Allow 1 day extra as grace period for WEEKLY and MONTHLY checksheets
+                if($tasklist->type == CheckSheetType::DAILY() || $tasklist->dueDate->diffInDays(today()) > 1)
+                StatusUpdateService::update($tasklist);
+            });
         
-        if(!in_array($today->dayOfWeek, [0, 6]))
-            $this->call('generate-tasklists');
+        // $generalHoliday = Leave::whereDate('date', $today)->where('type', LeaveType::GENERAL())->exists();
+        $generalHoliday = Leave::where([['start_date', '<=', $today], ['end_date', '>=', $today]])->where('type', LeaveType::GENERAL())->exists();
+
+        // Skip weekends and general holidays
+        if(!in_array($today->dayOfWeek, [0, 6]) || !$generalHoliday)
+        $this->call('generate-tasklists');
     }
 }

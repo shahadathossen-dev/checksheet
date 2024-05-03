@@ -3,8 +3,8 @@
 		<template #form>
 			<form-group class="border-b gap-8">
 				<!-- Due Date -->
-				<div class="col w-1/2" v-if="hasRoles(['Super Admin'])">
-					<jet-label class="md:w-1/4 mb-1" for="dueDate" value="User" required />
+				<div class="col w-1/2" v-if="hasRoles(['Super Admin', 'Admin'])">
+					<jet-label class="md:w-1/4 mb-1" for="dueDate" value="Due Date" required />
 					<div class="w-full">
 						<jet-input type="date" v-model="form.dueDate" @input="getTaskListDetails" id="dueDate" class="w-full" required />
 						<jet-input-error :message="form.errors.dueDate" class="mt-2" />
@@ -12,7 +12,7 @@
 				</div>
 
 				<!-- User -->
-				<div class="col w-1/2" v-if="hasRoles(['Super Admin'])">
+				<div class="col w-1/2" v-if="hasRoles(['Super Admin', 'Admin'])">
 					<jet-label class="md:w-1/4 mb-1" for="userId" value="User" required />
 					<div class="w-full">
 						<jet-select v-model="form.userId" @change="getTaskListDetails" id="userId" class="w-full" :options="users" autocomplete="user_id" required />
@@ -21,7 +21,7 @@
 				</div>
 
 				<!-- Type -->
-				<div class="col w-1/2" :class="{flex: !hasRoles(['Super Admin'])}">
+				<div class="col w-1/2" :class="{flex: !hasRoles(['Super Admin', 'Admin'])}">
 					<jet-label class="md:w-1/4 mb-1" for="type" value="Type" required />
 					<div class="w-full">
 						<jet-select v-model="form.type" @change="getTaskListDetails" id="type" class="w-full" track="value" :options="checksheetTypes" autocomplete="type" required />

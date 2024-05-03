@@ -59,7 +59,7 @@
                   class="mr-2"
                   :value="row.id"
                   v-model:checked="rowItems"
-                  @update:change="onSelectRow($event, row)"
+                  @update:checked="onSelectRow(row)"
                 />
                 <span>{{ row.label }}</span>
               </label>
@@ -71,7 +71,7 @@
                     class="mr-2"
                     :value="col.id"
                     v-model:checked="form.permissions"
-                    @update:change="onSelectCol(row)"
+                    @update:checked="onSelectCol(row)"
                   />
                   <span>{{ col.label }}</span>
                 </label>
@@ -184,8 +184,9 @@ export default {
     /**
      * Handle Select Row
      */
-    onSelectRow(event, row) {
-      if (event.target.checked) {
+    onSelectRow(row) {
+      if (this.rowItems.includes(row.id)) {
+        const permissions = [];
         row.permissions.map((col) => {
           if (!this.form.permissions.includes(col.id)) {
             this.form.permissions.push(col.id);

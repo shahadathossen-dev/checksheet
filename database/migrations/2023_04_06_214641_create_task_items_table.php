@@ -19,9 +19,10 @@ return new class extends Migration
             $table->unsignedBigInteger('tasklist_id');
             $table->string('note')->nullable();
             $table->boolean('done')->default(0);
+            $table->timestamps();
+            $table->softDeletes();
             $table->foreign('checksheet_item_id')->references('id')->on('checksheet_items')->onDelete('cascade');
             $table->foreign('tasklist_id')->references('id')->on('task_lists')->onDelete('cascade');
-            $table->timestamps();
         });
     }
 

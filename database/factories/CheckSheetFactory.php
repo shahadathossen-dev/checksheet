@@ -32,7 +32,6 @@ class CheckSheetFactory extends Factory
             'user_id' => $this->faker->randomElement(User::withoutSuperAdmin()->pluck('id')->toArray()),
             'type' => $this->type,
             'due_by' => $dueBy,
-            'created_by' => User::superAdmin()->first()->id,
         ];
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\CheckSheetType;
+use App\Enums\TaskListStatus;
 use App\Models\CheckSheet;
 use App\Models\User;
 use Carbon\Carbon;
@@ -20,7 +21,9 @@ class TaskListRequest extends FormRequest
     public function authorize()
     {
         $authUser = User::findOrFail(auth()->id());
-        return $authUser->isSuperAdmin() || CheckSheet::where('id', $this->input('checksheetId'))->where('user_id', $authUser->id)->exixts();
+        return $authUser->isSuperAdmin() ||
+        ($authUser->can('create-task-lists') && $authUser->can('update-task-lists')) ||
+        CheckSheet::where('id', $this->input('checksheetId'))->where('user_id', $authUser->id)->exixts();
     }
 
     /**
@@ -38,12 +41,15 @@ class TaskListRequest extends FormRequest
             case 'POST': {
                     return [
                         'checksheetId'  => ['nullable', 'integer', 'exists:check_sheets,id,user_id,'.$this->input('userId')],
-                        'type'      => ['required',
+                        'type'      => ['required', 'string',
                             Rule::in(CheckSheetType::toArray()),
                             Rule::unique('task_lists', 'type')->where('user_id', $this->input('userId'))->where('due_date', $this->input('dueDate'))
                         ],
                         'dueDate'  => ['nullable', 'date'],
                         'userId'  => ['nullable', 'integer', 'exists:users,id'],
+                        'status'      => ['nullable', 'string',
+                            Rule::in(TaskListStatus::toArray()),
+                        ],
                         'items'    => 'nullable|array',
                         'items.*.checksheetItemId'    => 'required|integer|exists:checksheet_items,id',
                         'items.*.note'    => 'nullable|required_if:items.*.required,1|string',
@@ -54,12 +60,15 @@ class TaskListRequest extends FormRequest
             case 'PATCH': {
                     return [
                         'checksheetId'  => ['nullable', 'integer', 'exists:check_sheets,id,user_id,'.$this->input('userId')],
-                        'type'      => ['required',
+                        'type'      => ['required', 'string',
                             Rule::in(CheckSheetType::toArray()),
                             Rule::unique('task_lists', 'type')->where('user_id', $this->input('userId'))->where('due_date', $this->input('dueDate'))->ignore($this->tasklist->id)
                         ],
                         'dueDate'  => ['nullable', 'date'],
                         'userId'  => ['nullable', 'integer', 'exists:users,id'],
+                        'status'      => ['nullable', 'string',
+                            Rule::in(TaskListStatus::toArray()),
+                        ],
                         'items'    => 'nullable|array',
                         'items.*.checksheetItemId'    => 'required|integer|exists:checksheet_items,id',
                         'items.*.note'    => 'nullable|required_if:items.*.required,1|string',

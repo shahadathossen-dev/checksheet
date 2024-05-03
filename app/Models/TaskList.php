@@ -9,11 +9,13 @@ use App\Traits\CamelCasing;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use EloquentFilter\Filterable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class TaskList extends Model
 {
     use HasFactory, CamelCasing, Filterable, Sortable;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -151,7 +153,6 @@ class TaskList extends Model
     public function markAsDone()
     {
         $this->update(['status' => TaskListStatus::DONE()]);
-        return $this;
     }
 
     /**
@@ -162,7 +163,6 @@ class TaskList extends Model
     public function markAsDue()
     {
         $this->update(['status' => TaskListStatus::DUE()]);
-        return $this;
     }
     
     /**
@@ -172,15 +172,24 @@ class TaskList extends Model
      */
     public function updateStatus()
     {
+        // If status input by force
+        if($status = request()->input('status')) {
+            $this->update(['status' => $status]);
+            return;
+        }
+
         $taskItems = $this->items;
         $totalCount = $taskItems->count();
         $doneCount = $taskItems->where('done', 1)->count();
+
         if($doneCount == $totalCount) {
             $this->markAsDone();
-        } else if(today()->format('Y-m-d') > $this->dueDate) {
+        } else if($this->dueDate->diffInDays(today()) > 0) {
             $this->markAsDue();
-            DueStatusEvent::dispatch($this->fresh());
         }
+
+        if($this->status == TaskListStatus::DUE())
+        DueStatusEvent::dispatch($this->fresh());
     }
 
     /**
