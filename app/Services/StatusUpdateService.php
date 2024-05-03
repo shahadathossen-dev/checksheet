@@ -7,7 +7,7 @@ use App\Jobs\StatusNotificationJob;
 
 class StatusUpdateService
 {
-    public static function handle($tasklist)
+    public static function update($tasklist)
     {
         $taskItems = $tasklist->items;
         $totalCount = $taskItems->count();

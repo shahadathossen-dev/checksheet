@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\CheckSheetType;
 use App\Traits\Sortable;
 use App\Traits\CamelCasing;
 use Illuminate\Support\Str;
@@ -100,7 +101,37 @@ class User extends Authenticatable
      */
     public function checksheets()
     {
-        return $this->hasMany(CheckSheet::class, 'user_id')->where('user_id', $this->id);
+        return $this->hasMany(CheckSheet::class, 'user_id');
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function dailyChecksheet()
+    {
+        return $this->hasOne(CheckSheet::class, 'user_id')->where('type', CheckSheetType::DAILY());
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function weeklyChecksheet()
+    {
+        return $this->hasOne(CheckSheet::class, 'user_id')->where('type', CheckSheetType::WEEKLY());
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function monthlyChecksheet()
+    {
+        return $this->hasOne(CheckSheet::class, 'user_id')->where('type', CheckSheetType::MONTHLY());
     }
 
     /**
@@ -110,7 +141,7 @@ class User extends Authenticatable
      */
     public function checksheetTemplates()
     {
-        return $this->hasMany(CheckSheet::class, 'created_by');
+        return $this->hasMany(CheckSheet::class, 'submitted_by');
     }
 
     /**
@@ -120,7 +151,7 @@ class User extends Authenticatable
      */
     public function tasklists()
     {
-        return $this->hasMany(TaskList::class, 'submitted_by');
+        return $this->hasMany(TaskList::class, 'user_id');
     }
 
     /**

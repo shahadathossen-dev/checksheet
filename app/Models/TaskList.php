@@ -164,7 +164,7 @@ class TaskList extends Model
         $this->update(['status' => TaskListStatus::DUE()]);
         return $this;
     }
-
+    
     /**
      * Handles status update
      *
@@ -183,7 +183,38 @@ class TaskList extends Model
         }
     }
 
-    
+    /**
+     * Scope a query to only exclude admin role.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopePending($query)
+    {
+        return $query->where('status', TaskListStatus::PENDING());
+    }
+
+    /**
+     * Scope a query to only exclude admin role.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeDone($query)
+    {
+        return $query->where('status', TaskListStatus::DONE());
+    }
+
+    /**
+     * Scope a query to only exclude admin role.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeDue($query)
+    {
+        return $query->where('status', TaskListStatus::DUE());
+    }
     
     /**
      * Format the ceated at with client timezone

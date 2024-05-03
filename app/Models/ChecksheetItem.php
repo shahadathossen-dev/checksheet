@@ -102,6 +102,16 @@ class ChecksheetItem extends Model
     }
 
     /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function taskItems()
+    {
+        return $this->hasMany(TaskItem::class, 'checksheet_item_id');
+    }
+
+    /**
      * Format the ceated at with client timezone
      *
      * @return string
