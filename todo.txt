@@ -1,8 +1,8 @@
--> Implement holidays => done
+-> Implement Leave => done
 -> Due Date extension => done
 -> Reset filter => done
 -> Role permission issue => done
--> Holidays CRUD => pending
+-> Leave CRUD => pending
 -> Sorting => pending
 -> tasklist export => pending
 -> test permissions issue as end user -> pending

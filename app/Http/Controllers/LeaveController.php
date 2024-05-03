@@ -91,36 +91,37 @@ class LeaveController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Leave  $leave
+     * @param  \App\Models\Leave  $leaf
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Request $request, Leave $leave)
+    public function show(Request $request, Leave $leaf)
     {
-        if ($request->user()->cannot('view', $leave)) {
+        if ($request->user()->cannot('view', $leaf)) {
             abort(403);
         }
 
         // Start from here ...
         return Inertia::render('Leaves/Show', [
-            'leave' => $leave,
+            'leave' => $leaf,
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Leave  $leave
+     * @param  \App\Models\Leave  $leaf
      * @return \Illuminate\Http\JsonResponse
      */
-    public function edit(Request $request, Leave $leave)
+    public function edit(Request $request, Leave $leaf)
     {
-        if ($request->user()->cannot('update', $leave)) {
+        if ($request->user()->cannot('update', $leaf)) {
             abort(403);
         }
 
+        // dd($leaf->id);
         // Start from here ...
         return Inertia::render('Leaves/Edit', [
-            'leave' => $leave,
+            'leave' => $leaf,
             'leaveTypes' => LeaveType::toSelectOptions(),
             'statusOptions' => LeaveStatus::toSelectOptions(),
             'users' => User::withoutSuperAdmin()->select('id', 'name')->get()
@@ -131,17 +132,17 @@ class LeaveController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\LeaveRequest  $request
-     * @param  \App\Models\Leave  $leave
+     * @param  \App\Models\Leave  $leaf
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(LeaveRequest $request, Leave $leave)
+    public function update(LeaveRequest $request, Leave $leaf)
     {
-        if ($request->user()->cannot('update', $leave)) {
+        if ($request->user()->cannot('update', $leaf)) {
             abort(403);
         }
 
         // Start from here ...
-        $leave->update(Helper::toSnakeCase($request->only('startDate', 'ednDate', 'title', 'description')));
+        $leaf->update(Helper::toSnakeCase($request->only('startDate', 'ednDate', 'title', 'description')));
 
         session()->flash('flash.banner', 'Updated successfully.');
         session()->flash('flash.bannerStyle', 'success');
@@ -155,17 +156,17 @@ class LeaveController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Leave  $leave
+     * @param  \App\Models\Leave  $leaf
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Request $request, Leave $leave)
+    public function destroy(Request $request, Leave $leaf)
     {
-        if ($request->user()->cannot('delete', $leave)) {
+        if ($request->user()->cannot('delete', $leaf)) {
             abort(403);
         }
 
         // Start from here ...
-        if ($leave->delete()) {
+        if ($leaf->delete()) {
             session()->flash('flash.banner', 'Deleted successfully.');
             session()->flash('flash.bannerStyle', 'success');
         }
@@ -175,16 +176,16 @@ class LeaveController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Models\leave  $leave
+     * @param  \App\Models\leave  $leaf
      * @return \Illuminate\Http\JsonResponse
      */
-    public function updateStatus(Request $request, leave $leave)
+    public function updateStatus(Request $request, Leave $leaf)
     {
-        if (request()->user()->cannot('update', $leave)) {
+        if (request()->user()->cannot('update', $leaf)) {
             abort(403);
         }
 
-        $leave->update(['status' => $request->status]);
+        $leaf->update(['status' => $request->status]);
         session()->flash('flash.banner', 'Check Sheet udpated successfully.');
         session()->flash('flash.bannerStyle', 'success');
 
@@ -199,13 +200,16 @@ class LeaveController extends Controller
      */
     public function getDetails(Request $request, $type)
     {
-        $startDate = request()->input('startDate');
-        $endDate =  request()->input('endDate');
         $userId =  request()->input('userId') ?? auth()->id();
-        $existingLeave = Leave::whereBetween('start_date', [$startDate, $endDate]) // st < dst < et 
-            ->orWhereBetween('end_date', [$startDate, $endDate]) // st < det < et
-            ->orWhere([['start_date', '<=', $startDate], ['end_date', '>=', $startDate]]) // dst <= st <= det
-            ->orWhere([['start_date', '<=', $endDate], ['end_date', '>=', $endDate]]) // dst <= et <= det
+
+        $existingLeave = Leave::where(function($query) {
+            $startDate = request()->input('startDate');
+            $endDate =  request()->input('endDate');
+            $query->whereBetween('start_date', [$startDate, $endDate]) // st < dst < et 
+                ->orWhereBetween('end_date', [$startDate, $endDate]) // st < det < et
+                ->orWhere([['start_date', '<=', $startDate], ['end_date', '>=', $startDate]]) // dst <= st <= det
+                ->orWhere([['start_date', '<=', $endDate], ['end_date', '>=', $endDate]]); // dst <= et <= det
+            })
             ->when(
                 $type == LeaveType::INDIVIDUAL(), 
                 fn($query) => $query->where('user_id', $userId),

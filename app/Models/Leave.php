@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\Sortable;
 use App\Traits\HasApproval;
 use App\Traits\CamelCasing;
+use Carbon\Carbon;
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -36,8 +37,8 @@ class Leave extends Model
      */
 
     protected $casts = [
-        'start_date' => 'date',
-        'end_date' => 'date'
+        // 'start_date' => 'date',
+        // 'end_date' => 'date'
     ];
 
     /**
@@ -45,7 +46,9 @@ class Leave extends Model
      *
      * @var array
      */
-    protected $appends = [];
+    protected $appends = [
+        'startDateFormatted', 'endDateFormatted',
+    ];
 
     /**
      * The relations to eager load on every query.
@@ -79,9 +82,19 @@ class Leave extends Model
      *
      * @return string
      */
+    // public function getStartDateAttribute()
+    // {
+    //     return $this->start_date->format('Y-m-d');
+    // }
+
+    /**
+     * Format the start_date with client timezone
+     *
+     * @return string
+     */
     public function getStartDateFormattedAttribute()
     {
-        return $this->startDate->format('d, M y H:i A');
+        return Carbon::parse($this->startDate)->format('Y, m d');
     }
 
     /**
@@ -91,6 +104,6 @@ class Leave extends Model
      */
     public function getEndDateFormattedAttribute()
     {
-        return $this->endDate->format('d, M y H:i A');
+        return Carbon::parse($this->endDate)->format('Y, m d');
     }
 }

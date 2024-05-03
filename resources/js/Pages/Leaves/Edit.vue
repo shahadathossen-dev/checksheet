@@ -1,6 +1,46 @@
 <template>
-	<form-view @submitted="update('leaves.update', leave.id)" title="Update Leave" :breadcrumb="breadcrumb">
+	<form-view @submitted="update('leaves.update', form.id)" title="Create Leave" :breadcrumb="breadcrumb">
 		<template #form>
+			<form-group class="border-b gap-8" v-if="hasRoles(['Super Admin', 'Admin'])">
+				<!-- Type -->
+				<div class="col w-full">
+					<jet-label class="md:w-1/4" for="type" value="Type" required />
+					<div class="w-full mt-1">
+						<jet-select v-model="form.type" @change="checkLeaves" id="type" class="w-full" track="value" :options="leaveTypes" autocomplete="type" required disabled />
+						<jet-input-error :message="form.errors.type" class="mt-2" />
+					</div>
+				</div>
+				<!-- User -->
+				<div class="col w-full" v-if="form.type == 'individual'">
+					<jet-label class="md:w-1/4" for="userId" value="User" required />
+					<div class="w-full mt-1">
+						<jet-select v-model="form.userId" @change="checkLeaves" id="userId" class="w-full" :options="users" autocomplete="userId" required disabled />
+						<jet-input-error :message="form.errors.userId" class="mt-2" />
+					</div>
+				</div>
+				
+			</form-group>
+
+			<form-group class="border-b gap-8">
+				<!-- Start Date -->
+				<div class="col w-full">
+					<jet-label class="md:w-1/4 mb-1" for="startDate" value="Date" required />
+					<div class="w-full">
+						<jet-input type="date" v-model="form.startDate" @input="checkLeaves" id="startDate" class="w-full" required />
+						<jet-input-error :message="form.errors.startDate" class="mt-2" />
+					</div>
+				</div>
+				
+				<!-- End Date -->
+				<!-- <div class="col w-1/2">
+					<jet-label class="md:w-1/4 mb-1" for="endDate" value="End Date" required />
+					<div class="w-full">
+						<jet-input type="date" v-model="form.endDate" @input="checkLeaves" id="endDate" class="w-full" required />
+						<jet-input-error :message="form.errors.endDate" class="mt-2" />
+					</div>
+				</div> -->
+			</form-group>
+
 			<form-group class="border-b gap-8">
 				<!-- Title -->
 				<div class="col w-full">
@@ -10,72 +50,23 @@
 						<jet-input-error :message="form.errors.title" class="mt-2" />
 					</div>
 				</div>
-				<!-- Type -->
-				<div class="col w-full">
-					<jet-label class="md:w-1/4" for="type" value="Type" required />
-					<div class="w-full mt-1">
-						<jet-select v-model="form.type" id="type" class="w-full" track="value" :options="checksheetTypes" autocomplete="type" required />
-						<jet-input-error :message="form.errors.type" class="mt-2" />
-					</div>
-				</div>
 			</form-group>
 
 			<form-group class="border-b gap-8">
-				<!-- Type -->
+				<!-- Description -->
 				<div class="col w-full">
-					<jet-label class="md:w-1/4" for="userId" value="Assignee" required />
+					<jet-label class="md:w-1/4" for="description" value="Description" />
 					<div class="w-full mt-1">
-						<jet-select v-model="form.userId" id="userId" class="w-full" :options="users" autocomplete="userId" required />
-						<jet-input-error :message="form.errors.userId" class="mt-2" />
-					</div>
-				</div>
-				<!-- Due By -->
-				<div class="col w-full">
-					<jet-label class="md:w-1/4" for="dueBy" value="Due By" />
-					<div class="w-full mt-1">
-						<jet-input v-model="form.dueBy" id="dueBy" type="number" max="30" class="w-full" autocomplete="dueBy" />
-						<jet-input-error :message="form.errors.dueBy" class="mt-2" />
+						<jet-text-area v-model="form.description" id="description" type="text" class="w-full" autocomplete="description" />
+						<jet-input-error :message="form.errors.description" class="mt-2" />
 					</div>
 				</div>
 			</form-group>
-
-			<!-- Description -->
-			<form-group class="border-b md:flex-col">
-				<jet-label class="md:w-1/4" for="description" value="Description" />
-				<div class="w-full mt-1">
-					<jet-text-area v-model="form.description" id="description" type="text" class="w-full" autocomplete="description" />
-					<jet-input-error :message="form.errors.description" class="mt-2" />
-				</div>
-			</form-group>
-
-			<!-- Attributes -->
-            <form-group class="border-b md:flex-col">
-				<jet-label class="md:w-1/4" for="Note-0" value="Leave Items" />
-                <div class="w-full">
-                    <div class="w-full flex items-center gap-5 block my-2" v-for="(attribute, index) in form.checksheetItems" :key="index">
-                        <jet-text-input v-model="attribute.title" :id="`Note-${index}`" type="text" class="mt-1 block w-full" placeholder="Title" required />
-						<jet-label class="md:w-1/4" :for="`Required-${index}`">
-                        	<jet-check-box v-model="attribute.required" :id="`Required-${index}`" :checked="!!attribute.required" />
-							<span class="px-2 align-middle">Note Required</span>
-						</jet-label>
-                        <jet-danger-button type="text" title="Remove Task" @click.prevent="removeAttribute(index)">
-                            <i class="ti-minus"></i>
-                        </jet-danger-button>
-                    </div>
-					<div class="text-right">
-						<jet-button class="w-full" type="text" title="Add Task" @click.prevent="addAttribute">
-                            <i class="ti-plus"></i>
-                        </jet-button>
-					</div>
-                </div>
-                <jet-input-error :message="form.errors.checksheetItems" class="mt-2" />
-			</form-group>
-
 		</template>
 
 		<template #actions>
 			<Link :href="route('leaves.index')" class="xs:mr-4">Cancel</Link>
-			<jet-button @click.prevent="update('leaves.update', leave.id, true)" class="px-6 xs:mr-2 my-2 xs:my-0" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">Save & Continue</jet-button>
+			<jet-button @click.prevent="save('leaves.store', true)" class="px-6 xs:mr-2 my-2 xs:my-0" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">Save & Continue</jet-button>
 			<jet-button class="px-6" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">Save</jet-button>
 		</template>
 	</form-view>
@@ -96,11 +87,11 @@ import JetDangerButton from "@/Components/DangerButton.vue";
 import JetCheckBox from "@/Components/Checkbox.vue";
 
 export default {
-	title: "edit-leave",
+	title: "create-user",
 	props: {
 		leave: Object,
 		users: Array,
-		checksheetTypes: Array,
+		leaveTypes: Array,
 	},
 
 	components: {
@@ -121,34 +112,53 @@ export default {
 		return {
 			breadcrumb: [
 				{ label: "Home", route: this.route("dashboard") },
-				{ label: "Check Sheets", route: this.route("leaves.index") },
-				{
-					label: this.leave.title,
-					route: this.route("leaves.show", this.leave.id),
-				},
+				{ label: "Holidays", route: this.route("leaves.index") },
 				{ label: "Edit", route: null },
 			],
 
 			form: this.$inertia.form({
+				type: 'individual',
+				userId: null,
+				startDate: null,
+				endDate: null,
 				title: null,
 				description: null,
-				dueBy: null,
-				type: null,
-				userId: null,
-                checksheetItems: [],
 			}),
+
 		};
 	},
+	watch: {
+		'form.startDate': function (val) {
+			this.form.endDate = this.form.startDate
+			// this.checkLeaves();
+		}
+	},
 	beforeMount() {
-		Object.assign(this.form, this.leave);
+		Object.assign(this.form, this.leave)
 	},
 	methods: {
+		checkLeaves() {
+			if(!((this.form.type == 'general' || this.form.userId) &&
+				this.form.startDate && this.form.endDate)
+			) return false;
+
+			try {
+				axios.get(route('leaves.details', this.form.type),
+					{params: {userId: this.form.userId, startDate: this.form.startDate, endDate: this.form.endDate}}
+				)
+				// .then(({data}) => Object.assign(this.form, data));
+				.then(({data}) => this.form.errors.startDate = 'Requested date overlaps with existing leaves.');
+			} catch (error) {				
+				console.log(error);
+			}
+		},
         addAttribute: function() {
             this.form.checksheetItems.push({title: '', required: 0})
         },
         removeAttribute: function(position) {
             this.form.checksheetItems.splice(position, 1)
-        }
+        },
+
     }
 };
 </script>

@@ -28,14 +28,16 @@ class CheckOverlap implements Rule
     public function passes($attribute, $value)
     {
         $type =  request()->input('type');
-        $endDate =  request()->input('endDate');
-        $startDate = request()->input('startDate');
         $userId = request()->input('userId') ?? auth()->id();
 
-        $leaveOpverlaps = Leave::whereBetween('start_date', [$startDate, $endDate]) // st < dst < et 
-            ->orWhereBetween('end_date', [$startDate, $endDate]) // st < det < et
-            ->orWhere([['start_date', '<=', $startDate], ['end_date', '>=', $startDate]]) // dst <= st <= det
-            ->orWhere([['start_date', '<=', $endDate], ['end_date', '>=', $endDate]]) // dst <= et <= det
+        $leaveOpverlaps = Leave::where(function($query) {
+                $startDate = request()->input('startDate');
+                $endDate =  request()->input('endDate');
+                $query->whereBetween('start_date', [$startDate, $endDate]) // st < dst < et 
+                    ->orWhereBetween('end_date', [$startDate, $endDate]) // st < det < et
+                    ->orWhere([['start_date', '<=', $startDate], ['end_date', '>=', $startDate]]) // dst <= st <= det
+                    ->orWhere([['start_date', '<=', $endDate], ['end_date', '>=', $endDate]]); // dst <= et <= det
+            })
             ->when(
                 $type == LeaveType::INDIVIDUAL(), 
                 fn($query) => $query->where('user_id', $userId),

@@ -1,5 +1,5 @@
 <template>
-	<form-view @submitted="form.id ? update('leaves.update', form.id) : save('leaves.store')" title="Create Leave" :breadcrumb="breadcrumb">
+	<form-view @submitted="save('leaves.store')" title="Create Leave" :breadcrumb="breadcrumb">
 		<template #form>
 			<form-group class="border-b gap-8" v-if="hasRoles(['Super Admin', 'Admin'])">
 				<!-- Type -->
@@ -89,7 +89,6 @@ import JetCheckBox from "@/Components/Checkbox.vue";
 export default {
 	title: "create-user",
 	props: {
-		user: Object,
 		users: Array,
 		leaveTypes: Array,
 	},
@@ -119,8 +118,6 @@ export default {
 			form: this.$inertia.form({
 				type: 'individual',
 				userId: null,
-				// type: this.hasRoles(['Super Admin', 'Admin']) ? null : 'individual',
-				// userId: this.hasRoles(['Super Admin', 'Admin']) ? null : this.user.id,
 				startDate: null,
 				endDate: null,
 				title: null,
@@ -148,10 +145,10 @@ export default {
 				axios.get(route('leaves.details', this.form.type),
 					{params: {userId: this.form.userId, startDate: this.form.startDate, endDate: this.form.endDate}}
 				)
-				.then(({data}) => Object.assign(this.form, data));
-			} catch (error) {
+				// .then(({data}) => Object.assign(this.form, data));
+				.then(({data}) => this.form.errors.startDate = 'Requested date overlaps with existing leaves.');
+			} catch (error) {				
 				console.log(error);
-				
 			}
 		},
         addAttribute: function() {
