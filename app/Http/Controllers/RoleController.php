@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 
 class RoleController extends Controller
 {
+    public $guard_name = 'web';
+
     /**
      * Display a listing of the resource.
      *
@@ -133,6 +135,8 @@ class RoleController extends Controller
             if ($request->has('permissions')) {
                 $role->syncPermissions($request->permissions);
             }
+
+
         });
 
         session()->flash('flash.banner', 'Role updated successfully.');

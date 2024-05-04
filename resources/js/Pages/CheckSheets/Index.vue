@@ -67,7 +67,7 @@
 						<td>{{ row.dueBy }}</td>
 						<td>{{ row.assignee?.name }}</td>
 						<td>{{ row.author?.name }}</td>
-						<td>{{ row.type }}</td>
+						<td class="capitalize">{{ row.type }}</td>
 						<td class="actions">
 							<div class="flex items-center gap-2 h-full">
 								<Link class="btn btn-success" title="Details" :href="route('checksheets.show', row.id)">

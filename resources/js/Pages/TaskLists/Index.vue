@@ -78,8 +78,8 @@
 						<td>{{ row.dueDateFormatted }}</td>
 						<td>{{ row.submitDateFormatted }}</td>
 						<td>{{ row.assignee?.name }}</td>
-						<td>{{ row.type }}</td>
-						<td>{{ row.status }}</td>
+						<td class="capitalize">{{ row.type }}</td>
+						<td class="capitalize">{{ row.status }}</td>
 						<td class="actions">
 							<div class="flex items-center gap-2 h-full">
 								<Link class="btn btn-success" title="Details" :href="route('tasklists.show', row.id)">

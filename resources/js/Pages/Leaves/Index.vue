@@ -75,7 +75,7 @@
 						<td>{{ row.title }}</td>
 						<td>{{ row.description }}</td>
 						<td>{{ row.user?.name }}</td>
-						<td>{{ row.type }}</td>
+						<td class="capitalize">{{ row.type }}</td>
 						<td>{{ row.startDateFormatted }}</td>
 						<!-- <td>{{ row.approver?.name }}</td> -->
 						<!-- <td>{{ row.status }}</td> -->
@@ -85,7 +85,7 @@
 									<detail-icon></detail-icon>
 								</Link>
 
-								<Link class="btn btn-purple mr-2" title="Edit" :href="route('leaves.edit', row.id)" v-if="$page.props.can.updateCheckSheets">
+								<Link class="btn btn-purple mr-2" title="Edit" :href="route('leaves.edit', row.id)" v-if="$page.props.can.updateLeaves">
 									<i class="ti-pencil-alt"></i>
 								</Link>
 							</div>

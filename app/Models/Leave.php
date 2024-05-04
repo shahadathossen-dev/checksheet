@@ -7,6 +7,7 @@ use App\Traits\HasApproval;
 use App\Traits\CamelCasing;
 use Carbon\Carbon;
 use EloquentFilter\Filterable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -37,8 +38,8 @@ class Leave extends Model
      */
 
     protected $casts = [
-        // 'start_date' => 'date',
-        // 'end_date' => 'date'
+        'start_date' => 'date',
+        'end_date' => 'date'
     ];
 
     /**
@@ -56,6 +57,18 @@ class Leave extends Model
      * @var array
      */
     protected $with = ['user', 'approver'];
+
+    /**
+     * Define accessor for model attribute
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    // protected function type(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn (string $value) => ucfirst($value),
+    //     );
+    // }
 
     /**
      * Determines one-to-many relation
@@ -77,15 +90,19 @@ class Leave extends Model
         return $this->belongsTo(User::class, 'checked_by');
     }
 
-    /**
-     * Format the start_date with client timezone
-     *
-     * @return string
-     */
-    // public function getStartDateAttribute()
-    // {
-    //     return $this->start_date->format('Y-m-d');
-    // }
+    protected function startDate(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => Carbon::parse($value)->format('Y-m-d'),
+        );
+    }
+
+    protected function endDate(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => Carbon::parse($value)->format('Y-m-d'),
+        );
+    }
 
     /**
      * Format the start_date with client timezone
@@ -94,7 +111,7 @@ class Leave extends Model
      */
     public function getStartDateFormattedAttribute()
     {
-        return Carbon::parse($this->startDate)->format('Y, m d');
+        return Carbon::parse($this->startDate)->format('d, M Y');
     }
 
     /**
@@ -104,6 +121,6 @@ class Leave extends Model
      */
     public function getEndDateFormattedAttribute()
     {
-        return Carbon::parse($this->endDate)->format('Y, m d');
+        return Carbon::parse($this->endDate)->format('d, M Y');
     }
 }

@@ -41,7 +41,7 @@ class UserRequest extends FormRequest
             case 'PATCH': {
                     return [
                         'name'      => ['required', 'multi_space',  'string', 'max:100'],
-                        'email'     => ['required', 'string', Rule::unique('users', 'email')->ignore($this->input('id'))],
+                        'email'     => ['required', 'string', Rule::unique('users', 'email')->ignore($this->user->id)],
                         'role'      => ['required', 'integer'],
                         'password'  => ['nullable', 'string', 'max:12', 'min:6', 'confirmed'],
                     ];

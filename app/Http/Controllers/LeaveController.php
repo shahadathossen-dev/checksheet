@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LeaveRequest;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Response;
 
@@ -23,13 +24,18 @@ class LeaveController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->user()->cannot('viewAny', Leave::class)) {
+        $authUser = $request->user();
+        if ($authUser->cannot('viewAny', Leave::class)) {
             abort(403);
         }
 
         // Start from here ...
         return Inertia::render('Leaves/Index', [
             'leaves' => Leave::filter($request->all())
+                ->when(
+                    !$authUser->hasRole([Role::SUPER_ADMIN, Role::ADMIN]),
+                    fn($query) => $query->where('user_id', $authUser->id)
+                )
                 ->sorted()
                 ->paginate()
                 ->withQueryString(),

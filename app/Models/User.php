@@ -78,7 +78,7 @@ class User extends Authenticatable
      *
      * @var int
      */
-    protected $perPage = 5;
+    protected $perPage = 25;
 
     /**
      * Available sortable fields

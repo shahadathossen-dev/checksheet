@@ -186,11 +186,13 @@ export default {
      */
     onSelectRow(row) {
       if (this.rowItems.includes(row.id)) {
-        const permissions = [];
+        // const permissions = [];
         row.permissions.map((col) => {
           if (!this.form.permissions.includes(col.id)) {
             this.form.permissions.push(col.id);
+            // permissions.push(col.id)
           }
+          // this.form.permissions = [...permissions, ...this.form.permissions]
         });
       } else {
         row.permissions.map((col) => {

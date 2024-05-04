@@ -18,6 +18,7 @@ use App\Facades\Helper;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskListRequest;
+use App\Models\Role;
 
 class TaskListController extends Controller
 {
@@ -28,12 +29,19 @@ class TaskListController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->user()->cannot('viewAny', TaskList::class)) {
+        $authUser = $request->user();
+
+        if ($authUser->cannot('viewAny', TaskList::class)) {
             abort(403);
         }
+
         // Start from here ...
         return Inertia::render('TaskLists/Index', [
             'tasklists' => TaskList::filter($request->all())
+                ->when(
+                    !$authUser->hasRole([Role::SUPER_ADMIN, Role::ADMIN]),
+                    fn($query) => $query->where('user_id', $authUser->id)
+                )
                 ->sorted()
                 ->paginate()
                 ->withQueryString(),

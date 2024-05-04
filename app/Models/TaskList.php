@@ -9,6 +9,7 @@ use App\Traits\CamelCasing;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use EloquentFilter\Filterable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -103,6 +104,42 @@ class TaskList extends Model
             $model->submitted_by = auth()->id();
             $model->submit_date = Carbon::today();
         });
+    }
+
+    /**
+     * Define accessor for model attribute
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    // protected function type(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn (string $value) => ucfirst($value),
+    //     );
+    // }
+    
+    /**
+     * Define accessor for model attribute
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function dueDate(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => Carbon::parse($value)->format('Y-m-d'),
+        );
+    }
+
+    /**
+     * Define accessor for model attribute
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function submitDate(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => Carbon::parse($value)->format('Y-m-d'),
+        );
     }
 
     /**
@@ -260,19 +297,9 @@ class TaskList extends Model
      *
      * @return string
      */
-    public function getDueDateAttribute($value)
-    {
-        return Carbon::parse($value)->format('Y-m-d');
-    }
-
-    /**
-     * Format the update at with client timezone
-     *
-     * @return string
-     */
     public function getSubmitDateFormattedAttribute()
     {
-        return $this->submitDate->format('d, M Y');
+        return Carbon::parse($this->submitDate)->format('d, M Y');
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Traits\Sortable;
 use App\Traits\CamelCasing;
 use Illuminate\Support\Str;
 use EloquentFilter\Filterable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -98,6 +99,18 @@ class CheckSheet extends Model
         );
     }
     
+    /**
+     * Define accessor for model attribute
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    // protected function type(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn (string $value) => ucfirst($value),
+    //     );
+    // }
+
     /**
      * Determines one-to-many relation
      *

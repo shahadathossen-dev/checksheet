@@ -2,9 +2,10 @@
 -> Due Date extension => done
 -> Reset filter => done
 -> Role permission issue => done
--> Leave CRUD => pending
--> Sorting => pending
+-> Leave CRUD => done
+-> Index page query for end user => done
+-> test permissions issue as end user -> done
 -> tasklist export => pending
--> test permissions issue as end user -> pending
+-> Sorting => pending
 -> Status mail recepients to check => pending
 -> Rename TaskList to ChesksheetHistories
