@@ -1,5 +1,5 @@
 <template>
-<index-view title="Check Sheets">
+<index-view title="Task List">
 	<datatable :data="tasklists" searchRoute="tasklists.index" class="" :filters="filters">
 		<!-- Left Header -->
 		<template #left-header>
