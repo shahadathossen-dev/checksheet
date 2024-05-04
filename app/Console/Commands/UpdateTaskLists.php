@@ -49,12 +49,5 @@ class UpdateTaskLists extends Command
                 if($tasklist->type == CheckSheetType::DAILY() || $tasklist->dueDate->diffInDays(today()) > 1)
                 StatusUpdateService::update($tasklist);
             });
-        
-        // $generalHoliday = Leave::whereDate('date', $today)->where('type', LeaveType::GENERAL())->exists();
-        $generalHoliday = Leave::where([['start_date', '<=', $today], ['end_date', '>=', $today]])->where('type', LeaveType::GENERAL())->exists();
-
-        // Skip weekends and general holidays
-        if(!in_array($today->dayOfWeek, [0, 6]) || !$generalHoliday)
-        $this->call('generate:tasklists');
     }
 }

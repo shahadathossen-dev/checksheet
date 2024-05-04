@@ -85,7 +85,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    public $sortable = ['*'];
+    public $sortable = ['*', 'roles.name'];
 
     /**
      * Get the custom permissions name of the resource

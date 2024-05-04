@@ -59,7 +59,7 @@
 				</colgroup> -->
 				<thead class="sticky top-0 z-10 shadow">
 					<tr>
-						<th>Title</th>
+						<th><sortable-column v-model="filters.sort" column-name="title">Title</sortable-column></th>
 						<th>Description</th>
 						<th>User</th>
 						<th>Type</th>
@@ -110,6 +110,7 @@ import SearchInput from "@/Components/SearchInput.vue";
 import DetailIcon from "@/Icons/DetailIcon.vue";
 import JetLabel from "@/Components/Label.vue";
 import JetInput from "@/Components/Input.vue";
+import SortableColumn from "@/Components/SortableColumn.vue";
 import SelectList from "@/Components/Select.vue";
 import FilterDropdown from "@/Components/FilterDropdown.vue";
 import DownloadDropdown from "@/Components/DownloadDropdown.vue";
@@ -142,6 +143,7 @@ export default {
         DownloadDropdown,
         ExcelDownloadButton,
         PdfDownloadButton,
+		SortableColumn
 	},
 
 	data() {
@@ -150,6 +152,7 @@ export default {
                 search: this.query.search,
                 type: this.query.type,
                 user: this.query.user,
+				sort: this.query.sort,
             },
             breadcrumb: [
                 { label: "Home", route: this.route("dashboard") },
@@ -159,7 +162,7 @@ export default {
     },
 
     methods: {
-		resetFilters() {Object.assign(this.filters, {search: null, type: null, user: null})},
+		resetFilters() {Object.assign(this.filters, {search: null, type: null, user: null, sort: null})},
         toggleStatus(id) {
             this.$swal
                 .fire({

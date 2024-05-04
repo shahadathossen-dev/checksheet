@@ -41,6 +41,7 @@ class Model extends BaseModel
      *
      * @var array
      */
+    protected $sortParameterName = 'sort';
     protected $defaultSortCriteria = ['id,desc'];
 
     /**

@@ -17,10 +17,10 @@ class Kernel extends ConsoleKernel
     {
         // Run worker to execute queued jobs in database
         // $schedule->command('inspire')->everyMinute();
-        // $schedule->command('test-command')->everyMinute();
         
-        $schedule->command('update:tasklists')->dailyAt('00:01');
         $schedule->command('queue:work --stop-when-empty')->everyMinute()->withoutOverlapping(3600);
+        
+        $schedule->command('perform:daily-check')->dailyAt('00:01');
     }
 
     /**
