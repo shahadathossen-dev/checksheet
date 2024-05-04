@@ -2,8 +2,11 @@
 
 use App\Models\Leave;
 use App\Enums\LeaveType;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,5 +33,21 @@ Artisan::command('perform:daily-check', function () {
     if(!in_array($today->dayOfWeek, [0, 6]) || !$generalHoliday)
     $this->call('generate:tasklists');
 })->purpose('Update and generate tasklists on daily basis.');
+
+Artisan::command('seed:super-admin', function () {
+    // Create super admin
+    DB::transaction(function () {
+        $admin = User::create([
+            'name'      => "Shahadat Hossen",
+            'email'     => 'shobujliugdu@gmail.com',
+            'password'  => bcrypt('password'),
+        ]);
+
+        $admin->markEmailAsVerified();
+        $admin->assignRole(Role::SUPER_ADMIN);
+    });
+
+    $this->info('Super Admin created successfully.');
+})->purpose('Seed Super Admin user in DB.');
 
 
