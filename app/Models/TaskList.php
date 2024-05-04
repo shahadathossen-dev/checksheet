@@ -104,6 +104,11 @@ class TaskList extends Model
             $model->submitted_by = auth()->id();
             $model->submit_date = Carbon::today();
         });
+
+        static::updating(function (Model $model) {
+            $model->submitted_by = auth()->id();
+            $model->submit_date = Carbon::today();
+        });
     }
 
     /**

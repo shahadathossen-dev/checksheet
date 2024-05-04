@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\TaskList;
+use App\Models\User;
 use App\Notifications\StatusNotificationAdmin;
 use App\Notifications\StatusNotificationUser;
 use Illuminate\Bus\Queueable;
@@ -10,7 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-
+use Illuminate\Support\Facades\Notification;
 
 class StatusNotificationJob implements ShouldQueue
 {
@@ -34,9 +35,9 @@ class StatusNotificationJob implements ShouldQueue
     public function handle()
     {
         $assignee = $this->tasklist->assignee;
-        $author = $this->tasklist->checksheet->author;
+        $adminUsers = User::adminUsers()->get();
 
         $assignee->notify(new StatusNotificationUser($this->tasklist));
-        $author->notify(new StatusNotificationAdmin($this->tasklist));
+        Notification::send($adminUsers, new StatusNotificationAdmin($this->tasklist));
     }
 }

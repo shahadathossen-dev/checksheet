@@ -6,6 +6,8 @@
 -> Index page query for end user => done
 -> test permissions issue as end user -> done
 -> tasklist export => done
+-> Status mail recepients to check => done
+-> test cron jobs => done
+-> test database queue => done
 -> Sorting => pending
--> Status mail recepients to check => pending
 -> Rename TaskList to ChesksheetHistories

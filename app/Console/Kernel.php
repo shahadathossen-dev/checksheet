@@ -15,8 +15,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
-        $schedule->command('update-tasklists')->dailyAt('00:01');
+        // Run worker to execute queued jobs in database
+        // $schedule->command('inspire')->everyMinute();
+        // $schedule->command('test-command')->everyMinute();
+        
+        $schedule->command('update:tasklists')->dailyAt('00:01');
+        $schedule->command('queue:work --stop-when-empty')->everyMinute()->withoutOverlapping(3600);
     }
 
     /**

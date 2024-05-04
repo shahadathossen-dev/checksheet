@@ -16,14 +16,14 @@ class UpdateTaskLists extends Command
      *
      * @var string
      */
-    protected $signature = 'generate:tasklists';
+    protected $signature = 'update:tasklists';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'This command will seed the permissions to db.';
+    protected $description = 'This command will update the tasklists to db.';
 
     /**
      * Create a new command instance.
@@ -55,6 +55,6 @@ class UpdateTaskLists extends Command
 
         // Skip weekends and general holidays
         if(!in_array($today->dayOfWeek, [0, 6]) || !$generalHoliday)
-        $this->call('generate-tasklists');
+        $this->call('generate:tasklists');
     }
 }

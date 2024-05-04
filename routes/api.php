@@ -36,5 +36,5 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::get('/tasklists/details/{type}', [TaskListController::class, 'getDetails'])->name('tasklists.details');
     Route::get('/leaves/details/{type}', [LeaveController::class, 'getDetails'])->name('leaves.details');
 
-    Route::get('/jobs/test/{tasklist}', [TaskListController::class, 'testJob'])->name('jobs.test');
+    Route::get('/jobs/test/{tasklist}', [TaskListController::class, 'testJob'])->name('jobs.test.api');
 });

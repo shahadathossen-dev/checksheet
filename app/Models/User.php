@@ -168,7 +168,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Scope a query without super admins.
+     * Scope a query with super admins.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
@@ -180,6 +180,19 @@ class User extends Authenticatable
         });
     }
 
+
+    /**
+     * Scope a query with admins.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeAdminUsers($query)
+    {
+        return $query->whereHas('roles', function ($role) {
+            $role->whereIn('name', [Role::SUPER_ADMIN, Role::ADMIN]);
+        });
+    }
     /**
      * Determines if the User is a Super admin
      *

@@ -19,6 +19,7 @@ use App\Exports\TaskListExport;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskListRequest;
+use App\Services\StatusUpdateService;
 
 class TaskListController extends Controller
 {
@@ -127,6 +128,10 @@ class TaskListController extends Controller
 
     public function testJob(Request $request, TaskList $tasklist)
     {
+        // $tasklist = TaskList::pending()->first();
+        $tasklist->items()->update(['done' => 1]);
+        StatusUpdateService::update($tasklist);
+        return 'success';
         DueStatusEvent::dispatch($tasklist);
         // StatusNotificationJob::dispatchAfterResponse($tasklist);
     }

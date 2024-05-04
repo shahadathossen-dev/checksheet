@@ -48,17 +48,17 @@ class GenerateTaskLists extends Command
             foreach (CheckSheetType::toArray() as $type)
             {
                 $tasklistPending = TaskList::where(['type' => $type, 'user_id' => $user->id])->pending()->exists();
+                $assignedChecksheet = $checksheet = CheckSheet::where(['type' => $type, 'user_id' => $user->id])->first();
 
                 // Skip if pending tasklist already exists
-                if(!$tasklistPending) {
+                if(!$tasklistPending && $assignedChecksheet) {
                     $today = today();
-                    $checksheet = CheckSheet::where(['type' => $type, 'user_id' => $user->d])->first();
                     
-                    if ($checksheet->due_by != null) {
+                    if ($checksheet->dueBy != null) {
                         $dueDate = $checksheet->type == CheckSheetType::MONTHLY() ?
-                            $today->setDays($checksheet->due_by) :
+                            $today->setDays($checksheet->dueBy) :
                             ($checksheet->type == CheckSheetType::WEEKLY() ?
-                            $today->startOfWeek()->addDays($checksheet->due_by) :
+                            $today->startOfWeek()->addDays($checksheet->dueBy) :
                             $today);
                     } else {
                         $dueDate = $checksheet->type == CheckSheetType::MONTHLY() ? $today->endOfMonth() :
@@ -68,7 +68,7 @@ class GenerateTaskLists extends Command
                     
                     // Skip weekends and general holidays
                     // $individualLeave = Leave::whereDate('date', $today)->where('type', LeaveType::INDIVIDUAL())->exists();
-                    $individualLeave = Leave::where([['start_date', '=<', $today], ['end_date', '>=', $today]])
+                    $individualLeave = Leave::where([['start_date', '<=', $today], ['end_date', '>=', $today]])
                         ->where(['user_id' => $user->id, 'type' => LeaveType::INDIVIDUAL()])->exists();
 
                     if ($type == CheckSheetType::DAILY() && $individualLeave) continue;
@@ -76,7 +76,7 @@ class GenerateTaskLists extends Command
                     $tasklist = $user->tasklists()->create([
                         'type'  => $type,
                         'checksheet_id' => $checksheet->id,
-                        // 'created_by' => $admin->id,
+                        // 'submitted_by' => $user->id,
                         'due_date'  => Carbon::parse($dueDate)->format('Y-m-d'),
                     ]);
 

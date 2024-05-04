@@ -75,6 +75,7 @@ Route::middleware([
     Route::post('/leaves/{leave}/update-status', [LeaveController::class, 'updateStatus'])->name('leaves.update-status');
     
     Route::get('/test', fn() => dd('test'))->name('route.test');
+    Route::get('/jobs/test/{tasklist}', [TaskListController::class, 'testJob'])->name('jobs.test.web');
 });
 
 // Message Route

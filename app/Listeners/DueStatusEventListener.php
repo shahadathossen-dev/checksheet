@@ -27,6 +27,6 @@ class DueStatusEventListener
      */
     public function handle(DueStatusEvent $event)
     {
-        StatusNotificationJob::dispatchAfterResponse($event->tasklist);
+        StatusNotificationJob::dispatch($event->tasklist);
     }
 }
