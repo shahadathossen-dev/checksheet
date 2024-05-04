@@ -1,29 +1,30 @@
 <table class="table">
+    <thead>
+        <tr>
+            <th colspan="7" class="header">
+                <h1>Task List Export</h1>
+            </th>
+        </tr>
+        <tr>
+            <th>Submit Date</th>
+            <th>Title</th>
+            <th>Assignee</th>
+            <th>Due Date</th>
+            <th>Author</th>
+            <th>Type</th>
+            <th>Status</th>
+        </tr>
+    </thead>
     <tbody>
-        <tr>
-            <td colspan="6" class="text-center">
-                <h1>Check Sheet Export</h1>
-            </td>
-        </tr>
-        <tr>
-            <td>#</td>
-            <td>Due Date</td>
-            <td>Title</td>
-            <td>Description</td>
-            <td>Assignee</td>
-            <td>Author</td>
-            <td>Type</td>
-        </tr>
-
         @foreach ($models as $model)
         <tr>
-            <td>{{ $loop->iteration }}</td>
-            <td>{{ $model->dueDate }}</td>
-            <td>{{ $model->title }}</td>
-            <td>{{ $model->description }}</td>
+            <td>{{ $model->submit_date }}</td>
+            <td>{{ $model->checksheet->title }}</td>
             <td>{{ $model->assignee->name}}</td>
-            <td>{{ $model->author->name}}</td>
-            <td>{{Str::upper($model->type) }}</td>
+            <td>{{ $model->due_date }}</td>
+            <td>{{ $model->author?->name}}</td>
+            <td style="text-transform: capitalize;">{{ $model->type }}</td>
+            <td style="text-transform: capitalize;">{{ $model->status }}</td>
         </tr>
         @endforeach
     </tbody>

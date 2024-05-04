@@ -215,7 +215,8 @@ class CheckSheetController extends Controller
      */
     public function exportExcel(Request $request)
     {
-        return (new CheckSheetExport($request->all()))->download('checksheets.xlsx');
+        $resource = CheckSheet::filter($request->all())->sorted()->get();
+        return (new CheckSheetExport($resource))->download('checksheets.xlsx');
     }
 
     /**
@@ -226,9 +227,8 @@ class CheckSheetController extends Controller
      */
     public function exportPdf(Request $request)
     {
-        return Pdf::loadView('exports.checksheets.pdf', [
-                'models' => CheckSheet::filter($request->all())->orderBy('id', 'desc')->get()
-            ])->download('checksheets.pdf');
+        $resource = CheckSheet::filter($request->all())->sorted()->get();
+        return Pdf::loadView('exports.checksheets.pdf', ['models' => $resource])->stream('checksheets.pdf');
     }
 
     public function getDetails(Request $request, $type)

@@ -16,9 +16,9 @@
 			<!-- Filters -->
 			<filter-dropdown v-model="filters" @reset="reset">
 				<slot name="filter">
-					<div class="filter">
+					<div class="filter" v-if="hasRoles(['Super Admin', 'Admin'])">
 						<jet-label class="mb-2 px-2 font-semibold" for="userId" value="User" />
-						<select-list id="userId" track="id" v-model="filters.userId" class="w-full rounded-md" :options="users" />
+						<select-list id="userId" track="id" v-model="filters.user" class="w-full rounded-md" :options="users" />
 					</div>
 					<div class="filter">
 						<jet-label class="mb-2 px-2 font-semibold" for="type" value="Type" />
@@ -149,7 +149,7 @@ export default {
             filters: {
                 search: this.query.search,
                 type: this.query.type,
-                assignee: this.query.assignee,
+                user: this.query.user,
             },
             breadcrumb: [
                 { label: "Home", route: this.route("dashboard") },
@@ -159,7 +159,7 @@ export default {
     },
 
     methods: {
-		resetFilters() {Object.assign(this.filters, {search: null, type: null, assignee: null})},
+		resetFilters() {Object.assign(this.filters, {search: null, type: null, user: null})},
         toggleStatus(id) {
             this.$swal
                 .fire({

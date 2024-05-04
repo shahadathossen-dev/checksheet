@@ -8,8 +8,8 @@
         class="bg-white shadow w-full overflow-hidden p-2"
         :class="
           hasActions
-            ? 'rounded-tl-primary rounded-tr-primary'
-            : 'rounded-primary'
+            ? 'rounded-tl-xl rounded-tr-xl'
+            : 'rounded-xl'
         "
       >
         <slot name="form"></slot>
@@ -24,7 +24,7 @@
           sm:px-6
           bg-gray-50
           text-center
-          rounded-bl-primary rounded-br-primary
+          rounded-bl-xl rounded-br-xl
           w-full
           shadow
         "

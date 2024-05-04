@@ -91,7 +91,7 @@ const isActive = (routes) => routes.some((currentRoute) => route().current(curre
         v-if="hasPermissions(['viewAnyCheckSheets'])"
       >
         <template #icon>
-          <i class="ti-package" title="Check Sheets"></i>
+          <i class="ti-agenda" title="Check Sheets"></i>
         </template>
         Check Sheets
       </SidebarItem>
@@ -104,7 +104,7 @@ const isActive = (routes) => routes.some((currentRoute) => route().current(curre
         v-if="hasPermissions(['viewAnyTaskLists'])"
       >
         <template #icon>
-          <i class="ti-user" title="Task List"></i>
+          <i class="ti-calendar" title="Task List"></i>
         </template>
         Task List
       </SidebarItem>
@@ -118,7 +118,7 @@ const isActive = (routes) => routes.some((currentRoute) => route().current(curre
         v-if="hasPermissions(['viewAnyLeaves'])"
       >
         <template #icon>
-          <i class="ti-package" title="Leaves"></i>
+          <i class="ti-support" title="Leaves"></i>
         </template>
         Leaves
       </SidebarItem>

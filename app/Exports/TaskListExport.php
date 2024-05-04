@@ -13,13 +13,12 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 
-class CheckSheetExport implements FromView, ShouldAutoSize, WithStyles, WithColumnFormatting, WithEvents
+class TaskListExport implements FromView, ShouldAutoSize, WithStyles, WithColumnFormatting, WithEvents
 {
     use Exportable;
 
     public function __construct(private $resource)
     {
-        //
     }
 
     /**
@@ -27,7 +26,7 @@ class CheckSheetExport implements FromView, ShouldAutoSize, WithStyles, WithColu
      */
     public function view(): View
     {
-        return view('exports.checksheets.excel', [
+        return view('exports.tasklists.excel', [
             'models' => $this->resource
         ]);
     }

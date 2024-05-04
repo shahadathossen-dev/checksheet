@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\User;
 use Inertia\Inertia;
+use App\Models\Role;
+use App\Facades\Helper;
 use App\Models\TaskList;
 use App\Models\CheckSheet;
 use Illuminate\Http\Request;
@@ -13,12 +15,10 @@ use App\Enums\TaskListStatus;
 use App\Enums\CheckSheetType;
 use App\Events\DueStatusEvent;
 use Barryvdh\DomPDF\Facade\Pdf;
-use App\Exports\CheckSheetExport;
-use App\Facades\Helper;
+use App\Exports\TaskListExport;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskListRequest;
-use App\Models\Role;
 
 class TaskListController extends Controller
 {
@@ -249,7 +249,14 @@ class TaskListController extends Controller
      */
     public function exportExcel(Request $request)
     {
-        return (new CheckSheetExport($request->all()))->download('tasklists.xlsx');
+        $authUser = $request->user();
+        $resource = TaskList::filter($request->all())
+            ->when(
+                !$authUser->hasRole([Role::SUPER_ADMIN, Role::ADMIN]),
+                fn($query) => $query->where('user_id', $authUser->id)
+            )
+            ->sorted()->get();
+        return (new TaskListExport($resource))->download('tasklists.xlsx');
     }
 
     /**
@@ -260,9 +267,14 @@ class TaskListController extends Controller
      */
     public function exportPdf(Request $request)
     {
-        return Pdf::loadView('exports.tasklists.pdf', [
-                'models' => TaskList::filter($request->all())->orderBy('id', 'desc')->get()
-            ])->download('tasklists.pdf');
+        $authUser = $request->user();
+        $resource = TaskList::filter($request->all())
+            ->when(
+                !$authUser->hasRole([Role::SUPER_ADMIN, Role::ADMIN]),
+                fn($query) => $query->where('user_id', $authUser->id)
+            )
+            ->sorted()->get();
+        return Pdf::loadView('exports.tasklists.pdf', ['models' => $resource])->download('tasklists.pdf');
     }
 
     /**

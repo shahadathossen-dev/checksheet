@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Enums\LeaveType;
 use App\Enums\LeaveStatus;
+use App\Exports\LeaveExport;
 use App\Facades\Helper;
 use Inertia\Inertia;
 use App\Models\Leave;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -196,6 +198,42 @@ class LeaveController extends Controller
         session()->flash('flash.bannerStyle', 'success');
 
         return back();
+    }
+
+    /**
+     * Export sale invoices as excel format
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function exportExcel(Request $request)
+    {
+        $authUser = $request->user();
+        $resource = Leave::filter($request->all())
+            ->when(
+                !$authUser->hasRole([Role::SUPER_ADMIN, Role::ADMIN]),
+                fn($query) => $query->where('user_id', $authUser->id)
+            )
+            ->sorted()->get();
+        return (new LeaveExport($resource))->download('leaves.xlsx');
+    }
+
+    /**
+     * Export sale invoices as pdf format
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function exportPdf(Request $request)
+    {
+        $authUser = $request->user();
+        $resource = Leave::filter($request->all())
+            ->when(
+                !$authUser->hasRole([Role::SUPER_ADMIN, Role::ADMIN]),
+                fn($query) => $query->where('user_id', $authUser->id)
+            )
+            ->sorted()->get();
+        return Pdf::loadView('exports.leaves.pdf', ['models' => $resource])->stream('leaves.pdf');
     }
 
     /**

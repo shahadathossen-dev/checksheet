@@ -1,18 +1,22 @@
+@extends('layouts.export', ['title' => 'Export Leaves'])
+
+@section('content')
 <table class="table">
     <thead>
         <tr>
             <th colspan="7" class="header">
-                <h1>Check Sheet Export</h1>
+                <h1>Leaves Export</h1>
             </th>
         </tr>
         <tr>
             <th>#</th>
             <th>Title</th>
             <th>Description</th>
+            <th>User</th>
+            <th>Date</th>
+            <th>Approver</th>
             <th>Type</th>
-            <th>Due By</th>
-            <th>Assignee</th>
-            <th>Author</th>
+            <!-- <th>Status</th> -->
         </tr>
     </thead>
     <tbody>
@@ -21,13 +25,13 @@
             <td>{{ $loop->iteration }}</td>
             <td>{{ $model->title }}</td>
             <td>{{ $model->description }}</td>
+            <td>{{ $model->user->name}}</td>
+            <td>{{ $model->start_date }}</td>
+            <!-- <td>{{ $model->approver?->name}}</td> -->
             <td style="text-transform: capitalize;">{{ $model->type }}</td>
-            <td>{{ $model->due_by }}</td>
-            <td>{{ $model->assignee->name}}</td>
-            <td>{{ $model->author?->name}}</td>
+            <td style="text-transform: capitalize;">{{ $model->status }}</td>
         </tr>
         @endforeach
     </tbody>
 </table>
-
-
+@endsection

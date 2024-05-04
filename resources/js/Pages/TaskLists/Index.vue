@@ -16,6 +16,10 @@
 			<!-- Filters -->
 			<filter-dropdown v-model="filters" @reset="reset">
 				<slot name="filter">
+					<div class="filter mb-2" v-if="hasRoles(['Super Admin', 'Admin'])">
+						<jet-label class="mb-1 px-2 font-semibold" for="assignee" value="Assignee" />
+						<select-list id="assignee" track="id" v-model="filters.assignee" class="w-full rounded-md" :options="users" />
+					</div>
 					<div class="filter mb-2">
 						<jet-label class="mb-1 px-2 font-semibold" for="type" value="Type" />
 						<select-list id="type" track="value" v-model="filters.type" class="w-full rounded-md" :options="checksheetTypes" />
@@ -23,10 +27,6 @@
 					<div class="filter mb-2">
 						<jet-label class="mb-1 px-2 font-semibold" for="status" value="Status" />
 						<select-list id="status" track="value" v-model="filters.status" class="w-full rounded-md" :options="statusOptions" />
-					</div>
-					<div class="filter mb-2">
-						<jet-label class="mb-1 px-2 font-semibold" for="assignee" value="Assignee" />
-						<select-list id="assignee" track="id" v-model="filters.assignee" class="w-full rounded-md" :options="users" />
 					</div>
 					<div class="filter mb-2">
 						<jet-label class="mb-1 px-2 font-semibold" for="dueDate" value="Due Date" />
