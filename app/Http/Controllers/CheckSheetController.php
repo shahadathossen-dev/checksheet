@@ -238,7 +238,7 @@ class CheckSheetController extends Controller
 
     public function getDetails(Request $request, $type)
     {
-        $userId = request('user_id') ?? auth()->id();
+        $userId = request('userId') ?? auth()->id();
         $checksheet = CheckSheet::where(['type' => $type, 'user_id' => $userId])
         ->with('assignee', 'checksheetItemms')
         ->firstOrFail();
