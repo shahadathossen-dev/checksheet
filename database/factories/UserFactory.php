@@ -28,7 +28,7 @@ class UserFactory extends Factory
         return $this->afterMaking(function (User $user) {
             //
         })->afterCreating(function (User $user) {
-            $user->assignRole(Role::ADMIN);
+            $user->assignRole(Role::SALES_EXECUTIVE);
         });
     }
 
