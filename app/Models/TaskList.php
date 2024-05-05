@@ -226,7 +226,7 @@ class TaskList extends Model
 
         if($doneCount == $totalCount) {
             $this->markAsDone();
-        } else if($this->dueDate->diffInDays(today()) > 0) {
+        } else if(Carbon::parse($this->due_date)->diffInDays(today()) > 0) {
             $this->markAsDue();
         }
 
