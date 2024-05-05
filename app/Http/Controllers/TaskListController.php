@@ -44,7 +44,7 @@ class TaskListController extends Controller
                     fn($query) => $query->where('user_id', $authUser->id)
                 )
                 ->sorted()
-                ->with('checksheet', 'items', 'assignee', 'author')
+                ->with('checksheet', 'assignee', 'author')
                 ->paginate()
                 ->withQueryString(),
             'query'  => $request->all(),
@@ -123,7 +123,7 @@ class TaskListController extends Controller
 
         // Start from here ...
         return Inertia::render('TaskLists/Show', [
-            'tasklist' => $tasklist->load('checksheet', 'items', 'assignee', 'author'),
+            'tasklist' => $tasklist->load('checksheet', 'items.checksheetItem', 'assignee', 'author'),
         ]);
     }
 
@@ -157,7 +157,7 @@ class TaskListController extends Controller
         });
 
         return Inertia::render('TaskLists/Edit', [
-            'tasklist'  => $tasklist->load('checksheet', 'items', 'assignee'),
+            'tasklist'  => $tasklist->load('checksheet', 'items.checksheetItem', 'assignee'),
             'checksheetTypes' => CheckSheetType::toSelectOptions(),
             'statusOptions' => TaskListStatus::toSelectOptions(),
             'users' => User::withoutSuperAdmin()->select('id', 'name')->get()
@@ -261,7 +261,7 @@ class TaskListController extends Controller
                 !$authUser->hasRole([Role::SUPER_ADMIN, Role::ADMIN]),
                 fn($query) => $query->where('user_id', $authUser->id)
             )
-            ->with('checksheet', 'items', 'assignee', 'author')
+            ->with('checksheet', 'items.checksheetItem', 'assignee', 'author')
             ->sorted()->get();
         return (new TaskListExport($resource))->download('tasklists.xlsx');
     }
@@ -280,7 +280,7 @@ class TaskListController extends Controller
                 !$authUser->hasRole([Role::SUPER_ADMIN, Role::ADMIN]),
                 fn($query) => $query->where('user_id', $authUser->id)
             )
-            ->with('checksheet', 'items', 'assignee', 'author')
+            ->with('checksheet', 'items.checksheetItem', 'assignee', 'author')
             ->sorted()->get();
         return Pdf::loadView('exports.tasklists.pdf', ['models' => $resource])->download('tasklists.pdf');
     }
