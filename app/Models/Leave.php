@@ -56,7 +56,9 @@ class Leave extends Model
      *
      * @var array
      */
-    protected $with = ['user', 'approver'];
+    protected $with = [
+        // 'user', 'approver'
+    ];
 
     /**
      * Define accessor for model attribute

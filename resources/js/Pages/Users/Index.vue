@@ -23,7 +23,7 @@
 			<!--Table Rows -->
 			<template #default="{rows}">
 				<table v-if="rows.length">
-					<thead>
+					<thead class="sticky top-0 z-10 shadow">
 						<tr>
 							<th>Id</th>
 							<th>Name</th>

@@ -69,9 +69,9 @@ class TaskList extends Model
      * @var array
      */
     protected $with = [
-        'checksheet',
-        'assignee',
-        'items'
+        // 'checksheet',
+        // 'assignee',
+        // 'items'
     ];
 
     /**
@@ -86,7 +86,7 @@ class TaskList extends Model
      *
      * @var array
      */
-    public $sortable = ['*'];
+    public $sortable = ['*', 'checksheet.title'];
 
     /**
      * Get the custom permissions name of the resource

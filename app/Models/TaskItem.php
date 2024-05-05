@@ -60,7 +60,7 @@ class TaskItem extends Model
      * @var array
      */
     protected $with = [
-        'checksheetItem',
+        // 'checksheetItem',
         // 'tasklist'
     ];
 

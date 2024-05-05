@@ -38,6 +38,7 @@ class LeaveController extends Controller
                     !$authUser->hasRole([Role::SUPER_ADMIN, Role::ADMIN]),
                     fn($query) => $query->where('user_id', $authUser->id)
                 )
+                ->with('user', 'approver')
                 ->sorted()
                 ->paginate()
                 ->withQueryString(),
@@ -110,7 +111,7 @@ class LeaveController extends Controller
 
         // Start from here ...
         return Inertia::render('Leaves/Show', [
-            'leave' => $leaf,
+            'leave' => $leaf->load('user'),
         ]);
     }
 
@@ -129,7 +130,7 @@ class LeaveController extends Controller
         // dd($leaf->id);
         // Start from here ...
         return Inertia::render('Leaves/Edit', [
-            'leave' => $leaf,
+            'leave' => $leaf->load('user'),
             'leaveTypes' => LeaveType::toSelectOptions(),
             'statusOptions' => LeaveStatus::toSelectOptions(),
             'users' => User::withoutSuperAdmin()->select('id', 'name')->get()
@@ -214,6 +215,7 @@ class LeaveController extends Controller
                 !$authUser->hasRole([Role::SUPER_ADMIN, Role::ADMIN]),
                 fn($query) => $query->where('user_id', $authUser->id)
             )
+            ->with('user', 'approver')
             ->sorted()->get();
         return (new LeaveExport($resource))->download('leaves.xlsx');
     }
@@ -232,6 +234,7 @@ class LeaveController extends Controller
                 !$authUser->hasRole([Role::SUPER_ADMIN, Role::ADMIN]),
                 fn($query) => $query->where('user_id', $authUser->id)
             )
+            ->with('user', 'approver')
             ->sorted()->get();
         return Pdf::loadView('exports.leaves.pdf', ['models' => $resource])->stream('leaves.pdf');
     }
@@ -259,6 +262,7 @@ class LeaveController extends Controller
                 fn($query) => $query->where('user_id', $userId),
                 fn($query) => $query->where('type', LeaveType::GENERAL()),
             )
+            ->with('user')
             ->first();
 
         return response()->json($existingLeave, $existingLeave ? Response::HTTP_OK : Response::HTTP_NOT_FOUND);
