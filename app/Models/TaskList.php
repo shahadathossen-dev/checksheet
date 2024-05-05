@@ -217,6 +217,8 @@ class TaskList extends Model
         // If status input by force
         if($status = request()->input('status')) {
             $this->update(['status' => $status]);
+            if($status == TaskListStatus::DUE())
+            DueStatusEvent::dispatch($this->fresh());
             return;
         }
 
@@ -228,10 +230,8 @@ class TaskList extends Model
             $this->markAsDone();
         } else if(Carbon::parse($this->due_date)->diffInDays(today()) > 0) {
             $this->markAsDue();
+            DueStatusEvent::dispatch($this->fresh());
         }
-
-        if($this->status == TaskListStatus::DUE())
-        DueStatusEvent::dispatch($this->fresh());
     }
 
     /**
