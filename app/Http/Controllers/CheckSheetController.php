@@ -240,7 +240,7 @@ class CheckSheetController extends Controller
     {
         $userId = request('userId') ?? auth()->id();
         $checksheet = CheckSheet::where(['type' => $type, 'user_id' => $userId])
-        ->with('assignee', 'checksheetItemms')
+        ->with('assignee', 'checksheetItems')
         ->firstOrFail();
         return response()->json($checksheet, Response::HTTP_OK);
     }
