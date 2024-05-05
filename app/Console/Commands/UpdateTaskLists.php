@@ -7,6 +7,7 @@ use App\Enums\LeaveType;
 use App\Models\Leave;
 use App\Models\TaskList;
 use App\Services\StatusUpdateService;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class UpdateTaskLists extends Command
@@ -46,7 +47,7 @@ class UpdateTaskLists extends Command
         TaskList::pending()->whereDate('due_date', '<', $today)->get()
             ->each(function($tasklist) {
                 // Allow 1 day extra as grace period for WEEKLY and MONTHLY checksheets
-                if($tasklist->type == CheckSheetType::DAILY() || $tasklist->dueDate->diffInDays(today()) > 1)
+                if($tasklist->type == CheckSheetType::DAILY() || Carbon::parse($tasklist->dueDate)->diffInDays(today()) > 1)
                 StatusUpdateService::update($tasklist);
             });
     }
