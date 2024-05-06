@@ -8,10 +8,10 @@
 
 		<template #right-header>
 			<!-- Downloads -->
-			<download-dropdown class="mr-4">
+			<!-- <download-dropdown class="mr-4">
 				<pdf-download-button :href="route('tasklists.pdf', searchQuery)"></pdf-download-button>
 				<excel-download-button :href="route('tasklists.excel', searchQuery)"></excel-download-button>
-			</download-dropdown>
+			</download-dropdown> -->
 
 			<!-- Filters -->
 			<filter-dropdown v-model="filters" @reset="reset">
