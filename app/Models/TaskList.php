@@ -294,7 +294,7 @@ class TaskList extends Model
      */
     public function getDueDateFormattedAttribute()
     {
-        return Carbon::parse($this->dueDate)->format('d, M Y');
+        return Carbon::parse($this->due_date)->format('d, M Y');
     }
 
     /**
@@ -304,7 +304,7 @@ class TaskList extends Model
      */
     public function getSubmitDateFormattedAttribute()
     {
-        return Carbon::parse($this->submitDate)->format('d, M Y');
+        return Carbon::parse($this->submit_date)->format('d, M Y');
     }
 
     /**

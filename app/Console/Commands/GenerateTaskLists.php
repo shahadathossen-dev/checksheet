@@ -48,17 +48,17 @@ class GenerateTaskLists extends Command
             foreach (CheckSheetType::toArray() as $type)
             {
                 $tasklistPending = TaskList::where(['type' => $type, 'user_id' => $user->id])->pending()->exists();
-                $assignedChecksheet = $checksheet = CheckSheet::where(['type' => $type, 'user_id' => $user->id])->first();
+                $assignedChecksheet = $checksheet = CheckSheet::where(['type' => $type, 'user_id' => $user->id])->with('checksheetItems')->first();
 
                 // Skip if pending tasklist already exists
                 if(!$tasklistPending && $assignedChecksheet) {
                     $today = today();
                     
-                    if ($checksheet->dueBy != null) {
+                    if ($checksheet->due_by != null) {
                         $dueDate = $checksheet->type == CheckSheetType::MONTHLY() ?
-                            $today->setDays($checksheet->dueBy) :
+                            $today->setDays($checksheet->due_by) :
                             ($checksheet->type == CheckSheetType::WEEKLY() ?
-                            $today->startOfWeek()->addDays($checksheet->dueBy) :
+                            $today->startOfWeek()->addDays($checksheet->due_by) :
                             $today);
                     } else {
                         $dueDate = $checksheet->type == CheckSheetType::MONTHLY() ? $today->endOfMonth() :
