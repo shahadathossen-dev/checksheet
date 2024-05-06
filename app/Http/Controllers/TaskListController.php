@@ -44,6 +44,7 @@ class TaskListController extends Controller
                     fn($query) => $query->where('user_id', $authUser->id)
                 )
                 ->sorted()
+                ->with('checksheet', 'assignee', 'author')
                 ->paginate()
                 ->withQueryString(),
             'query'  => $request->all(),
@@ -122,7 +123,7 @@ class TaskListController extends Controller
 
         // Start from here ...
         return Inertia::render('TaskLists/Show', [
-            'tasklist' => $tasklist,
+            'tasklist' => $tasklist->load('checksheet', 'items.checksheetItem', 'assignee', 'author'),
         ]);
     }
 
@@ -156,7 +157,7 @@ class TaskListController extends Controller
         });
 
         return Inertia::render('TaskLists/Edit', [
-            'tasklist'  => $tasklist,
+            'tasklist'  => $tasklist->load('checksheet', 'items.checksheetItem', 'assignee'),
             'checksheetTypes' => CheckSheetType::toSelectOptions(),
             'statusOptions' => TaskListStatus::toSelectOptions(),
             'users' => User::withoutSuperAdmin()->select('id', 'name')->get()
@@ -260,6 +261,7 @@ class TaskListController extends Controller
                 !$authUser->hasRole([Role::SUPER_ADMIN, Role::ADMIN]),
                 fn($query) => $query->where('user_id', $authUser->id)
             )
+            ->with('checksheet', 'items.checksheetItem', 'assignee', 'author')
             ->sorted()->get();
         return (new TaskListExport($resource))->download('tasklists.xlsx');
     }
@@ -278,6 +280,7 @@ class TaskListController extends Controller
                 !$authUser->hasRole([Role::SUPER_ADMIN, Role::ADMIN]),
                 fn($query) => $query->where('user_id', $authUser->id)
             )
+            ->with('checksheet', 'items.checksheetItem', 'assignee', 'author')
             ->sorted()->get();
         return Pdf::loadView('exports.tasklists.pdf', ['models' => $resource])->download('tasklists.pdf');
     }
@@ -298,6 +301,7 @@ class TaskListController extends Controller
                 fn($q) => $q->whereDate('due_date', $dueDate),
                 fn($q) => $q->whereDate('due_date', '>=', $dueDate),
             )
+            ->with('items.checksheetItem')
             ->latest()->first();
             
         if($tasklist) {
@@ -311,7 +315,9 @@ class TaskListController extends Controller
                 return $item;
             });
         } else {
-            $tasklist = CheckSheet::where(['type' => $type, 'user_id' => $userId])->first();
+            $tasklist = CheckSheet::where(['type' => $type, 'user_id' => $userId])
+                ->with('checksheetItem')
+                ->first();
 
             if(!$tasklist) return response()->json(['message' => 'Resource not found!'], Response::HTTP_NOT_FOUND);
 

@@ -69,9 +69,9 @@ class TaskList extends Model
      * @var array
      */
     protected $with = [
-        'checksheet',
-        'assignee',
-        'items'
+        // 'checksheet',
+        // 'assignee',
+        // 'items'
     ];
 
     /**
@@ -86,7 +86,7 @@ class TaskList extends Model
      *
      * @var array
      */
-    public $sortable = ['*'];
+    public $sortable = ['*', 'checksheet.title'];
 
     /**
      * Get the custom permissions name of the resource
@@ -217,6 +217,8 @@ class TaskList extends Model
         // If status input by force
         if($status = request()->input('status')) {
             $this->update(['status' => $status]);
+            if($status == TaskListStatus::DUE())
+            DueStatusEvent::dispatch($this->fresh());
             return;
         }
 
@@ -226,12 +228,10 @@ class TaskList extends Model
 
         if($doneCount == $totalCount) {
             $this->markAsDone();
-        } else if($this->dueDate->diffInDays(today()) > 0) {
+        } else if(Carbon::parse($this->due_date)->diffInDays(today()) > 0) {
             $this->markAsDue();
+            DueStatusEvent::dispatch($this->fresh());
         }
-
-        if($this->status == TaskListStatus::DUE())
-        DueStatusEvent::dispatch($this->fresh());
     }
 
     /**

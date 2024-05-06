@@ -32,6 +32,7 @@ class CheckSheetController extends Controller
         return Inertia::render('CheckSheets/Index', [
             'checksheets' => CheckSheet::filter($request->all())
                 ->sorted()
+                ->with('assignee', 'author')
                 ->paginate()
                 ->withQueryString(),
             'query'  => $request->all(),
@@ -101,7 +102,7 @@ class CheckSheetController extends Controller
 
         // Start from here ...
         return Inertia::render('CheckSheets/Show', [
-            'checksheet' => $checksheet,
+            'checksheet' => $checksheet->load('checksheetItems', 'assignee', 'author'),
         ]);
     }
 
@@ -119,7 +120,7 @@ class CheckSheetController extends Controller
 
         // Start from here ...
         return Inertia::render('CheckSheets/Edit', [
-            'checksheet'  => $checksheet,
+            'checksheet'  => $checksheet->load('checksheetItems', 'assignee', 'author'),
             'checksheetTypes' => CheckSheetType::toSelectOptions(),
             'users' => User::withoutSuperAdmin()->select('id', 'name')->get()
         ]);
@@ -215,7 +216,9 @@ class CheckSheetController extends Controller
      */
     public function exportExcel(Request $request)
     {
-        $resource = CheckSheet::filter($request->all())->sorted()->get();
+        $resource = CheckSheet::filter($request->all())
+            ->with('assignee', 'author')
+            ->sorted()->get();
         return (new CheckSheetExport($resource))->download('checksheets.xlsx');
     }
 
@@ -227,14 +230,18 @@ class CheckSheetController extends Controller
      */
     public function exportPdf(Request $request)
     {
-        $resource = CheckSheet::filter($request->all())->sorted()->get();
+        $resource = CheckSheet::filter($request->all())
+            ->with('assignee', 'author')
+            ->sorted()->get();
         return Pdf::loadView('exports.checksheets.pdf', ['models' => $resource])->stream('checksheets.pdf');
     }
 
     public function getDetails(Request $request, $type)
     {
-        $userId = request('user_id') ?? auth()->id();
-        $checksheet = CheckSheet::where(['type' => $type, 'user_id' => $userId])->firstOrFail();
+        $userId = request('userId') ?? auth()->id();
+        $checksheet = CheckSheet::where(['type' => $type, 'user_id' => $userId])
+        ->with('assignee', 'checksheetItems')
+        ->firstOrFail();
         return response()->json($checksheet, Response::HTTP_OK);
     }
 }

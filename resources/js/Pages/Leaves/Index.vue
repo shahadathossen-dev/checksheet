@@ -149,10 +149,10 @@ export default {
 	data() {
         return {
             filters: {
-                search: this.query.search,
-                type: this.query.type,
-                user: this.query.user,
-				sort: this.query.sort,
+                search: '',
+                type: '',
+                user: '',
+				sort: '',
             },
             breadcrumb: [
                 { label: "Home", route: this.route("dashboard") },
@@ -160,7 +160,9 @@ export default {
             ],
         };
     },
-
+	mounted() {
+		Object.assign(this.filters, this.query);
+	},
     methods: {
 		resetFilters() {Object.assign(this.filters, {search: null, type: null, user: null, sort: null})},
         toggleStatus(id) {

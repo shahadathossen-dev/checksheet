@@ -9,5 +9,5 @@
 -> Status mail recepients to check => done
 -> test cron jobs => done
 -> test database queue => done
--> Sorting => pending
--> Rename TaskList to ChesksheetHistories
+-> Sorting => done
+-> Rename TaskList to ChesksheetHistories => pending

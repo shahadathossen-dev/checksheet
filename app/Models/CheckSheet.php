@@ -63,9 +63,9 @@ class CheckSheet extends Model
      * @var array
      */
     protected $with = [
-        'assignee',
-        'author',
-        'checksheetItems',
+        // 'assignee',
+        // 'author',
+        // 'checksheetItems',
     ];
 
     /**
