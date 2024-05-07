@@ -188,26 +188,6 @@ class CheckSheetController extends Controller
         });
     }
 
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Models\CheckSheet  $checksheet
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function updateStatus(CheckSheet $checksheet)
-    {
-        if (request()->user()->cannot('update', $checksheet)) {
-            abort(403);
-        }
-
-        $checksheet->update(['status' => TaskListStatus::DONE()]);
-        session()->flash('flash.banner', 'Check Sheet udpated successfully.');
-        session()->flash('flash.bannerStyle', 'success');
-
-        return back();
-    }
-
     /**
      * Export sale invoices as excel format
      *

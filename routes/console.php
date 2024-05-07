@@ -2,6 +2,7 @@
 
 use App\Models\Leave;
 use App\Enums\LeaveType;
+use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Inspiring;
@@ -50,4 +51,7 @@ Artisan::command('seed:super-admin', function () {
     $this->info('Super Admin created successfully.');
 })->purpose('Seed Super Admin user in DB.');
 
+Artisan::command('update:permissions', function () {
+    User::superAdmin()->first()->givePermissionTo(Permission::where('guard_name', 'web')->get());
+})->purpose('Give permissions to super admin user for new model.');
 

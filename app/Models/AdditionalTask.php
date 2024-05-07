@@ -2,8 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\TaskListStatus;
-use App\Events\DueStatusEvent;
+use App\Enums\AdditionalTaskStatus;
 use App\Traits\Sortable;
 use App\Traits\CamelCasing;
 use Carbon\Carbon;
@@ -13,7 +12,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class TaskList extends Model
+class AdditionalTask extends Model
 {
     use HasFactory, CamelCasing, Filterable, Sortable;
     use SoftDeletes;
@@ -24,11 +23,11 @@ class TaskList extends Model
      * @var string[]
      */
     protected $fillable = [
-        'checksheet_id',
-        'type',
+        'title',
+        'description',
         'user_id',
         'due_date',
-        'submitted_by',
+        'created_by',
         'submit_date',
         'status',
     ];
@@ -69,9 +68,8 @@ class TaskList extends Model
      * @var array
      */
     protected $with = [
-        // 'checksheet',
         // 'assignee',
-        // 'items'
+        // 'author'
     ];
 
     /**
@@ -101,12 +99,10 @@ class TaskList extends Model
 
         // Will fire everytime an User is created
         static::creating(function (Model $model) {
-            $model->submitted_by = auth()->id();
-            $model->submit_date = Carbon::today();
+            $model->created_by = auth()->id();
         });
 
         static::updating(function (Model $model) {
-            $model->submitted_by = auth()->id();
             $model->submit_date = Carbon::today();
         });
     }
@@ -152,16 +148,6 @@ class TaskList extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function checksheet()
-    {
-        return $this->belongsTo(CheckSheet::class, 'checksheet_id');
-    }
-
-    /**
-     * Determines one-to-many relation
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function assignee()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -172,19 +158,9 @@ class TaskList extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function items()
-    {
-        return $this->hasMany(TaskItem::class, 'tasklist_id');
-    }
-
-    /**
-     * Determines one-to-many relation
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function author()
     {
-        return $this->belongsTo(User::class, 'submitted_by');
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     /**
@@ -194,7 +170,7 @@ class TaskList extends Model
      */
     public function markAsDone()
     {
-        $this->update(['status' => TaskListStatus::DONE()]);
+        $this->update(['status' => AdditionalTaskStatus::DONE()]);
     }
 
     /**
@@ -204,34 +180,7 @@ class TaskList extends Model
      */
     public function markAsDue()
     {
-        $this->update(['status' => TaskListStatus::DUE()]);
-    }
-    
-    /**
-     * Handles status update
-     *
-     * @return \App\Models\TaskList
-     */
-    public function updateStatus()
-    {
-        // If status input by force
-        if($status = request()->input('status')) {
-            $this->update(['status' => $status]);
-            if($status == TaskListStatus::DUE())
-            DueStatusEvent::dispatch($this->fresh());
-            return;
-        }
-
-        $taskItems = $this->items;
-        $totalCount = $taskItems->count();
-        $doneCount = $taskItems->where('done', 1)->count();
-
-        if($doneCount == $totalCount) {
-            $this->markAsDone();
-        } else if(Carbon::parse($this->due_date)->diffInDays(today()) > 0) {
-            $this->markAsDue();
-            DueStatusEvent::dispatch($this->fresh());
-        }
+        $this->update(['status' => AdditionalTaskStatus::DUE()]);
     }
 
     /**
@@ -242,7 +191,7 @@ class TaskList extends Model
      */
     public function scopePending($query)
     {
-        return $query->where('status', TaskListStatus::PENDING());
+        return $query->where('status', AdditionalTaskStatus::PENDING());
     }
 
     /**
@@ -253,7 +202,7 @@ class TaskList extends Model
      */
     public function scopeDone($query)
     {
-        return $query->where('status', TaskListStatus::DONE());
+        return $query->where('status', AdditionalTaskStatus::DONE());
     }
 
     /**
@@ -264,7 +213,7 @@ class TaskList extends Model
      */
     public function scopeDue($query)
     {
-        return $query->where('status', TaskListStatus::DUE());
+        return $query->where('status', AdditionalTaskStatus::DUE());
     }
     
     /**

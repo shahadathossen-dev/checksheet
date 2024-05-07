@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdditionalTaskController;
+use App\Http\Controllers\PurchaseRequestController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckSheetController;
 use App\Http\Controllers\ProductController;
@@ -11,6 +13,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\DelegateController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\TaskListController;
+use App\Models\AdditionalTask;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,11 +71,23 @@ Route::middleware([
     Route::get('/tasklists/export/pdf', [TaskListController::class, 'exportPdf'])->name('tasklists.pdf');
     Route::post('/tasklists/{tasklist}/update-status', [TaskListController::class, 'updateStatus'])->name('tasklists.update-status');
     
+    // AdditionalTasks
+    Route::resource('additional-tasks', AdditionalTaskController::class);
+    Route::get('/additional-tasks/export/excel', [AdditionalTaskController::class, 'exportExcel'])->name('additional-tasks.excel');
+    Route::get('/additional-tasks/export/pdf', [AdditionalTaskController::class, 'exportPdf'])->name('additional-tasks.pdf');
+    Route::post('/additional-tasks/{additional-task}/update-status', [AdditionalTaskController::class, 'updateStatus'])->name('additional-tasks.update-status');
+
+    // purchaseRequests
+    Route::resource('purchase-requests', PurchaseRequestController::class);
+    Route::get('/purchase-requests/export/excel', [PurchaseRequestController::class, 'exportExcel'])->name('purchase-requests.excel');
+    Route::get('/purchase-requests/export/pdf', [PurchaseRequestController::class, 'exportPdf'])->name('purchase-requests.pdf');
+    Route::post('/purchase-requests/{additional-task}/update-status', [PurchaseRequestController::class, 'updateStatus'])->name('purchase-requests.update-status');
+
     // Leaves
     Route::resource('leaves', LeaveController::class);
     Route::get('/leaves/export/excel', [LeaveController::class, 'exportExcel'])->name('leaves.excel');
     Route::get('/leaves/export/pdf', [LeaveController::class, 'exportPdf'])->name('leaves.pdf');
-    Route::post('/leaves/{leave}/update-status', [LeaveController::class, 'updateStatus'])->name('leaves.update-status');
+    Route::post('/leaves/{leaf}/update-status', [LeaveController::class, 'updateStatus'])->name('leaves.update-status');
     
     Route::get('/test', fn() => dd('test'))->name('route.test');
     Route::get('/jobs/test/{tasklist}', [TaskListController::class, 'testJob'])->name('jobs.test.web');

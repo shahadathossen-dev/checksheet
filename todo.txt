@@ -1,13 +1,2 @@
--> Implement Leave => done
--> Due Date extension => done
--> Reset filter => done
--> Role permission issue => done
--> Leave CRUD => done
--> Index page query for end user => done
--> test permissions issue as end user -> done
--> tasklist export => done
--> Status mail recepients to check => done
--> test cron jobs => done
--> test database queue => done
--> Sorting => done
--> Rename TaskList to ChesksheetHistories => pending
+-> Implement Leave => pending
+

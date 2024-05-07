@@ -21,7 +21,7 @@
 			</form-group>
 
 			<form-group class="border-b gap-8">
-				<!-- Type -->
+				<!-- Assignee -->
 				<div class="col w-full">
 					<jet-label class="md:w-1/4" for="userId" value="Assignee" required />
 					<div class="w-full mt-1">

@@ -91,7 +91,7 @@ const isActive = (routes) => routes.some((currentRoute) => route().current(curre
         v-if="hasPermissions(['viewAnyCheckSheets'])"
       >
         <template #icon>
-          <i class="ti-agenda" title="Check Sheets"></i>
+          <i class="ti-layout-list-thumb" title="Check Sheets"></i>
         </template>
         Check Sheets
       </SidebarItem>
@@ -104,9 +104,37 @@ const isActive = (routes) => routes.some((currentRoute) => route().current(curre
         v-if="hasPermissions(['viewAnyTaskLists'])"
       >
         <template #icon>
-          <i class="ti-calendar" title="Task List"></i>
+          <i class="ti-view-list-alt" title="Task List"></i>
         </template>
         Task List
+      </SidebarItem>
+
+      <!-- Additional Tasks -->
+      <SidebarItem
+        title="Additional Tasks"
+        :active="isActive(['additional-tasks.*'])"
+        :href="route('additional-tasks.index')"
+        :collapsed="collapsed"
+        v-if="hasPermissions(['viewAnyAdditionalTasks'])"
+      >
+        <template #icon>
+          <i class="ti-support" title="Additional Tasks"></i>
+        </template>
+        Additional Tasks
+      </SidebarItem>
+
+      <!-- Purchase Requests -->
+      <SidebarItem
+        title="Purchase Requests"
+        :active="isActive(['purchase-requests.*'])"
+        :href="route('purchase-requests.index')"
+        :collapsed="collapsed"
+        v-if="hasPermissions(['viewAnyPurchaseRequests'])"
+      >
+        <template #icon>
+          <i class="ti-shopping-cart" title="Purchase Requests"></i>
+        </template>
+        Purchase Requests
       </SidebarItem>
 
       <!-- Holidays -->
@@ -118,7 +146,7 @@ const isActive = (routes) => routes.some((currentRoute) => route().current(curre
         v-if="hasPermissions(['viewAnyLeaves'])"
       >
         <template #icon>
-          <i class="ti-support" title="Leaves"></i>
+          <i class="ti-calendar" title="Leaves"></i>
         </template>
         Leaves
       </SidebarItem>

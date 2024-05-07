@@ -17,7 +17,7 @@
     ref="select"
     :disabled="disabled"
   >
-    <option value="" v-if="showPlaceholder" disabled>{{ placeholder }}</option>
+    <option value="-1" v-if="showPlaceholder" disabled>{{ placeholder }}</option>
     <option
       :selected="option['track']"
       :value="option[track]"

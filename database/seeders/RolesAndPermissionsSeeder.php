@@ -27,6 +27,8 @@ class RolesAndPermissionsSeeder extends Seeder
             \App\Models\ChecksheetItem::class,
             \App\Models\TaskList::class,
             \App\Models\TaskItem::class,
+            \App\Models\AdditionalTask::class,
+            \App\Models\PurchaseRequest::class,
             \App\Models\Leave::class,
 
 

@@ -20,7 +20,7 @@ class Kernel extends ConsoleKernel
         
         $schedule->command('queue:work --stop-when-empty')->everyMinute()->withoutOverlapping(3600);
         
-        $schedule->command('perform:daily-check')->dailyAt('00:01');
+        $schedule->command('perform:daily-check')->dailyAt('00:00');
     }
 
     /**
