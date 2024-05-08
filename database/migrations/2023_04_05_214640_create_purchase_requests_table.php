@@ -18,6 +18,7 @@ return new class extends Migration
             $table->id();
             $table->string('title')->index('title_index');
             $table->text('description')->nullable();
+            $table->text('note')->nullable();
             $table->date('due_date')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->enum('status', PurchaseRequestStatus::toArray())->default(PurchaseRequestStatus::PENDING());

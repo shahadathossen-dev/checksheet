@@ -50,7 +50,7 @@ class ChecksheetItem extends Model
      */
     protected $appends = [
         // 'attachments',
-        'createdAtFormatted', 'updatedAtFormatted',
+        // 'createdAtFormatted', 'updatedAtFormatted',
     ];
 
     /**

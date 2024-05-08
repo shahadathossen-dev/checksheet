@@ -25,6 +25,7 @@ class PurchaseRequest extends Model
     protected $fillable = [
         'title',
         'description',
+        'note',
         'user_id',
         'due_date',
         'status',

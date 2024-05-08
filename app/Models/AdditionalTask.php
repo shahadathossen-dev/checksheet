@@ -25,6 +25,8 @@ class AdditionalTask extends Model
     protected $fillable = [
         'title',
         'description',
+        'note',
+        'note_required',
         'user_id',
         'due_date',
         'created_by',

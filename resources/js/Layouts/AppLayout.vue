@@ -95,7 +95,7 @@ const toggleSidebar = () => store.dispatch("toggleCollapsed");
 
         <!-- Page Content -->
         <main
-          class="p-4 2xl:p-6 overflow-y-auto w-full relative"
+          class="p-4 overflow-y-auto w-full relative"
           style="height: calc(100vh - 85px)"
           scroll-region
         >

@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\Enums\TaskListStatus;
+use App\Events\DueStatusEvent;
 use App\Traits\Sortable;
 use App\Traits\CamelCasing;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -113,6 +116,75 @@ class TaskItem extends Model
     public function tasklist()
     {
         return $this->belongsTo(TaskList::class, 'tasklist_id');
+    }
+
+    /**
+     * Update task list status as done
+     *
+     * @return \App\Models\TaskList
+     */
+    public function markAsDone()
+    {
+        $this->update(['done' => 1]);
+    }
+
+    /**
+     * Update task list status as due
+     *
+     * @return \App\Models\TaskList
+     */
+    public function markAsDue()
+    {
+        $this->update(['done' => 0]);
+    }
+    
+    /**
+     * Handles status update
+     *
+     * @return \App\Models\TaskList
+     */
+    public function updateStatus()
+    {
+        // If status input by force
+        if($status = request()->input('status')) {
+            $this->update(['status' => $status]);
+            if($status == TaskListStatus::DUE())
+            DueStatusEvent::dispatch($this->fresh());
+            return;
+        }
+
+        $taskItems = $this->items;
+        $totalCount = $taskItems->count();
+        $doneCount = $taskItems->where('done', 1)->count();
+
+        if($doneCount == $totalCount) {
+            $this->markAsDone();
+        } else if(Carbon::parse($this->due_date)->diffInDays(today()) > 0) {
+            $this->markAsDue();
+            DueStatusEvent::dispatch($this->fresh());
+        }
+    }
+
+    /**
+     * Scope a query to only exclude admin role.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopePending($query)
+    {
+        return $query->where('done', 0);
+    }
+
+    /**
+     * Scope a query to only exclude admin role.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeDone($query)
+    {
+        return $query->where('done', 1);
     }
 
     /**

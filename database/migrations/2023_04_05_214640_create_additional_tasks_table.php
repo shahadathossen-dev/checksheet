@@ -18,6 +18,8 @@ return new class extends Migration
             $table->id();
             $table->string('title')->index('title_index');
             $table->text('description')->nullable();
+            $table->text('note')->nullable();
+            $table->boolean('note_required')->default(0);
             $table->date('due_date');
             $table->date('submit_date')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();

@@ -50,6 +50,8 @@ class TaskList extends Model
     protected $casts = [
         'due_date' => 'date',
         'submit_date' => 'date',
+        'created_at' => 'date',
+        'udpated_at' => 'date',
     ];
 
     /**
@@ -59,7 +61,7 @@ class TaskList extends Model
      */
     protected $appends = [
         // 'attachments',
-        'createdAtFormatted', 'updatedAtFormatted',
+        // 'createdAtFormatted', 'updatedAtFormatted',
         'dueDateFormatted', 'submitDateFormatted',
     ];
 
@@ -274,7 +276,8 @@ class TaskList extends Model
      */
     public function getCreatedAtFormattedAttribute()
     {
-        return $this->createdAt->format('d, M y H:i A');
+        dd($this);
+        return $this->created_at->format('d, M y H:i A');
     }
 
     /**
@@ -284,7 +287,7 @@ class TaskList extends Model
      */
     public function getUpdatedAtFormattedAttribute()
     {
-        return $this->updatedAt->format('d, M y H:i A');
+        return $this->updated_at->format('d, M y H:i A');
     }
 
     /**

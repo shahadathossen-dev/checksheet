@@ -43,17 +43,17 @@
 			<!-- Attributes -->
             <form-group class="border-b md:flex-col" v-if="tasklist?.items">
 				<jet-label class="w-full" value="Check Sheet Items" />
-                    <div class="w-full flex items-center gap-5 block my-2" v-for="(attribute, index) in tasklist?.items" :key="index">
-						<div class="task-item flex-grow">
-							<jet-label class="w-full" :for="`Note-${index}`" :value="attribute.title" :required="!!attribute.required" />
+				<div class="w-full flex items-center gap-5 block my-2" v-for="(attribute, index) in tasklist?.items" :key="index">
+					<div class="task-item flex-grow">
+						<jet-label class="w-full" :for="`Note-${index}`" :value="attribute.checksheetItem.title" :required="!!attribute.checksheetItem.required" />
 
-							<jet-text-input v-model="attribute.note" :id="`Note-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="attribute.required" />
-						</div>
-						<jet-label class="" :for="`Done-${index}`">
-                        	<jet-check-box v-model="attribute.done" :id="`Done-${index}`" :checked="!!attribute.done" />
-							<span class="px-2 align-middle">Done</span>
-						</jet-label>
-                    </div>
+						<jet-text-input v-model="attribute.note" :id="`Note-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="attribute.required" />
+					</div>
+					<jet-label class="" :for="`Done-${index}`">
+						<jet-check-box v-model="attribute.done" :id="`Done-${index}`" :checked="!!attribute.done" />
+						<span class="px-2 align-middle">Done</span>
+					</jet-label>
+				</div>
                 <jet-input-error :message="form.errors.check_sheet_items" class="mt-2" />
 			</form-group>
 		</template>

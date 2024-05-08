@@ -34,6 +34,7 @@ class PurchaseRequestRequest extends FormRequest
                     return [
                         'title'         => ['required', 'string'],
                         'description'   => ['nullable', 'string'],
+                        'note'          => ['nullable', 'string'],
                         'status'        => ['nullable', 'string',
                             Rule::in(PurchaseRequestStatus::toArray()),
                         ],
@@ -47,11 +48,11 @@ class PurchaseRequestRequest extends FormRequest
                     return [
                         'title'         => ['required', 'string'],
                         'description'   => ['nullable', 'string'],
+                        'note'          => ['nullable', 'string'],
                         'status'        => ['nullable', 'string',
                             Rule::in(PurchaseRequestStatus::toArray()),
                         ],
                         'dueDate'       => ['nullable', 'date'],
-                        'userId'        => ['nullable', 'integer', 'exists:users,id'],
                     ];
                 }
             default:
