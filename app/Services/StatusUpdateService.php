@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Enums\CheckSheetType;
 use App\Events\DueStatusEvent;
-use App\Jobs\StatusNotificationJob;
+use Carbon\Carbon;
 
 class StatusUpdateService
 {
@@ -15,7 +15,8 @@ class StatusUpdateService
         $doneCount = $taskItems->where('done', 1)->count();
         if($doneCount == $totalCount) {
             $tasklist->markAsDone();
-        } else if(today() > $tasklist->dueDate) {
+        } else if($tasklist->due_date < today()) {
+            if($tasklist->type == CheckSheetType::DAILY() || Carbon::parse($tasklist->due_date)->diffInDays(today()) > 1)
             $tasklist->markAsDue();
             DueStatusEvent::dispatch($tasklist->fresh());
         }

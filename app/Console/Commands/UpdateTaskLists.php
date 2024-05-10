@@ -46,8 +46,10 @@ class UpdateTaskLists extends Command
         TaskList::pending()->whereDate('due_date', '<', today())->get()
             ->each(function($tasklist) {
                 // Allow 1 day extra as grace period for WEEKLY and MONTHLY checksheets
-                if($tasklist->type == CheckSheetType::DAILY() || Carbon::parse($tasklist->due_date)->diffInDays(today()) > 1)
-                StatusUpdateService::update($tasklist);
+                if($tasklist->due_date < today()) {
+                    if($tasklist->type == CheckSheetType::DAILY() || Carbon::parse($tasklist->due_date)->diffInDays(today()) > 1)
+                        StatusUpdateService::update($tasklist);
+                }
             });
     }
 }

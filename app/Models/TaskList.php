@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\CheckSheetType;
 use App\Enums\TaskListStatus;
 use App\Events\DueStatusEvent;
 use App\Traits\Sortable;
@@ -224,13 +225,15 @@ class TaskList extends Model
             return;
         }
 
+
         $taskItems = $this->items;
         $totalCount = $taskItems->count();
         $doneCount = $taskItems->where('done', 1)->count();
 
         if($doneCount == $totalCount) {
             $this->markAsDone();
-        } else if(Carbon::parse($this->due_date)->diffInDays(today()) > 0) {
+        } else if($this->due_date < today()) {
+            if($this->type == CheckSheetType::DAILY() || Carbon::parse($this->due_date)->diffInDays(today()) > 1)
             $this->markAsDue();
             DueStatusEvent::dispatch($this->fresh());
         }

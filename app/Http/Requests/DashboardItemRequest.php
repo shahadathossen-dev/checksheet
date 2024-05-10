@@ -9,7 +9,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
 
-class TaskItemRequest extends FormRequest
+class DashboardItemRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -18,7 +18,7 @@ class TaskItemRequest extends FormRequest
      */
     public function authorize()
     {
-        return TaskItem::whereHas('tasklist', fn($q) => $q->where('user_id', auth()->id()))->exists();
+        return true;
     }
 
     /**
@@ -35,15 +35,19 @@ class TaskItemRequest extends FormRequest
                 }
             case 'POST': {
                     return [
-                        'note'  => ['requried_if:required,1', 'string'],
+                        'title' => ['nullable', 'string'],
+                        'note'  => ['required_if:required,1', 'nullable', 'string'],
                         'done'  => ['nullable', 'boolean'],
+                        'required'  => ['nullable', 'boolean'],
                     ];
                 }
             case 'PUT':
             case 'PATCH': {
                     return [
-                        'note'  => ['requried_if:required,1', 'string'],
+                        'title' => ['nullable', 'string'],
+                        'note'  => ['requried_if:required,1', 'nullable', 'string'],
                         'done'  => ['nullable', 'boolean'],
+                        'required'  => ['nullable', 'boolean'],
                     ];
                 }
             default:

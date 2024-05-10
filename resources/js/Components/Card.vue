@@ -1,6 +1,6 @@
 <template>
 <div class="card">
-    <header class="card_header" :class="$attrs.headerClass">
+    <header  v-if="$attrs.header" class="card_header" :class="$attrs.headerClass">
         <div class="card_header--left">
             <slot name="left-header"></slot>
         </div>
@@ -13,7 +13,7 @@
         <slot name="body"></slot>
     </div>
 
-    <footer class="card_footer" :class="$attrs.footerClass">
+    <footer v-if="$slots.footer" class="card_footer" :class="$attrs.footerClass">
         <slot name="footer"></slot>
     </footer>
 </div>
@@ -29,9 +29,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 .card {
-    @apply  w-full;
+    @apply  w-full p-2 border rounded-md;
     &_header {
-        @apply  p-2 flex w-full justify-between;
+        @apply  p-2 flex w-full justify-between shadow-sm border-b font-bold;
 
     }
 
@@ -40,7 +40,7 @@ export default {
     }
 
     &_footer {
-        @apply p-2;
+        @apply p-2 border-t;
     }
 }
 </style>
