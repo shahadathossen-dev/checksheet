@@ -19,13 +19,13 @@
                     <template v-if="dailyChecksheet.items?.length">
                         <form @submit.prevent="submit(item, route('api.task-items.update', item.id), 'dailyChecksheet')" class="w-full flex items-center gap-5 block my-2" :action="route('api.task-items.update', item.id)" method="POST" v-for="(item, index) in dailyChecksheet.items" :key="item.id">
                             <div class="task-item flex-grow">
-                                <jet-label class="w-full" :for="`Note-${index}`" :value="item.checksheetItem.title" :required="!!item.checksheetItem.required" />
+                                <jet-label class="w-full" :for="`dailyTaskItemNote-${item.id}`" :value="item.checksheetItem.title" :required="!!item.checksheetItem.required" />
 
-                                <jet-input v-model="item.note" :id="`Note-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="!!item.checksheetItem.required" />
+                                <jet-input v-model="item.note" :id="`dailyTaskItemNote-${item.id}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="!!item.checksheetItem.required" />
                             </div>
-                            <jet-label class="mt-5 min-w-16" :for="`Done-${index}`">
+                            <jet-label class="mt-5 min-w-16" :for="`dailyTaskItemDone-${item.id}`">
                                 <jet-input type="submit" value="submit" class="hidden" />
-                                <jet-check-box v-model="item.done" :id="`Done-${index}`" :checked="!!item.done" @change="($event) => $event.target.checked ? $event.target.previousSibling.click() : item.done = 0" />
+                                <jet-check-box v-model="item.done" :id="`dailyTaskItemDone-${item.id}`" :checked="!!item.done" @change="($event) => $event.target.checked ? $event.target.previousSibling.click() : item.done = 0" />
                                 <span class="px-2 align-middle">Done</span>
                             </jet-label>
                         </form>
@@ -51,13 +51,13 @@
                     <template v-if="weeklyChecksheet.items?.length">
                         <form @submit.prevent="submit(item, route('api.task-items.update', item.id), 'weeklyChecksheet')" class="w-full flex items-center gap-5 block my-2" :action="route('api.task-items.update', item.id)" method="POST" v-for="(item, index) in weeklyChecksheet.items" :key="item.id">
                             <div class="task-item flex-grow">
-                                <jet-label class="w-full" :for="`Note-${index}`" :value="item.checksheetItem.title" :required="!!item.checksheetItem.required" />
+                                <jet-label class="w-full" :for="`weeklyTaskItemNote-${index}`" :value="item.checksheetItem.title" :required="!!item.checksheetItem.required" />
 
-                                <jet-text-input v-model="item.note" :id="`Note-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="!!item.checksheetItem.required" />
+                                <jet-text-input v-model="item.note" :id="`weeklyTaskItemNote-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="!!item.checksheetItem.required" />
                             </div>
-                            <jet-label class="mt-5 min-w-16" :for="`Done-${index}`">
+                            <jet-label class="mt-5 min-w-16" :for="`weeklyTaskItemDone-${index}`">
                                 <jet-input type="submit" value="submit" class="hidden" />
-                                <jet-check-box v-model="item.done" :id="`Done-${index}`" :checked="!!item.done" @change="($event) => $event.target.checked ? $event.target.previousSibling.click() : item.done = 0" />
+                                <jet-check-box v-model="item.done" :id="`weeklyTaskItemDone-${index}`" :checked="!!item.done" @change="($event) => $event.target.checked ? $event.target.previousSibling.click() : item.done = 0" />
                                 <span class="px-2 align-middle">Done</span>
                             </jet-label>
                         </form>
@@ -83,13 +83,13 @@
                     <template v-if="monthlyChecksheet.items?.length">
                         <form @submit.prevent="submit(item, route('api.task-items.update', item.id), 'monthlyChecksheet')" class="w-full flex items-center gap-5 block my-2" :action="route('api.task-items.update', item.id)" method="POST" v-for="(item, index) in monthlyChecksheet.items" :key="item.id">
                             <div class="task-item flex-grow">
-                                <jet-label class="w-full" :for="`Note-${index}`" :value="item.checksheetItem.title" :required="!!item.checksheetItem.required" />
+                                <jet-label class="w-full" :for="`monthlyTaskItemNote-${index}`" :value="item.checksheetItem.title" :required="!!item.checksheetItem.required" />
 
-                                <jet-text-input v-model="item.note" :id="`Note-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="item.checksheetItem.required" />
+                                <jet-text-input v-model="item.note" :id="`monthlyTaskItemNote-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="item.checksheetItem.required" />
                             </div>
-                            <jet-label class="mt-5 min-w-16" :for="`Done-${index}`">
+                            <jet-label class="mt-5 min-w-16" :for="`monthlyTaskItemDone-${index}`">
                                 <jet-input type="submit" value="submit" class="hidden" />
-                                <jet-check-box v-model="item.done" :id="`Done-${index}`" :checked="!!item.done" @change="($event) => $event.target.checked ? $event.target.previousSibling.click() : item.done = 0" />
+                                <jet-check-box v-model="item.done" :id="`monthlyTaskItemDone-${index}`" :checked="!!item.done" @change="($event) => $event.target.checked ? $event.target.previousSibling.click() : item.done = 0" />
                                 <span class="px-2 align-middle">Done</span>
                             </jet-label>
                         </form>
@@ -113,13 +113,13 @@
                     <template v-if="additionalTasks.length">
                         <form @submit.prevent="submit(item, route('api.additional-tasks.update', item.id), 'additionalTasks')" class="w-full flex items-center gap-5 block my-2" :action="route('api.additional-tasks.update', item.id)" method="POST" v-for="(item, index) in additionalTasks" :key="item.id">
                             <div class="task-item flex-grow">
-                                <jet-label class="w-full" :for="`Note-${index}`" :value="item.title" :required="!!item.required" />
+                                <jet-label class="w-full" :for="`additionalTaskNote-${index}`" :value="item.title" :required="!!item.required" />
 
-                                <jet-text-input v-model="item.note" :id="`Note-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="item.required" />
+                                <jet-text-input v-model="item.note" :id="`additionalTaskNote-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="item.required" />
                             </div>
-                            <jet-label class="mt-5 min-w-16" :for="`Done-${index}`">
+                            <jet-label class="mt-5 min-w-16" :for="`additionalTaskDone-${index}`">
                                 <jet-input type="submit" value="submit" class="hidden" />
-                                <jet-check-box v-model="item.done" :id="`Done-${index}`" :checked="!!item.done" @change="($event) => $event.target.checked ? $event.target.previousSibling.click() : item.done = 0" />
+                                <jet-check-box v-model="item.done" :id="`additionalTaskDone-${index}`" :checked="!!item.done" @change="($event) => $event.target.checked ? $event.target.previousSibling.click() : item.done = 0" />
                                 <span class="px-2 align-middle">Done</span>
                             </jet-label>
                         </form>
