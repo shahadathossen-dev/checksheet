@@ -143,7 +143,7 @@
                             <div class="task-item flex-grow">
                                 <jet-label class="w-full" :for="`Note-${index}`" :value="item.title" />
                             </div>
-                            <jet-label class="mt-5 text-capitalize" :for="`Status-${index}`">
+                            <jet-label class="mt-5 capitalize" :for="`Status-${index}`">
                                 {{item.status}}
                             </jet-label>
                         </div>
@@ -204,6 +204,7 @@ const form = reactive({
     note: null,
     done: null,
     title: null,
+    status: null,
 })
 
 const toastify = (message, type = 'success') => toast(message, {

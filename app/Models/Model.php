@@ -14,7 +14,6 @@ class Model extends BaseModel
 {
     use HasFactory, CamelCasing, Sortable, Filterable;
 
-
     /**
      * The number of models to return for pagination.
      *

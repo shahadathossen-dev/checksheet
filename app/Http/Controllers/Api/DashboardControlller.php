@@ -104,12 +104,12 @@ class DashboardControlller extends Controller
      */
     public function storePurchaseRequest(DashboardItemRequest $request)
     {
-        if ($request->user()->cannot('update', PurchaseRequest::class)) {
+        if ($request->user()->cannot('create', PurchaseRequest::class)) {
             abort(403);
         }
         
-        $purchaseRequest = PurchaseRequest::create(Helper::toSnakeCase($request->only('title', 'description', 'dueDate')));
-        return response()->json(['status' => 'success', 'message' => 'Updated successfully', 'data' => $purchaseRequest]);
+        $purchaseRequest = PurchaseRequest::create($request->only('title', 'description', 'dueDate'));
+        return response()->json(['status' => 'success', 'message' => 'Updated successfully', 'data' => $purchaseRequest->fresh()]);
     }
 
     /**

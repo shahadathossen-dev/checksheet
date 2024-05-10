@@ -17,6 +17,11 @@ class PurchaseRequest extends Model
     use HasFactory, CamelCasing, Filterable, Sortable;
     use SoftDeletes;
 
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+    }
+
     /**
      * The attributes that are mass assignable.
      *
