@@ -218,7 +218,7 @@ class TaskList extends Model
     public function updateStatus()
     {
         // If status input by force
-        if($status = request()->input('status')) {
+        if($status = request()->input('status') && request()->user()->hasAnyRole([Role::SUPER_ADMIN, Role::ADMIN])) {
             $this->update(['status' => $status]);
             if($status == TaskListStatus::DUE())
             DueStatusEvent::dispatch($this->fresh());

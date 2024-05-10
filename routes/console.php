@@ -40,7 +40,7 @@ Artisan::command('seed:super-admin', function () {
     DB::transaction(function () {
         $admin = User::create([
             'name'      => "Shahadat Hossen",
-            'email'     => 'shobujliugdu@gmail.com',
+            'email'     => 'shobujlingdu@gmail.com',
             'password'  => bcrypt('password'),
         ]);
 

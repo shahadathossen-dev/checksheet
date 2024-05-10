@@ -28,6 +28,14 @@
 						<jet-input-error :message="form.errors.type" class="mt-2" />
 					</div>
 				</div>
+				<!-- Status -->
+				<div class="col w-1/2" :class="{flex: !hasRoles(['Super Admin', 'Admin'])}">
+					<jet-label class="mb-1" for="status" value="Status" required />
+					<div class="w-full">
+						<jet-select v-model="form.status" id="status" class="w-full" track="value" :options="statusOptions" autocomplete="status" required disabled />
+						<jet-input-error :message="form.errors.status" class="mt-2" />
+					</div>
+				</div>
 			</form-group>
 			<!-- Title -->
 			<detail-section class="border-b" label="Title" :value="checksheet?.title"></detail-section>
@@ -118,6 +126,7 @@ export default {
 			form: this.$inertia.form({
 				checksheetId: null,
 				type: 'daily',
+				status: 'pending',
 				userId: null,
 				dueDate: (new Date()).toISOString().slice(0,10),
                 items: [],

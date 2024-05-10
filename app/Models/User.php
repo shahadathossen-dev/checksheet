@@ -193,6 +193,7 @@ class User extends Authenticatable
             $role->whereIn('name', [Role::SUPER_ADMIN, Role::ADMIN]);
         });
     }
+
     /**
      * Determines if the User is a Super admin
      *
@@ -201,6 +202,16 @@ class User extends Authenticatable
     public function isSuperAdmin()
     {
         return $this->hasRole(Role::SUPER_ADMIN);
+    }
+
+    /**
+     * Determines if the User is a Admin
+     *
+     * @return boolean
+     */
+    public function isAdmin()
+    {
+        return $this->hasRole(Role::ADMIN);
     }
 
 
