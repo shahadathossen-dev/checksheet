@@ -32,7 +32,7 @@
 				<div class="col w-1/2" :class="{flex: !hasRoles(['Super Admin', 'Admin'])}">
 					<jet-label class="mb-1" for="status" value="Status" required />
 					<div class="w-full">
-						<jet-select v-model="form.status" id="status" class="w-full" track="value" :options="statusOptions" autocomplete="status" required disabled />
+						<jet-select v-model="form.status" id="status" class="w-full" track="value" :options="statusOptions" autocomplete="status" required :disabled="!hasRoles(['Super Admin', 'Admin'])" />
 						<jet-input-error :message="form.errors.status" class="mt-2" />
 					</div>
 				</div>
@@ -58,7 +58,7 @@
 						<jet-text-input v-model="attribute.note" :id="`Note-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="attribute.required" />
 					</div>
 					<jet-label class="" :for="`Done-${index}`">
-						<jet-check-box v-model="attribute.done" :id="`Done-${index}`" :checked="!!attribute.done" />
+						<jet-check-box v-model="attribute.done" :id="`Done-${index}`" :checked="attribute.done == 1" />
 						<span class="px-2 align-middle">Done</span>
 					</jet-label>
 				</div>

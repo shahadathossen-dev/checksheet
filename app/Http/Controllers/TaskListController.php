@@ -178,8 +178,9 @@ class TaskListController extends Controller
         }
 
         // Start from here ...
-        DB::transaction(function () use ($request, $tasklist) {
+        DB::beginTransaction();
 
+        try {
             // Collect check sheet attributes from request
             $taskItems = collect($request->input('items'))->values();
 
@@ -192,14 +193,21 @@ class TaskListController extends Controller
                     ['id' => $attribute['id'] ?? null],
                     [
                         'note' => $attribute['note'],
-                        'done' => $attribute['done'],
+                        'done' => $attribute['done'] ?? 0,
                         'checksheet_item_id' => $attribute['checksheetItemId'],
                     ]
                 );
             });
 
             $tasklist->updateStatus();
-        });
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            session()->flash('flash.banner', $th->getMessage());
+            session()->flash('flash.bannerStyle', 'error');
+            return back();
+            // throw $th;
+        }
 
         session()->flash('flash.banner', 'Updated successfully.');
         session()->flash('flash.bannerStyle', 'success');

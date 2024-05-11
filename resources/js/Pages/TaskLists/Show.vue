@@ -33,7 +33,7 @@
 									<td>{{index + 1}}</td>
 									<td>{{row.checksheetItem.title}}</td>
 									<td>{{row.note}}</td>
-									<td>{{row.done ? 'Done' : 'Not done'}}</td>
+									<td>{{row.done == 1 ? 'Done' : 'Not done'}}</td>
 								</tr>
 							</tbody>
 						</table>

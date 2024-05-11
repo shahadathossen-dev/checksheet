@@ -6,10 +6,8 @@ use App\Enums\CheckSheetType;
 use App\Enums\TaskListStatus;
 use App\Models\CheckSheet;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Enum;
 
 class TaskListRequest extends FormRequest
 {
@@ -62,7 +60,7 @@ class TaskListRequest extends FormRequest
                         'checksheetId'  => ['nullable', 'integer', 'exists:check_sheets,id,user_id,'.$this->input('userId')],
                         'type'      => ['required', 'string',
                             Rule::in(CheckSheetType::toArray()),
-                            Rule::unique('task_lists', 'type')->where('user_id', $this->input('userId'))->where('due_date', $this->input('dueDate'))->ignore($this->tasklist->id)
+                            // Rule::unique('task_lists', 'type')->where('user_id', $this->input('userId'))->where('due_date', $this->input('dueDate'))->ignore($this->tasklist)
                         ],
                         'dueDate'  => ['nullable', 'date'],
                         'userId'  => ['nullable', 'integer', 'exists:users,id'],

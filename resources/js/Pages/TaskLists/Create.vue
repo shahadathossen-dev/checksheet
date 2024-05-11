@@ -50,7 +50,7 @@
 						<jet-text-input v-model="attribute.note" :id="`Note-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="attribute.required" />
 					</div>
 					<jet-label class="" :for="`Done-${index}`">
-						<jet-check-box v-model="attribute.done" :id="`Done-${index}`" :checked="!!attribute.done" />
+						<jet-check-box v-model="attribute.done" :id="`Done-${index}`" :checked="attribute.done == 1" />
 						<span class="px-2 align-middle">Done</span>
 					</jet-label>
 				</div>
