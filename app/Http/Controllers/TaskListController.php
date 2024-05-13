@@ -31,11 +31,10 @@ class TaskListController extends Controller
     public function index(Request $request)
     {
         $authUser = $request->user();
-
         if ($authUser->cannot('viewAny', TaskList::class)) {
             abort(403);
         }
-
+        
         // Start from here ...
         return Inertia::render('TaskLists/Index', [
             'tasklists' => TaskList::filter($request->all())

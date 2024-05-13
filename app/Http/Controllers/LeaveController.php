@@ -36,7 +36,7 @@ class LeaveController extends Controller
             'leaves' => Leave::filter($request->all())
                 ->when(
                     !$authUser->hasRole([Role::SUPER_ADMIN, Role::ADMIN]),
-                    fn($query) => $query->where('user_id', $authUser->id)
+                    fn($query) => $query->where('user_id', $authUser->id)->orWhere('type', LeaveType::GENERAL())
                 )
                 ->with('user', 'approver')
                 ->sorted()

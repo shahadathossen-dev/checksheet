@@ -93,7 +93,7 @@ class PurchaseRequest extends Model
      *
      * @var array
      */
-    public static $permissions = ['view', 'view-any', 'create', 'update'];
+    public static $permissions = ['view', 'view-any', 'create', 'update', 'delete'];
 
     public static function boot(): void
     {

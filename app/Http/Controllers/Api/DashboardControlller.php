@@ -3,28 +3,17 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enums\AdditionalTaskStatus;
-use Carbon\Carbon;
-use App\Models\User;
-use Inertia\Inertia;
-use App\Models\Role;
-use App\Facades\Helper;
+use App\Enums\PurchaseRequestStatus;
 use App\Models\TaskList;
-use App\Models\CheckSheet;
+use App\Models\TaskItem;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Enums\TaskListStatus;
-use App\Enums\CheckSheetType;
 use App\Events\DueStatusEvent;
-use Barryvdh\DomPDF\Facade\Pdf;
-use App\Exports\TaskListExport;
-use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\DashboardItemRequest;
-use App\Http\Requests\TaskListRequest;
 use App\Models\AdditionalTask;
 use App\Models\PurchaseRequest;
-use App\Models\TaskItem;
+use App\Http\Controllers\Controller;
 use App\Services\StatusUpdateService;
+use App\Http\Requests\DashboardItemRequest;
 
 class DashboardControlller extends Controller
 {
@@ -44,15 +33,15 @@ class DashboardControlller extends Controller
         // $pendingTaskItems = TaskItem::whereHas('tasklist', fn($q) => $q->where('user_id', $authUser->id)->pending())
         //     ->with('tasklist:id,type,due_date', 'checksheetItem:id,title')->pending()->get()->groupBy('tasklist.type');
         
-        $pendingChecksheets = TaskList::where('user_id', $authUser->id)->pending()->select('id','type','due_date')
+        $pendingChecksheets = TaskList::where('user_id', $authUser->id)->whereDate('due_date', '>=', today()->subDay())->select('id', 'type', 'due_date', 'status')
             ->with([
                 // 'checksheet:id,title,created_at,updated_at',
-                'items' => fn($q) => $q->pending()->with('checksheetItem:id,title,required')
+                'items' => fn($q) => $q->with('checksheetItem:id,title,required')
             ])
             ->get()->groupBy('type');
         
-        $pendingAdditionalTasks = AdditionalTask::where('user_id', $authUser->id)->pending()->get();
-        $pendingPurchaseRequests = PurchaseRequest::where('user_id', $authUser->id)->pending()->get();
+        $pendingAdditionalTasks = AdditionalTask::where('user_id', $authUser->id)->get();
+        $pendingPurchaseRequests = PurchaseRequest::where('user_id', $authUser->id)->get();
 
         $data = [
             'checksheets' => $pendingChecksheets,
@@ -74,7 +63,11 @@ class DashboardControlller extends Controller
             abort(403);
         }
 
-        $taskItem->update($request->only('note', 'done'));
+        // $taskItem->update($request->only('note', 'done'));
+        $taskItem->update([
+            'note' => $request->note,
+            'done' => $request->done
+        ]);
 
         $taskItem->tasklist->updateStatus();
         return response()->json(['status' => 'success', 'message' => 'Updated successfully']);
@@ -91,10 +84,13 @@ class DashboardControlller extends Controller
             abort(403);
         }
 
-        $additionalTask->markAsDone();
+        // $additionalTask->update($request->only('note', 'status'));
+        $additionalTask->update([
+            'status' => $request->status == AdditionalTaskStatus::DONE() ? AdditionalTaskStatus::DONE() : AdditionalTaskStatus::DUE()
+        ]);
+
         return response()->json(['status' => 'success', 'message' => 'Updated successfully']);
         
-        // $additionalTask->update($request->only('note', 'status'));
     }
 
     /**
@@ -123,8 +119,25 @@ class DashboardControlller extends Controller
             abort(403);
         }
 
-        $purchaseRequest->markAsDone();
-        // $purchaseRequest->update($request->only('note', 'status'));
+        $purchaseRequest->update($request->only('title', 'status'));
+
+        return response()->json(['status' => 'success', 'message' => 'Updated successfully']);
+    }
+
+    /**
+     * Delete resource on db.
+     * @param  \App\Models\PurchaseRequest
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deletePurchaseRequest(Request $request, PurchaseRequest $purchaseRequest)
+    {
+        if ($request->user()->cannot('delete', $purchaseRequest)) {
+            abort(403);
+        }
+
+        $purchaseRequest->delete();
+
+        return response()->json(['status' => 'success', 'message' => 'Deleted successfully']);
     }
 
     public function testJob(Request $request, TaskList $tasklist)

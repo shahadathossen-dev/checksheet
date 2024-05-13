@@ -14,6 +14,7 @@ use App\Facades\Helper;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AdditionalTaskRequest;
+use App\Models\Role;
 
 class AdditionalTaskController extends Controller
 {
@@ -24,12 +25,18 @@ class AdditionalTaskController extends Controller
      */
     public function index(Request $request)
     {
+        $authUser = $request->user();
         if ($request->user()->cannot('viewAny', AdditionalTask::class)) {
             abort(403);
         }
+        
         // Start from here ...
         return Inertia::render('AdditionalTasks/Index', [
             'additionalTasks' => AdditionalTask::filter($request->all())
+                ->when(
+                    !$authUser->hasRole([Role::SUPER_ADMIN, Role::ADMIN]),
+                    fn($query) => $query->where('user_id', $authUser->id)
+                )
                 ->sorted()
                 ->with('assignee', 'author')
                 ->paginate()

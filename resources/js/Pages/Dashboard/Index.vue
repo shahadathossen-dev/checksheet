@@ -17,15 +17,15 @@
                 </template>
                 <template #body>
                     <template v-if="dailyChecksheet.items?.length">
-                        <form @submit.prevent="submit(item, route('api.task-items.update', item.id), 'dailyChecksheet')" class="w-full flex items-center gap-5 block my-2" :action="route('api.task-items.update', item.id)" method="POST" v-for="(item, index) in dailyChecksheet.items" :key="item.id">
+                        <form @submit.prevent="submit(item, route('api.task-items.update', item.id))" class="w-full flex items-center gap-5 block my-2" v-for="(item, index) in dailyChecksheet.items" :key="item.id">
                             <div class="task-item flex-grow">
-                                <jet-label class="w-full" :for="`dailyTaskItemNote-${item.id}`" :value="item.checksheetItem.title" :required="!!item.checksheetItem.required" />
+                                <jet-label class="w-full" :class="{'line-through': item.done == 1}" :for="`dailyTaskItemNote-${item.id}`" :value="item.checksheetItem.title" :required="!!item.checksheetItem.required" />
 
-                                <jet-input v-model="item.note" :id="`dailyTaskItemNote-${item.id}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="!!item.checksheetItem.required" />
+                                <jet-input v-model="item.note" :id="`dailyTaskItemNote-${item.id}`" type="text" class="mt-'done' block w-full" placeholder="Note" :required="!!item.checksheetItem.required" :disabled="dailyChecksheet.status != 'pending' || item.done == 1" />
                             </div>
                             <jet-label class="mt-5 min-w-16" :for="`dailyTaskItemDone-${item.id}`">
                                 <jet-input type="submit" value="submit" class="hidden" />
-                                <jet-check-box v-model="item.done" :id="`dailyTaskItemDone-${item.id}`" :checked="item.done == 1" @change="($event) => $event.target.checked ? $event.target.previousSibling.click() : item.done = 0" />
+                                <jet-check-box v-model="item.done" :id="`dailyTaskItemDone-${item.id}`" :checked="item.done == 1" @change="($event) => $event.target.previousSibling.click()" :disabled="dailyChecksheet.status != 'pending'" />
                                 <span class="px-2 align-middle">Done</span>
                             </jet-label>
                         </form>
@@ -49,15 +49,15 @@
                 </template>
                 <template #body>
                     <template v-if="weeklyChecksheet.items?.length">
-                        <form @submit.prevent="submit(item, route('api.task-items.update', item.id), 'weeklyChecksheet')" class="w-full flex items-center gap-5 block my-2" :action="route('api.task-items.update', item.id)" method="POST" v-for="(item, index) in weeklyChecksheet.items" :key="item.id">
+                        <form @submit.prevent="submit(item, route('api.task-items.update', item.id))" class="w-full flex items-center gap-5 block my-2" v-for="(item, index) in weeklyChecksheet.items" :key="item.id">
                             <div class="task-item flex-grow">
-                                <jet-label class="w-full" :for="`weeklyTaskItemNote-${index}`" :value="item.checksheetItem.title" :required="!!item.checksheetItem.required" />
+                                <jet-label class="w-full" :class="{'line-through': item.done == 1}" :for="`weeklyTaskItemNote-${index}`" :value="item.checksheetItem.title" :required="!!item.checksheetItem.required" />
 
-                                <jet-text-input v-model="item.note" :id="`weeklyTaskItemNote-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="!!item.checksheetItem.required" />
+                                <jet-text-input v-model="item.note" :id="`weeklyTaskItemNote-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="!!item.checksheetItem.required" :disabled="weeklyChecksheet.status != 'pending' || item.done == 1" />
                             </div>
                             <jet-label class="mt-5 min-w-16" :for="`weeklyTaskItemDone-${index}`">
                                 <jet-input type="submit" value="submit" class="hidden" />
-                                <jet-check-box v-model="item.done" :id="`weeklyTaskItemDone-${index}`" :checked="item.done == 1" @change="($event) => $event.target.checked ? $event.target.previousSibling.click() : item.done = 0" />
+                                <jet-check-box v-model="item.done" :id="`weeklyTaskItemDone-${index}`" :checked="item.done == 1" @change="($event) => $event.target.previousSibling.click()" :disabled="weeklyChecksheet.status != 'pending'" />
                                 <span class="px-2 align-middle">Done</span>
                             </jet-label>
                         </form>
@@ -81,15 +81,15 @@
                 </template>
                 <template #body>
                     <template v-if="monthlyChecksheet.items?.length">
-                        <form @submit.prevent="submit(item, route('api.task-items.update', item.id), 'monthlyChecksheet')" class="w-full flex items-center gap-5 block my-2" :action="route('api.task-items.update', item.id)" method="POST" v-for="(item, index) in monthlyChecksheet.items" :key="item.id">
+                        <form @submit.prevent="submit(item, route('api.task-items.update', item.id))" class="w-full flex items-center gap-5 block my-2" v-for="(item, index) in monthlyChecksheet.items" :key="item.id">
                             <div class="task-item flex-grow">
-                                <jet-label class="w-full" :for="`monthlyTaskItemNote-${index}`" :value="item.checksheetItem.title" :required="!!item.checksheetItem.required" />
+                                <jet-label class="w-full" :class="{'line-through': item.done == 1}" :for="`monthlyTaskItemNote-${index}`" :value="item.checksheetItem.title" :required="!!item.checksheetItem.required" />
 
-                                <jet-text-input v-model="item.note" :id="`monthlyTaskItemNote-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="item.checksheetItem.required" />
+                                <jet-text-input v-model="item.note" :id="`monthlyTaskItemNote-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="item.checksheetItem.required" :disabled="monthlyChecksheet.status != 'pending' || item.done == 1" />
                             </div>
                             <jet-label class="mt-5 min-w-16" :for="`monthlyTaskItemDone-${index}`">
                                 <jet-input type="submit" value="submit" class="hidden" />
-                                <jet-check-box v-model="item.done" :id="`monthlyTaskItemDone-${index}`" :checked="item.done == 1" @change="($event) => $event.target.checked ? $event.target.previousSibling.click() : item.done = 0" />
+                                <jet-check-box v-model="item.done" :id="`monthlyTaskItemDone-${index}`" :checked="item.done == 1" @change="($event) => $event.target.previousSibling.click()" :disabled="monthlyChecksheet.status != 'pending'" />
                                 <span class="px-2 align-middle">Done</span>
                             </jet-label>
                         </form>
@@ -111,15 +111,13 @@
                 </template>
                 <template #body>
                     <template v-if="additionalTasks.length">
-                        <form @submit.prevent="submit(item, route('api.additional-tasks.update', item.id), 'additionalTasks')" class="w-full flex items-center gap-5 block my-2" :action="route('api.additional-tasks.update', item.id)" method="POST" v-for="(item, index) in additionalTasks" :key="item.id">
+                        <form @submit.prevent="submit(item, route('api.additional-tasks.update', item.id))" class="w-full flex items-center gap-5 block my-2" v-for="(item, index) in additionalTasks" :key="item.id">
                             <div class="task-item flex-grow">
-                                <jet-label class="w-full" :for="`additionalTaskNote-${index}`" :value="item.title" :required="!!item.note_required" />
-
-                                <jet-text-input v-model="item.note" :id="`additionalTaskNote-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="item.note_required == 1" />
+                                <jet-label class="w-full" :class="{'line-through': item.status == 'done'}" :for="`additionalTaskNote-${index}`" :value="item.title" />
                             </div>
-                            <jet-label class="mt-5 min-w-16" :for="`additionalTaskDone-${index}`">
+                            <jet-label class="min-w-16" :for="`additionalTaskDone-${index}`">
                                 <jet-input type="submit" value="submit" class="hidden" />
-                                <jet-check-box v-model="item.done" :id="`additionalTaskDone-${index}`" :checked="item.done == 1" @change="($event) => $event.target.checked ? $event.target.previousSibling.click() : item.done = 0" />
+                                <jet-check-box value="done" v-model="item.status" :id="`additionalTaskDone-${index}`" :checked="item.status == 'done'" @change="($event) => $event.target.previousSibling.click()" :disabled="item.status != 'pending'" />
                                 <span class="px-2 align-middle">Done</span>
                             </jet-label>
                         </form>
@@ -139,14 +137,30 @@
                 </template>
                 <template #body>
                     <template v-if="purchaseRequests.length">
-                        <div class="w-full flex items-center gap-5 block my-2" v-for="(item, index) in purchaseRequests" :key="item.id">
+                        <form @submit.prevent="submit(item, route('api.purchase-requests.update', item.id))" class="w-full flex items-center gap-5 block my-2 group" v-for="(item, index) in purchaseRequests" :key="item.id">
                             <div class="task-item flex-grow">
-                                <jet-label class="w-full" :for="`Note-${index}`" :value="item.title" />
+                                <jet-text-input type="text" class="block w-full" placeholder="Title" required :for="`PurchaseNote-${index}`" v-model="item.title" :disabled="!item.edit" />
                             </div>
-                            <jet-label class="mt-5 capitalize" :for="`Status-${index}`">
+                            <div v-if="item.status == 'pending'" class="invisible group-hover:visible flex gap-1">
+                                <button v-if="item.edit" id="Update-PurchaseRequest" type="submit">
+                                    <i class="ti ti-check"></i>
+                                </button>
+                                <button v-else id="Edit-PurchaseRequest" @click.prevent="(item.edit = true), (item.proxyTitle = item.title)" type="reset">
+								    <i class="ti-pencil-alt"></i>
+                                </button>
+                                
+                                <button v-if="item.edit" @click.prevent="(item.edit = false), (item.title = item.proxyTitle)" id="Reset-PurchaseRequest" type="reset">
+								    <i class="ti-close"></i>
+                                </button>
+
+                                <button v-else @click.prevent="removeItem(item, route('api.purchase-requests.update', item.id))" id="Delete-PurchaseRequest" type="reset">
+								    <i class="ti-trash"></i>
+                                </button>
+                            </div>
+                            <jet-label class="capitalize" :for="`PurchaseStatus-${index}`">
                                 {{item.status}}
                             </jet-label>
-                        </div>
+                        </form>
                     </template>
                     <template v-else>
                         <div class="h-full w-full flex justify-center items-center">
@@ -157,7 +171,7 @@
                 <template #footer>
                     <form class="w-full flex items-center gap-5 block" @submit.prevent="submit(form, route('api.purchase-requests.store'), 'purchaseRequests')" :action="route('api.purchase-requests.store')" method="POST">
                         <div class="task-item flex-grow">
-                            <jet-text-input v-model="form.title" id="Note-PurchaseRequest" type="text" class="mt-1 block w-full" placeholder="Note" required />
+                            <jet-text-input v-model="form.title" id="Note-PurchaseRequest" type="text" class="mt-1 block w-full" placeholder="Title" required />
                         </div>
                         <jet-label for="Save-PurchaseRequest" class="p-2 rounded-md btn btn-success text-white">
                             <span class="ti ti-save"></span>
@@ -213,21 +227,32 @@ const toastify = (message, type = 'success') => toast(message, {
   "dangerouslyHTMLString": true
 })
 
-const submit = async (payload, route, type) => {
+const submit = async (payload, route, type = '') => {
     Object.assign(form, payload)
 
     try {
-        const {data} = await axios.post(route, form);
-        if(type == 'purchaseRequests')
-        purchaseRequests.value.push(data.data)
-        else if(type == 'additionalTasks')
-        additionalTasks.value = additionalTasks.value.filter(item => item.id != payload.id)
-        else if(type == 'dailyChecksheet')
-        dailyChecksheet.value.items = dailyChecksheet.value?.items.filter(item => item.id != payload.id)
-        else if(type == 'weeklyChecksheet')
-        weeklyChecksheet.value.items = weeklyChecksheet.value?.items.filter(item => item.id != payload.id)
-        else if(type == 'monthlyChecksheet')
-        monthlyChecksheet.value.items = monthlyChecksheet.value?.items.filter(item => item.id != payload.id)
+        if(type == 'purchaseRequests') {
+            const {data} = await axios.post(route, form);
+            purchaseRequests.value.push(data.data)
+        }
+        
+        const {data} = await axios.put(route, form);
+
+        toastify(data.message);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const removeItem = async (payload, route) => {
+    if(payload.status == 'done') {
+        toastify('Request already closed', 'error');
+        return;
+    }
+
+    try {
+        const {data} = await axios.delete(route);
+        purchaseRequests.value = purchaseRequests.value.filter(item => item.id != payload.id)
 
         toastify(data.message);
     } catch (error) {

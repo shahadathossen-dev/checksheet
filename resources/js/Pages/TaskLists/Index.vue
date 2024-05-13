@@ -61,7 +61,7 @@
 				<thead class="sticky top-0 z-10 shadow">
 					<tr>
 						<th>Title</th>
-						<th>Description</th>
+						<!-- <th>Description</th> -->
 						<th>Due Date</th>
 						<th>Submit Date</th>
 						<th>Assignee</th>
@@ -74,7 +74,7 @@
 				<tbody class="h-full overflow-auto">
 					<tr v-for="(row, index) in rows" :key="index">
 						<td>{{ row.checksheet?.title }}</td>
-						<td>{{ row.checksheet?.description }}</td>
+						<!-- <td>{{ row.checksheet?.description }}</td> -->
 						<td>{{ row.dueDateFormatted }}</td>
 						<td>{{ row.submitDateFormatted }}</td>
 						<td>{{ row.assignee?.name }}</td>

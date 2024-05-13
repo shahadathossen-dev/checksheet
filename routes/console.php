@@ -55,3 +55,7 @@ Artisan::command('update:permissions', function () {
     User::superAdmin()->first()->givePermissionTo(Permission::where('guard_name', 'web')->get());
 })->purpose('Give permissions to super admin user for new model.');
 
+Artisan::command('forget:permissions-cache', function () {
+    app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+})->purpose('Clear permissions cache.');
+

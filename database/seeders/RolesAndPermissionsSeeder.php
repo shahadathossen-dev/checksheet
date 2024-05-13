@@ -36,11 +36,11 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $order    = 1;
         foreach ($userResources as $key => $model) {
-            $name     = $model::readableName();
-            $permissionOrder    = 1;
-
             // CreateOrUpdate permission group
+            $name     = $model::readableName();
             $group = PermissionGroup::firstOrCreate(['name' => $name, 'guard_name' => 'web'], ['name' => $name, 'order' => $order, 'guard_name' => 'web']);
+
+            $permissionOrder    = 1;
             foreach ($model::$permissions as $permission) {
                 $name = $permission . "-" . $model::readableName();
 

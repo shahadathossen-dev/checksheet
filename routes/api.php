@@ -34,10 +34,11 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     // Route::get('/products/{id}/deleted', [ProductController::class, 'forceDelete'])->name('rest.products.force-delete');
 
     Route::get('/dashboard/details', [DashboardControlller::class, 'index'])->name('dashboard.details');
-    Route::post('/task-items/{taskItem}', [DashboardControlller::class, 'updateTaskItem'])->name('api.task-items.update');
-    Route::post('/additional-tasks/{additionalTask}', [DashboardControlller::class, 'updateAdditionalTask'])->name('api.additional-tasks.update');
+    Route::put('/task-items/{taskItem}', [DashboardControlller::class, 'updateTaskItem'])->name('api.task-items.update');
+    Route::put('/additional-tasks/{additionalTask}', [DashboardControlller::class, 'updateAdditionalTask'])->name('api.additional-tasks.update');
     Route::post('/purchase-requests', [DashboardControlller::class, 'storePurchaseRequest'])->name('api.purchase-requests.store');
-    Route::post('/purchase-requests/{purchaseRequest}', [DashboardControlller::class, 'updatePurchaseRequest'])->name('api.purchase-requests.update');
+    Route::put('/purchase-requests/{purchaseRequest}', [DashboardControlller::class, 'updatePurchaseRequest'])->name('api.purchase-requests.update');
+    Route::delete('/purchase-requests/{purchaseRequest}', [DashboardControlller::class, 'deletePurchaseRequest'])->name('api.purchase-requests.delete');
     Route::get('/checksheets/details/{type}', [CheckSheetController::class, 'getDetails'])->name('checksheets.details');
     Route::get('/tasklists/details/{type}', [TaskListController::class, 'getDetails'])->name('tasklists.details');
     Route::get('/leaves/details/{type}', [LeaveController::class, 'getDetails'])->name('leaves.details');
