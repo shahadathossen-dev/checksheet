@@ -25,7 +25,7 @@
                             </div>
                             <jet-label class="mt-5 min-w-16" :for="`dailyTaskItemDone-${item.id}`">
                                 <jet-input type="submit" value="submit" class="hidden" />
-                                <jet-check-box v-model="item.done" :id="`dailyTaskItemDone-${item.id}`" :checked="attribute.done == 1" @change="($event) => $event.target.checked ? $event.target.previousSibling.click() : item.done = 0" />
+                                <jet-check-box v-model="item.done" :id="`dailyTaskItemDone-${item.id}`" :checked="item.done == 1" @change="($event) => $event.target.checked ? $event.target.previousSibling.click() : item.done = 0" />
                                 <span class="px-2 align-middle">Done</span>
                             </jet-label>
                         </form>
@@ -57,7 +57,7 @@
                             </div>
                             <jet-label class="mt-5 min-w-16" :for="`weeklyTaskItemDone-${index}`">
                                 <jet-input type="submit" value="submit" class="hidden" />
-                                <jet-check-box v-model="item.done" :id="`weeklyTaskItemDone-${index}`" :checked="attribute.done == 1" @change="($event) => $event.target.checked ? $event.target.previousSibling.click() : item.done = 0" />
+                                <jet-check-box v-model="item.done" :id="`weeklyTaskItemDone-${index}`" :checked="item.done == 1" @change="($event) => $event.target.checked ? $event.target.previousSibling.click() : item.done = 0" />
                                 <span class="px-2 align-middle">Done</span>
                             </jet-label>
                         </form>
@@ -89,7 +89,7 @@
                             </div>
                             <jet-label class="mt-5 min-w-16" :for="`monthlyTaskItemDone-${index}`">
                                 <jet-input type="submit" value="submit" class="hidden" />
-                                <jet-check-box v-model="item.done" :id="`monthlyTaskItemDone-${index}`" :checked="attribute.done == 1" @change="($event) => $event.target.checked ? $event.target.previousSibling.click() : item.done = 0" />
+                                <jet-check-box v-model="item.done" :id="`monthlyTaskItemDone-${index}`" :checked="item.done == 1" @change="($event) => $event.target.checked ? $event.target.previousSibling.click() : item.done = 0" />
                                 <span class="px-2 align-middle">Done</span>
                             </jet-label>
                         </form>
@@ -119,7 +119,7 @@
                             </div>
                             <jet-label class="mt-5 min-w-16" :for="`additionalTaskDone-${index}`">
                                 <jet-input type="submit" value="submit" class="hidden" />
-                                <jet-check-box v-model="item.done" :id="`additionalTaskDone-${index}`" :checked="attribute.done == 1" @change="($event) => $event.target.checked ? $event.target.previousSibling.click() : item.done = 0" />
+                                <jet-check-box v-model="item.done" :id="`additionalTaskDone-${index}`" :checked="item.done == 1" @change="($event) => $event.target.checked ? $event.target.previousSibling.click() : item.done = 0" />
                                 <span class="px-2 align-middle">Done</span>
                             </jet-label>
                         </form>
