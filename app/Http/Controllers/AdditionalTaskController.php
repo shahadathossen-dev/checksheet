@@ -137,7 +137,7 @@ class AdditionalTaskController extends Controller
         // Start from here ...
         DB::transaction(function () use ($request, $additionalTask) {
             // Update check sheet
-            $additionalTask->update(Helper::toSnakeCase($request->only('title', 'description', 'dueDate')));
+            $additionalTask->update(Helper::toSnakeCase($request->only('title', 'description', 'dueDate', 'status')));
         });
 
         session()->flash('flash.banner', 'Updated successfully.');

@@ -4,6 +4,6 @@ import { Link } from '@inertiajs/inertia-vue3';
 
 <template>
     <Link :href="'/'">
-        <img class="max-w-full" src="../../images/logo-mark.png" alt="{{ env('APP_NAME') }}" />
+        <img class="w-60 rounded-lg" src="../../images/logo-mark.png" alt="{{ env('APP_NAME') }}" />
     </Link>
 </template>

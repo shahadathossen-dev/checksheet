@@ -324,7 +324,7 @@ class TaskListController extends Controller
             });
         } else {
             $tasklist = CheckSheet::where(['type' => $type, 'user_id' => $userId])
-                ->with('checksheetItem')
+                ->with('checksheetItems')
                 ->first();
 
             if(!$tasklist) return response()->json(['message' => 'Resource not found!'], Response::HTTP_NOT_FOUND);

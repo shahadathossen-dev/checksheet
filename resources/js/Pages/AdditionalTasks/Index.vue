@@ -68,7 +68,7 @@
 									<detail-icon></detail-icon>
 								</Link>
 
-								<Link class="btn btn-purple mr-2" title="Edit" :href="route('additional-tasks.edit', row.id)" v-if="$page.props.can.udpateAdditionalTasks">
+								<Link class="btn btn-purple mr-2" title="Edit" :href="route('additional-tasks.edit', row.id)" v-if="$page.props.can.updateAdditionalTasks">
 									<i class="ti-pencil-alt"></i>
 								</Link>
 							</div>

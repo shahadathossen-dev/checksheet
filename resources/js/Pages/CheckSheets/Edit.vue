@@ -33,20 +33,23 @@
 				<div class="col w-full">
 					<jet-label class="md:w-1/4" for="dueBy" value="Due By" />
 					<div class="w-full mt-1">
-						<jet-input v-model="form.dueBy" id="dueBy" type="number" max="30" class="w-full" autocomplete="dueBy" />
-						<jet-input-error :message="form.errors.dueBy" class="mt-2" />
+						<jet-input :max="maxDueBy" v-model="form.dueBy" id="dueBy" type="number" max="30" class="w-full" autocomplete="dueBy" :disabled="form.type == 'daily'" />
+						<div class="flex justify-between">
+							<jet-input-error :message="form.errors.dueBy" class="mt-2" />
+							<dvi class="helping-text text-gray-400">{{ helpeingTextDueBy }}</dvi>
+						</div>
 					</div>
 				</div>
 			</form-group>
 
 			<!-- Description -->
-			<form-group class="border-b md:flex-col">
+			<!-- <form-group class="border-b md:flex-col">
 				<jet-label class="md:w-1/4" for="description" value="Description" />
 				<div class="w-full mt-1">
 					<jet-text-area v-model="form.description" id="description" type="text" class="w-full" autocomplete="description" />
 					<jet-input-error :message="form.errors.description" class="mt-2" />
 				</div>
-			</form-group>
+			</form-group> -->
 
 			<!-- Attributes -->
             <form-group class="border-b md:flex-col">
@@ -138,6 +141,15 @@ export default {
                 checksheetItems: [],
 			}),
 		};
+	},
+	computed: {
+		helpeingTextDueBy () {
+			return this.form.type == 'monthly' ? '1 - 30 (Keep it empty to indicate end of every month)' : (this.form.type == 'weekly' ? '0-6 (Weekdays every week)' : 'Not required (The current date)')
+		},
+
+		maxDueBy () {
+			return this.form.type == 'monthly' ? 30 : (this.form.type == 'weekly' ? 6 : null)
+		},
 	},
 	beforeMount() {
 		Object.assign(this.form, this.checksheet);

@@ -1,10 +1,8 @@
 <script setup>
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
-import ApplicationMark from "@/Components/ApplicationMark.vue";
 import SidebarItem from "@/Layouts/Partials/SidebarItem.vue";
 import SubmenuItem from "@/Layouts/Partials/SubmenuItem.vue";
 import { Link } from "@inertiajs/inertia-vue3";
-import UserIcon from "@/Icons/UserIcon.vue";
 
 defineProps({
   collapsed: Boolean,
@@ -15,9 +13,9 @@ const isActive = (routes) => routes.some((currentRoute) => route().current(curre
 <template>
   <div class="sidebar shadow-md" :class="{ collapsed: collapsed }">
     <Link :href="route('dashboard')" class="flex items-center justify-center px-5 h-20">
-      <div class="ml-4 flex-grow">
+      <div class="ml-4 text-2xl flex-grow uppercase font-bold text-blue-500">
         <Transition name="zoomin">
-          <ApplicationLogo class="" />
+          Laurel Smiles
         </Transition>
       </div>
     </Link>

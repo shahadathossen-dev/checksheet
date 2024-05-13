@@ -51,7 +51,7 @@
 				<thead class="sticky top-0 z-10 shadow">
 					<tr>
 						<th>Title</th>
-						<th>Description</th>
+						<!-- <th>Description</th> -->
 						<th>Due By</th>
 						<th>Assignee</th>
 						<th>Author</th>
@@ -63,7 +63,7 @@
 				<tbody class="h-full overflow-auto">
 					<tr v-for="(row, index) in rows" :key="index">
 						<td>{{ row.title }}</td>
-						<td>{{ row.description }}</td>
+						<!-- <td>{{ row.description }}</td> -->
 						<td>{{ row.dueBy }}</td>
 						<td>{{ row.assignee?.name }}</td>
 						<td>{{ row.author?.name }}</td>
