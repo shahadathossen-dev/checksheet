@@ -228,15 +228,14 @@ const toastify = (message, type = 'success') => toast(message, {
 })
 
 const submit = async (payload, route, type = '') => {
-    Object.assign(form, payload)
-
     try {
         if(type == 'purchaseRequests') {
-            const {data} = await axios.post(route, form);
+            const {data} = await axios.post(route, payload);
+            form.title = null
             purchaseRequests.value.push(data.data)
         }
         
-        const {data} = await axios.put(route, form);
+        const {data} = await axios.put(route, payload);
 
         toastify(data.message);
     } catch (error) {
