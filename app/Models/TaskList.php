@@ -32,6 +32,7 @@ class TaskList extends Model
         'submitted_by',
         'submit_date',
         'status',
+        'title',
     ];
 
     /**

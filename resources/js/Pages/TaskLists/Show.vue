@@ -2,8 +2,8 @@
 	<detail-view title="Task List Details">
 
 		<!-- Title -->
-		<detail-section class="border-b" label="Title" :value="tasklist.checksheet.title"></detail-section>
-		<detail-section class="border-b" label="Description" :value="tasklist.checksheet.description"></detail-section>
+		<detail-section class="border-b" label="Title" :value="tasklist.title"></detail-section>
+		<!-- <detail-section class="border-b" label="Description" :value="tasklist.description"></detail-section> -->
 		<!-- Date -->
 		<detail-section class="border-b" label="Due Date" :value="tasklist.dueDateFormatted"></detail-section>
 		<detail-section class="border-b" label="Submit Date" :value="tasklist.submitDateFormatted"></detail-section>
@@ -31,7 +31,7 @@
 							<tbody>
 								<tr v-for="(row, index) in rows" :key="index">
 									<td>{{index + 1}}</td>
-									<td>{{row.checksheetItem.title}}</td>
+									<td>{{row.title}}</td>
 									<td>{{row.note}}</td>
 									<td>{{row.done == 1 ? 'Done' : 'Not done'}}</td>
 								</tr>

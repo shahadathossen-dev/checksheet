@@ -85,7 +85,7 @@ class TaskListController extends Controller
         }
 
         DB::transaction(function () use ($request) {
-            $tasklist = TaskList::create(Helper::toSnakeCase($request->only('checksheetId', 'dueDate', 'userId', 'type')));
+            $tasklist = TaskList::create(Helper::toSnakeCase($request->only('checksheetId', 'title', 'dueDate', 'userId', 'type')));
 
             // Collect Check Sheet items from request and sync
             $taskItems = collect($request->input('items'))->values();
@@ -94,6 +94,8 @@ class TaskListController extends Controller
                 'checksheet_item_id' => $item['checksheetItemId'],
                 'note' => $item['note'],
                 'done' => $item['done'],
+                'title' => $item['title'],
+                'note_required' => $item['noteRequired'],
             ]));
 
             $tasklist->updateStatus();
@@ -149,12 +151,11 @@ class TaskListController extends Controller
         }
 
         // Start from here ...
-        $tasklist->items->map(function($item) {
-            $item->title = $item->checksheetItem->title;
-            $item->required = $item->checksheetItem->required;
-            return $item;
-        });
-
+        // $tasklist->items->map(function($item) {
+        //     $item->title = $item->checksheetItem->title;
+        //     $item->required = $item->checksheetItem->required;
+        //     return $item;
+        // });
         return Inertia::render('TaskLists/Edit', [
             'tasklist'  => $tasklist->load('checksheet', 'items.checksheetItem', 'assignee'),
             'checksheetTypes' => CheckSheetType::toSelectOptions(),
@@ -313,14 +314,6 @@ class TaskListController extends Controller
             
         if($tasklist) {
             $tasklist->model = 'tasklist';
-            $tasklist->checksheet_id = $tasklist->checksheet->id;
-            $tasklist->title = $tasklist->checksheet->title;
-            $tasklist->description = $tasklist->checksheet->description;
-            $tasklist->items->map(function($item) {
-                $item->title = $item->checksheetItem->title;
-                $item->required = $item->checksheetItem->required;
-                return $item;
-            });
         } else {
             $tasklist = CheckSheet::where(['type' => $type, 'user_id' => $userId])
                 ->with('checksheetItems')

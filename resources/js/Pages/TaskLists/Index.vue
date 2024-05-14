@@ -73,8 +73,8 @@
 				</thead>
 				<tbody class="h-full overflow-auto">
 					<tr v-for="(row, index) in rows" :key="index">
-						<td>{{ row.checksheet?.title }}</td>
-						<!-- <td>{{ row.checksheet?.description }}</td> -->
+						<td>{{ row.title }}</td>
+						<!-- <td>{{ row.description }}</td> -->
 						<td>{{ row.dueDateFormatted }}</td>
 						<td>{{ row.submitDateFormatted }}</td>
 						<td>{{ row.assignee?.name }}</td>

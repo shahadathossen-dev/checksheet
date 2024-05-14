@@ -34,20 +34,16 @@
 			<!-- Date -->
 			<detail-section class="border-b" label="Type" :value="checksheet?.type"></detail-section>
 			<detail-section class="border-b" label="Due Date" :value="checksheet?.dueDateFormatted"></detail-section>
-			<!-- Author -->
-			<!-- <detail-section class="border-b" label="Assignee" :value="checksheet?.assignee.name"></detail-section> -->
-			<!-- <detail-section class="border-b" label="Author" :value="checksheet?.author?.name"></detail-section> -->
-			
-			<detail-section class="border-b" label="Description" :value="checksheet?.description"></detail-section>
+			<!-- <detail-section class="border-b" label="Description" :value="checksheet?.description"></detail-section> -->
 
 			<!-- Attributes -->
             <form-group class="border-b md:flex-col" v-if="checksheet?.items">
 				<jet-label class="w-full" value="Check Sheet Items" />
 				<div class="w-full flex items-center gap-5 block my-2" v-for="(attribute, index) in checksheet?.items" :key="index">
 					<div class="task-item flex-grow">
-						<jet-label class="w-full" :for="`Note-${index}`" :value="attribute.title" :required="!!attribute.required" />
+						<jet-label class="w-full" :for="`Note-${index}`" :value="attribute.title" :required="!!attribute.note_required" />
 
-						<jet-text-input v-model="attribute.note" :id="`Note-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="attribute.required" />
+						<jet-text-input v-model="attribute.note" :id="`Note-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="attribute.note_required == 1" />
 					</div>
 					<jet-label class="" :for="`Done-${index}`">
 						<jet-check-box v-model="attribute.done" :id="`Done-${index}`" :checked="attribute.done == 1" />
@@ -117,6 +113,7 @@ export default {
 				checksheetId: null,
 				type: 'daily',
 				userId: null,
+				title: null,
 				dueDate: (new Date()).toISOString().slice(0,10),
                 items: [],
 			}),

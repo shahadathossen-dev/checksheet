@@ -36,7 +36,7 @@ class DashboardItemRequest extends FormRequest
             case 'POST': {
                     return [
                         'title' => ['nullable', 'string'],
-                        'note'  => ['required_if:required,1', 'nullable', 'string'],
+                        'note'  => ['nullable', 'required_if:note_required,1', 'string'],
                         'done'  => ['nullable', 'boolean'],
                         'required'  => ['nullable', 'boolean'],
                     ];
@@ -45,7 +45,7 @@ class DashboardItemRequest extends FormRequest
             case 'PATCH': {
                     return [
                         'title' => ['nullable', 'string'],
-                        'note'  => ['requried_if:required,1', 'nullable', 'string'],
+                        'note'  => ['nullable', 'required_if:note_required,1', 'string'],
                         'done'  => ['nullable', 'boolean'],
                         'required'  => ['nullable', 'boolean'],
                     ];

@@ -21,7 +21,7 @@ class ChecksheetItem extends Model
      */
     protected $fillable = [
         'title',
-        'required',
+        'note_required',
         'checksheet_id',
     ];
 

@@ -4,7 +4,7 @@
         <div class="title px-2">
             Checksheets
         </div>
-        <div class="checksheets flex gap-4 p-2">
+        <div class="checksheets flex flex-wrap lg:flex-nowrap gap-4 p-2">
             <card :header="true" bodyClass="max-h-72 overflow-y-auto">
                 <template #left-header>
                     <strong>Daily Checksheets</strong>
@@ -17,15 +17,15 @@
                 </template>
                 <template #body>
                     <template v-if="dailyChecksheet.items?.length">
-                        <form @submit.prevent="submit(item, route('api.task-items.update', item.id))" class="w-full flex items-center gap-5 block my-2" v-for="(item, index) in dailyChecksheet.items" :key="item.id">
+                        <form @submit.prevent="submit(item, route('api.task-items.update', item.id))" class="max-w-full flex items-center gap-5 block my-2" v-for="(item, index) in dailyChecksheet.items" :key="item.id">
                             <div class="task-item flex-grow">
-                                <jet-label class="w-full" :class="{'line-through': item.done == 1}" :for="`dailyTaskItemNote-${item.id}`" :value="item.checksheetItem.title" :required="!!item.checksheetItem.required" />
+                                <jet-label class="w-full" :class="{'line-through': item.done == 1}" :for="`dailyTaskItemNote-${item.id}`" :value="item.title" :required="!!item.note_required" />
 
-                                <jet-input v-model="item.note" :id="`dailyTaskItemNote-${item.id}`" type="text" class="mt-'done' block w-full" placeholder="Note" :required="!!item.checksheetItem.required" :disabled="dailyChecksheet.status != 'pending' || item.done == 1" />
+                                <jet-input v-model="item.note" :id="`dailyTaskItemNote-${item.id}`" type="text" class="mt-'done' block w-full" placeholder="Note" :required="!!item.note_required" :disabled="dailyChecksheet.status != 'pending'" />
                             </div>
                             <jet-label class="mt-5 min-w-16" :for="`dailyTaskItemDone-${item.id}`">
                                 <jet-input type="submit" value="submit" class="hidden" />
-                                <jet-check-box v-model="item.done" :id="`dailyTaskItemDone-${item.id}`" :checked="item.done == 1" @change="($event) => $event.target.previousSibling.click()" :disabled="dailyChecksheet.status != 'pending'" />
+                                <jet-check-box value="1" :checked="item.done == 1" v-model="item.done" :id="`dailyTaskItemDone-${item.id}`" @change="($event) => $event.target.previousSibling.click()" :disabled="dailyChecksheet.status != 'pending'" />
                                 <span class="px-2 align-middle">Done</span>
                             </jet-label>
                         </form>
@@ -51,13 +51,13 @@
                     <template v-if="weeklyChecksheet.items?.length">
                         <form @submit.prevent="submit(item, route('api.task-items.update', item.id))" class="w-full flex items-center gap-5 block my-2" v-for="(item, index) in weeklyChecksheet.items" :key="item.id">
                             <div class="task-item flex-grow">
-                                <jet-label class="w-full" :class="{'line-through': item.done == 1}" :for="`weeklyTaskItemNote-${index}`" :value="item.checksheetItem.title" :required="!!item.checksheetItem.required" />
+                                <jet-label class="w-full" :class="{'line-through': item.done == 1}" :for="`weeklyTaskItemNote-${index}`" :value="item.title" :required="!!item.note_required" />
 
-                                <jet-text-input v-model="item.note" :id="`weeklyTaskItemNote-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="!!item.checksheetItem.required" :disabled="weeklyChecksheet.status != 'pending' || item.done == 1" />
+                                <jet-text-input v-model="item.note" :id="`weeklyTaskItemNote-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="!!item.note_required" :disabled="weeklyChecksheet.status != 'pending'" />
                             </div>
                             <jet-label class="mt-5 min-w-16" :for="`weeklyTaskItemDone-${index}`">
                                 <jet-input type="submit" value="submit" class="hidden" />
-                                <jet-check-box v-model="item.done" :id="`weeklyTaskItemDone-${index}`" :checked="item.done == 1" @change="($event) => $event.target.previousSibling.click()" :disabled="weeklyChecksheet.status != 'pending'" />
+                                <jet-check-box value="1" :checked="item.done == 1" v-model="item.done" :id="`weeklyTaskItemDone-${index}`" @change="($event) => $event.target.previousSibling.click()" :disabled="weeklyChecksheet.status != 'pending'" />
                                 <span class="px-2 align-middle">Done</span>
                             </jet-label>
                         </form>
@@ -83,13 +83,13 @@
                     <template v-if="monthlyChecksheet.items?.length">
                         <form @submit.prevent="submit(item, route('api.task-items.update', item.id))" class="w-full flex items-center gap-5 block my-2" v-for="(item, index) in monthlyChecksheet.items" :key="item.id">
                             <div class="task-item flex-grow">
-                                <jet-label class="w-full" :class="{'line-through': item.done == 1}" :for="`monthlyTaskItemNote-${index}`" :value="item.checksheetItem.title" :required="!!item.checksheetItem.required" />
+                                <jet-label class="w-full" :class="{'line-through': item.done == 1}" :for="`monthlyTaskItemNote-${index}`" :value="item.title" :required="!!item.note_required" />
 
-                                <jet-text-input v-model="item.note" :id="`monthlyTaskItemNote-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="item.checksheetItem.required" :disabled="monthlyChecksheet.status != 'pending' || item.done == 1" />
+                                <jet-text-input v-model="item.note" :id="`monthlyTaskItemNote-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="item.note_required" :disabled="monthlyChecksheet.status != 'pending'" />
                             </div>
                             <jet-label class="mt-5 min-w-16" :for="`monthlyTaskItemDone-${index}`">
                                 <jet-input type="submit" value="submit" class="hidden" />
-                                <jet-check-box v-model="item.done" :id="`monthlyTaskItemDone-${index}`" :checked="item.done == 1" @change="($event) => $event.target.previousSibling.click()" :disabled="monthlyChecksheet.status != 'pending'" />
+                                <jet-check-box value="1" :checked="item.done == 1" v-model="item.done" :id="`monthlyTaskItemDone-${index}`" @change="($event) => $event.target.previousSibling.click()" :disabled="monthlyChecksheet.status != 'pending'" />
                                 <span class="px-2 align-middle">Done</span>
                             </jet-label>
                         </form>
@@ -112,12 +112,14 @@
                 <template #body>
                     <template v-if="additionalTasks.length">
                         <form @submit.prevent="submit(item, route('api.additional-tasks.update', item.id))" class="w-full flex items-center gap-5 block my-2" v-for="(item, index) in additionalTasks" :key="item.id">
-                            <div class="task-item flex-grow">
-                                <jet-label class="w-full" :class="{'line-through': item.status == 'done'}" :for="`additionalTaskNote-${index}`" :value="item.title" />
+                            <div class="task-item flex-grow flex">
+                                <jet-label class="flex-grow" :class="{'line-through': item.status == 'done'}" :for="`additionalTaskNote-${index}`" :value="item.title" />
+                                <jet-label class="" v-if="item.dueDate" :for="`additionalTaskDueDate-${index}`" :value="item.dueDate" />
+
                             </div>
                             <jet-label class="min-w-16" :for="`additionalTaskDone-${index}`">
                                 <jet-input type="submit" value="submit" class="hidden" />
-                                <jet-check-box value="done" v-model="item.status" :id="`additionalTaskDone-${index}`" :checked="item.status == 'done'" @change="($event) => $event.target.previousSibling.click()" :disabled="item.status != 'pending'" />
+                                <jet-check-box value="done" :checked="item.status == 'done'" v-model="item.status" :id="`additionalTaskDone-${index}`" @change="($event) => $event.target.previousSibling.click()" :disabled="item.status != 'pending'" />
                                 <span class="px-2 align-middle">Done</span>
                             </jet-label>
                         </form>

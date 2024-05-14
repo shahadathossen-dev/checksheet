@@ -76,11 +76,16 @@ class GenerateTaskLists extends Command
                     $tasklist = $user->tasklists()->create([
                         'type'  => $type,
                         'checksheet_id' => $checksheet->id,
+                        'title' => $checksheet->title,
                         // 'submitted_by' => $user->id,
                         'due_date'  => Carbon::parse($dueDate)->format('Y-m-d'),
                     ]);
 
-                    $taskItems = $checksheet->checksheetItems->map(fn($item) => ['checksheet_item_id' => $item->id]);
+                    $taskItems = $checksheet->checksheetItems->map(fn($item) => [
+                        'checksheet_item_id' => $item->id,
+                        'title' => $item->title,
+                        'note_required' => $item->note_required,
+                    ]);
 
                     $tasklist->items()->createMany($taskItems);
                 }

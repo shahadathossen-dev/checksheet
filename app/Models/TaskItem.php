@@ -27,6 +27,8 @@ class TaskItem extends Model
         'checksheet_item_id',
         'tasklist_id',
         'done',
+        'title',
+        'note_required',
     ];
 
     /**

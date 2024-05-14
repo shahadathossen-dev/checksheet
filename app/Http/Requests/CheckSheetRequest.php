@@ -44,7 +44,7 @@ class CheckSheetRequest extends FormRequest
                         'user_id'  => ['nullable', 'integer', 'exists:users,id'],
                         'checksheetItems'    => 'nullable|array',
                         'checksheetItems.*.title'    => 'required|string',
-                        'checksheetItems.*.required'    => 'nullable|boolean',
+                        'checksheetItems.*.note_required'    => 'nullable|boolean',
                     ];
                 }
             case 'PUT':
@@ -60,7 +60,7 @@ class CheckSheetRequest extends FormRequest
                         'user_id'  => ['nullable', 'integer', 'exists:users,id'],
                         'checksheetItems'    => 'nullable|array',
                         'checksheetItems.*.title'    => 'required|string',
-                        'checksheetItems.*.required'    => 'nullable|boolean',
+                        'checksheetItems.*.note_required'    => 'nullable|boolean',
                     ];
                 }
             default:

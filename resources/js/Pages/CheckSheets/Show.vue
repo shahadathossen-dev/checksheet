@@ -29,7 +29,7 @@
 								<tr v-for="(row, index) in rows" :key="index">
 									<td>{{index + 1}}</td>
 									<td>{{row.title}}</td>
-									<td>{{row.required ? 'Required' : 'Not required'}}</td>
+									<td>{{row.note_required ? 'Required' : 'Not required'}}</td>
 								</tr>
 							</tbody>
 						</table>

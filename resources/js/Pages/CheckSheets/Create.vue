@@ -59,7 +59,7 @@
                     <div class="w-full flex items-center gap-5 block my-2" v-for="(attribute, index) in form.checksheetItems" :key="index">
                         <jet-text-input v-model="attribute.title" :id="`Note-${index}`" type="text" class="mt-1 block w-full" autocomplete="priceWithVat" placeholder="Title" required />
 						<jet-label class="md:w-1/4" :for="`Required-${index}`">
-                        	<jet-check-box v-model="attribute.required" :id="`Required-${index}`" :checked="attribute.required == 1" autocomplete="priceWithVat" />
+                        	<jet-check-box v-model="attribute.note_required" :id="`Required-${index}`" :checked="attribute.note_required == 1" autocomplete="priceWithVat" />
 							<span class="px-2 align-middle">Note Required</span>
 						</jet-label>
                         <jet-danger-button title="Remove Task" type="text" @click.prevent="removeAttribute(index)">
@@ -134,6 +134,7 @@ export default {
 				dueBy: null,
 				userId: null,
 				type: null,
+				noteRequired: null,
                 checksheetItems: [],
 			}),
 
