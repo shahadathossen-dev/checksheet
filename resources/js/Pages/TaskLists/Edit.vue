@@ -21,7 +21,7 @@
 				</div>
 
 				<!-- Type -->
-				<div class="col w-1/2" :class="{flex: !hasRoles(['Super Admin', 'Admin'])}">
+				<div class="col w-1/2 gap-2" :class="{flex: !hasRoles(['Super Admin', 'Admin'])}">
 					<jet-label class="mb-1" for="type" value="Type" required />
 					<div class="w-full">
 						<jet-select v-model="form.type" @change="getTaskListDetails" id="type" class="w-full" track="value" :options="checksheetTypes" autocomplete="type" required disabled />
@@ -29,7 +29,7 @@
 					</div>
 				</div>
 				<!-- Status -->
-				<div class="col w-1/2" :class="{flex: !hasRoles(['Super Admin', 'Admin'])}">
+				<div class="col w-1/2 gap-2" :class="{flex: !hasRoles(['Super Admin', 'Admin'])}">
 					<jet-label class="mb-1" for="status" value="Status" required />
 					<div class="w-full">
 						<jet-select v-model="form.status" id="status" class="w-full" track="value" :options="statusOptions" autocomplete="status" required :disabled="!hasRoles(['Super Admin', 'Admin'])" />
@@ -43,7 +43,7 @@
 			<detail-section class="border-b" label="Type" :value="checksheet?.type"></detail-section>
 			<detail-section class="border-b" label="Due Date" :value="tasklist?.dueDateFormatted"></detail-section>
 			<!-- Author -->
-			<detail-section class="border-b" label="Assignee" :value="checksheet?.assignee.name"></detail-section>
+			<detail-section class="border-b" label="Assignee" :value="checksheet?.assignee?.name"></detail-section>
 			<detail-section class="border-b" label="Author" :value="checksheet?.author?.name"></detail-section>
 			
 			<!-- <detail-section class="border-b" label="Description" :value="checksheet?.description"></detail-section> -->
@@ -53,7 +53,7 @@
 				<jet-label class="w-full" value="Check Sheet Items" />
 				<div class="w-full flex items-center gap-5 block my-2" v-for="(attribute, index) in tasklist?.items" :key="index">
 					<div class="task-item flex-grow">
-						<jet-label class="w-full" :for="`Note-${index}`" :value="attribute.checksheetItem.title" :required="!!attribute.checksheetItem.note_required" />
+						<jet-label class="w-full" :for="`Note-${index}`" :value="attribute.title" :required="!!attribute.note_required" />
 
 						<jet-text-input v-model="attribute.note" :id="`Note-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="attribute.note_required" />
 					</div>
@@ -136,7 +136,7 @@ export default {
 	},
 	beforeMount() {
 		// this.getTaskListDetails();
-		this.checksheet = this.tasklist.checksheet;
+		this.checksheet = this.tasklist;
 		Object.assign(this.form, this.tasklist)
 	},
 	methods: {

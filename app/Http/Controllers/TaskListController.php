@@ -309,7 +309,7 @@ class TaskListController extends Controller
                 fn($q) => $q->whereDate('due_date', $dueDate),
                 fn($q) => $q->whereDate('due_date', '>=', $dueDate),
             )
-            ->with('items.checksheetItem')
+            ->with('items')
             ->latest()->first();
             
         if($tasklist) {
