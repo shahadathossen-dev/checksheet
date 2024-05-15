@@ -36,18 +36,18 @@ class DashboardItemRequest extends FormRequest
             case 'POST': {
                     return [
                         'title' => ['nullable', 'string'],
-                        'note'  => ['nullable', 'required_if:note_required,1', 'string'],
+                        'note'  => ['nullable', 'required_if:noteRequired,1', 'string'],
                         'done'  => ['nullable', 'boolean'],
-                        'required'  => ['nullable', 'boolean'],
+                        'noteRequired'  => ['nullable', 'boolean'],
                     ];
                 }
             case 'PUT':
             case 'PATCH': {
                     return [
                         'title' => ['nullable', 'string'],
-                        'note'  => ['nullable', 'required_if:note_required,1', 'string'],
+                        'note'  => ['nullable', 'required_if:noteRequired,1', 'string'],
                         'done'  => ['nullable', 'boolean'],
-                        'required'  => ['nullable', 'boolean'],
+                        'noteRequired'  => ['nullable', 'boolean'],
                     ];
                 }
             default:

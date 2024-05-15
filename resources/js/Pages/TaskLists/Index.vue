@@ -87,7 +87,7 @@
 								</Link>
 							</div>
 							<div class="flex items-center gap-2 h-full" v-if="hasPermissions(['updateTaskLists'])">
-								<Link class="btn btn-purple" title="Edit" :href="route('tasklists.edit', row.id)">
+								<Link class="btn btn-purple" :class="{disabled: !hasRoles(['Super Admin', 'Admin']) && row.status != 'pending'}" title="Edit" :href="route('tasklists.edit', row.id)">
 									<i class="ti-pencil-alt"></i>
 								</Link>
 							</div>
@@ -167,3 +167,8 @@ export default {
     },
 };
 </script>
+<style lang="scss" scoped>
+.disabled {
+	@apply pointer-events-none;
+}
+</style>

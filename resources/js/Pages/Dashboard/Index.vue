@@ -19,9 +19,9 @@
                     <template v-if="dailyChecksheet.items?.length">
                         <form @submit.prevent="submit(item, route('api.task-items.update', item.id))" class="max-w-full flex items-center gap-5 block my-2" v-for="(item, index) in dailyChecksheet.items" :key="item.id">
                             <div class="task-item flex-grow">
-                                <jet-label class="w-full" :class="{'line-through': item.done == 1}" :for="`dailyTaskItemNote-${item.id}`" :value="item.title" :required="!!item.note_required" />
+                                <jet-label class="w-full" :class="{'line-through': item.done == 1}" :for="`dailyTaskItemNote-${item.id}`" :value="item.title" :required="!!item.noteRequired" />
 
-                                <jet-input v-model="item.note" :id="`dailyTaskItemNote-${item.id}`" type="text" class="mt-'done' block w-full" placeholder="Note" :required="!!item.note_required" :disabled="dailyChecksheet.status != 'pending'" />
+                                <jet-input v-model="item.note" :id="`dailyTaskItemNote-${item.id}`" type="text" class="mt-'done' block w-full" placeholder="Note" :required="!!item.noteRequired" :disabled="dailyChecksheet.status != 'pending'" />
                             </div>
                             <jet-label class="mt-5 min-w-16" :for="`dailyTaskItemDone-${item.id}`">
                                 <jet-input type="submit" value="submit" class="hidden" />
@@ -51,9 +51,9 @@
                     <template v-if="weeklyChecksheet.items?.length">
                         <form @submit.prevent="submit(item, route('api.task-items.update', item.id))" class="w-full flex items-center gap-5 block my-2" v-for="(item, index) in weeklyChecksheet.items" :key="item.id">
                             <div class="task-item flex-grow">
-                                <jet-label class="w-full" :class="{'line-through': item.done == 1}" :for="`weeklyTaskItemNote-${index}`" :value="item.title" :required="!!item.note_required" />
+                                <jet-label class="w-full" :class="{'line-through': item.done == 1}" :for="`weeklyTaskItemNote-${index}`" :value="item.title" :required="!!item.noteRequired" />
 
-                                <jet-text-input v-model="item.note" :id="`weeklyTaskItemNote-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="!!item.note_required" :disabled="weeklyChecksheet.status != 'pending'" />
+                                <jet-text-input v-model="item.note" :id="`weeklyTaskItemNote-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="!!item.noteRequired" :disabled="weeklyChecksheet.status != 'pending'" />
                             </div>
                             <jet-label class="mt-5 min-w-16" :for="`weeklyTaskItemDone-${index}`">
                                 <jet-input type="submit" value="submit" class="hidden" />
@@ -83,9 +83,9 @@
                     <template v-if="monthlyChecksheet.items?.length">
                         <form @submit.prevent="submit(item, route('api.task-items.update', item.id))" class="w-full flex items-center gap-5 block my-2" v-for="(item, index) in monthlyChecksheet.items" :key="item.id">
                             <div class="task-item flex-grow">
-                                <jet-label class="w-full" :class="{'line-through': item.done == 1}" :for="`monthlyTaskItemNote-${index}`" :value="item.title" :required="!!item.note_required" />
+                                <jet-label class="w-full" :class="{'line-through': item.done == 1}" :for="`monthlyTaskItemNote-${index}`" :value="item.title" :required="!!item.noteRequired" />
 
-                                <jet-text-input v-model="item.note" :id="`monthlyTaskItemNote-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="item.note_required" :disabled="monthlyChecksheet.status != 'pending'" />
+                                <jet-text-input v-model="item.note" :id="`monthlyTaskItemNote-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="item.noteRequired" :disabled="monthlyChecksheet.status != 'pending'" />
                             </div>
                             <jet-label class="mt-5 min-w-16" :for="`monthlyTaskItemDone-${index}`">
                                 <jet-input type="submit" value="submit" class="hidden" />
@@ -141,7 +141,8 @@
                     <template v-if="purchaseRequests.length">
                         <form @submit.prevent="submit(item, route('api.purchase-requests.update', item.id))" class="w-full flex items-center gap-5 block my-2 group" v-for="(item, index) in purchaseRequests" :key="item.id">
                             <div class="task-item flex-grow">
-                                <jet-text-input type="text" class="block w-full" placeholder="Title" required :for="`PurchaseNote-${index}`" v-model="item.title" :disabled="!item.edit" />
+                                <jet-text-input v-if="item.edit" type="text" class="block w-full" placeholder="Title" required :for="`PurchaseNote-${index}`" v-model="item.title" :disabled="!item.edit" />
+                                <jet-label v-else class="flex-grow" :class="{'line-through': item.status == 'done'}" :for="`PurchaseNote-${index}`" :value="item.title" />
                             </div>
                             <div v-if="item.status == 'pending'" class="invisible group-hover:visible flex gap-1">
                                 <button v-if="item.edit" id="Update-PurchaseRequest" type="submit">

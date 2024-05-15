@@ -37,7 +37,7 @@ class DashboardControlller extends Controller
             ->select('id', 'type', 'due_date', 'status')
             ->with([
                 // 'checksheet:id,title,created_at,updated_at',
-                // 'items' => fn($q) => $q->with('checksheetItem:id,title,required')
+                'items'
             ])
             ->get()->groupBy('type');
         

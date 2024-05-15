@@ -3,8 +3,9 @@
 namespace App\Enums;
 
 /**
- * @method static ActiveStatus INACTIVE()
- * @method static ActiveStatus ACTIVE()
+ * @method static ActiveStatus PENDING()
+ * @method static ActiveStatus DUE()
+ * @method static ActiveStatus DONE()
  */
 class TaskListStatus extends Enum
 {

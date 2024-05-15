@@ -89,15 +89,8 @@ class TaskListController extends Controller
 
             // Collect Check Sheet items from request and sync
             $taskItems = collect($request->input('items'))->values();
-            // $tasklist->items()->createMany($taskItems->toArray());
-            $taskItems->each(fn($item) => $tasklist->items()->create([
-                'checksheet_item_id' => $item['checksheetItemId'],
-                'note' => $item['note'],
-                'done' => $item['done'],
-                'title' => $item['title'],
-                'note_required' => $item['noteRequired'],
-            ]));
-
+            $taskItems->each(fn($item) => $tasklist->items()->create(Helper::toSnakeCase($item)));
+            
             $tasklist->updateStatus();
         });
 
@@ -146,7 +139,8 @@ class TaskListController extends Controller
      */
     public function edit(Request $request, TaskList $tasklist)
     {
-        if ($request->user()->cannot('update', $tasklist)) {
+        $authUser = $request->user();
+        if ($request->user()->cannot('update', $tasklist) || (!$authUser->hasRole([Role::SUPER_ADMIN, Role::ADMIN]) && $tasklist->status != TaskListStatus::PENDING())) {
             abort(403);
         }
 
@@ -157,7 +151,7 @@ class TaskListController extends Controller
         //     return $item;
         // });
         return Inertia::render('TaskLists/Edit', [
-            'tasklist'  => $tasklist->load('checksheet', 'items.checksheetItem', 'assignee'),
+            'tasklist'  => $tasklist->load('items', 'assignee'),
             'checksheetTypes' => CheckSheetType::toSelectOptions(),
             'statusOptions' => TaskListStatus::toSelectOptions(),
             'users' => User::withoutSuperAdmin()->select('id', 'name')->get()

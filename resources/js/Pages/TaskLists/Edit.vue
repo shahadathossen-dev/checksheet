@@ -40,7 +40,7 @@
 			<!-- Title -->
 			<detail-section class="border-b" label="Title" :value="checksheet?.title"></detail-section>
 			<!-- Date -->
-			<detail-section class="border-b" label="Type" :value="checksheet?.type"></detail-section>
+			<detail-section class="border-b capitalize" label="Type" :value="checksheet?.type"></detail-section>
 			<detail-section class="border-b" label="Due Date" :value="tasklist?.dueDateFormatted"></detail-section>
 			<!-- Author -->
 			<detail-section class="border-b" label="Assignee" :value="checksheet?.assignee?.name"></detail-section>
@@ -53,9 +53,9 @@
 				<jet-label class="w-full" value="Check Sheet Items" />
 				<div class="w-full flex items-center gap-5 block my-2" v-for="(attribute, index) in tasklist?.items" :key="index">
 					<div class="task-item flex-grow">
-						<jet-label class="w-full" :for="`Note-${index}`" :value="attribute.title" :required="!!attribute.note_required" />
+						<jet-label class="w-full" :for="`Note-${index}`" :value="attribute.title" :required="!!attribute.noteRequired" />
 
-						<jet-text-input v-model="attribute.note" :id="`Note-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="attribute.note_required" />
+						<jet-text-input v-model="attribute.note" :id="`Note-${index}`" type="text" class="mt-1 block w-full" placeholder="Note" :required="attribute.noteRequired && attribute.done" />
 					</div>
 					<jet-label class="" :for="`Done-${index}`">
 						<jet-check-box v-model="attribute.done" :id="`Done-${index}`" :checked="attribute.done == 1" />

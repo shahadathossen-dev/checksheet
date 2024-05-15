@@ -21,7 +21,7 @@ class TaskListRequest extends FormRequest
         $authUser = User::findOrFail(auth()->id());
         return $authUser->isSuperAdmin() ||
         ($authUser->can('create-task-lists') && $authUser->can('update-task-lists')) ||
-        CheckSheet::where('id', $this->input('checksheetId'))->where('user_id', $authUser->id)->exixts();
+        CheckSheet::where('id', $this->input('checksheetId'))->where('user_id', $authUser->id)->exists();
     }
 
     /**
@@ -50,7 +50,7 @@ class TaskListRequest extends FormRequest
                         ],
                         'items'    => 'nullable|array',
                         'items.*.checksheetItemId'    => 'required|integer|exists:checksheet_items,id',
-                        'items.*.note'    => 'nullable|required_if:items.*.required,1|string',
+                        'items.*.note'    => 'nullable|string',
                         'items.*.done'    => 'nullable|boolean',
                     ];
                 }
@@ -69,7 +69,9 @@ class TaskListRequest extends FormRequest
                         ],
                         'items'    => 'nullable|array',
                         'items.*.checksheetItemId'    => 'required|integer|exists:checksheet_items,id',
-                        'items.*.note'    => 'nullable|required_if:items.*.required,1|string',
+                        // 'items.*.note'    => 'nullable|required_if:items.*.noteRequired,1|string',
+                        // Skip required validation to update other not required items
+                        'items.*.note'    => 'nullable|string',
                         'items.*.done'    => 'nullable|boolean',
                     ];
                 }

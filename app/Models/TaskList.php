@@ -226,14 +226,11 @@ class TaskList extends Model
             return;
         }
 
+        $pendingItems = $this->items()->pending()->count();
 
-        $taskItems = $this->items;
-        $totalCount = $taskItems->count();
-        $doneCount = $taskItems->where('done', 1)->count();
-
-        if($doneCount == $totalCount) {
+        if(!$pendingItems) {
             $this->markAsDone();
-        } else if($this->due_date < today()) {
+        } else if($this->due_date < today()->format('Y-m-d')) {
             if($this->type == CheckSheetType::DAILY() || Carbon::parse($this->due_date)->diffInDays(today()) > 1)
             $this->markAsDue();
             DueStatusEvent::dispatch($this->fresh());
