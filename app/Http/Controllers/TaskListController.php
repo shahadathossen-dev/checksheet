@@ -53,7 +53,6 @@ class TaskListController extends Controller
         ]);
     }
 
-
     /**
      * Show the form for creating a new resource.
      *
@@ -145,11 +144,6 @@ class TaskListController extends Controller
         }
 
         // Start from here ...
-        // $tasklist->items->map(function($item) {
-        //     $item->title = $item->checksheetItem->title;
-        //     $item->required = $item->checksheetItem->required;
-        //     return $item;
-        // });
         return Inertia::render('TaskLists/Edit', [
             'tasklist'  => $tasklist->load('items', 'assignee'),
             'checksheetTypes' => CheckSheetType::toSelectOptions(),

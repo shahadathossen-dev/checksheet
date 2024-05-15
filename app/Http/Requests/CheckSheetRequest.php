@@ -60,7 +60,7 @@ class CheckSheetRequest extends FormRequest
                         'user_id'  => ['nullable', 'integer', 'exists:users,id'],
                         'checksheetItems'    => 'nullable|array',
                         'checksheetItems.*.title'    => 'required|string',
-                        'checksheetItems.*.note_required'    => 'nullable|boolean',
+                        'checksheetItems.*.noteRequried'    => 'nullable|boolean',
                     ];
                 }
             default:
