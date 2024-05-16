@@ -25,6 +25,7 @@
 									<th>#</th>
 									<th>Title</th>
 									<th>Note</th>
+									<th>Updated at</th>
 									<th>Status</th>
 								</tr>
 							</thead>
@@ -33,12 +34,13 @@
 									<td>{{index + 1}}</td>
 									<td>{{row.title}}</td>
 									<td>{{row.note}}</td>
+									<td>{{row.updatedAtFormatted}}</td>
 									<td>{{row.done == 1 ? 'Done' : 'Not done'}}</td>
 								</tr>
 							</tbody>
 						</table>
 					</template>
-					<template #nodata>No Subscriptions Found</template>
+					<template #nodata>No Items Found</template>
 				</datatable>
 			</div>
 		</template>
