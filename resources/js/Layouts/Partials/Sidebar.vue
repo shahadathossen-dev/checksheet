@@ -118,7 +118,7 @@ const isActive = (routes) => routes.some((currentRoute) => route().current(curre
         <template #icon>
           <i class="ti-support" title="Additional Tasks"></i>
         </template>
-        Additional Tasks
+        Self-Todos
       </SidebarItem>
 
       <!-- Purchase Requests -->
