@@ -116,9 +116,6 @@ class TaskListController extends Controller
         }
 
         // Start from here ...
-        // if($request->notification)
-        // DatabaseNotification::find($request->notification)->markAsRead();
-
         return Inertia::render('TaskLists/Show', [
             'tasklist' => $tasklist->load('checksheet', 'items.checksheetItem', 'assignee', 'author'),
         ]);
