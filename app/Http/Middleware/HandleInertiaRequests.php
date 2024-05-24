@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Facades\Helper;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\DatabaseNotification;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -37,6 +38,9 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        if($request->notification)
+        DatabaseNotification::find($request->notification)->markAsRead();
+
         return array_merge(parent::share($request), [
             'can' => Helper::availablePermissions(),
             'notifications' => auth()->check() ? auth()->user()->notifications : []

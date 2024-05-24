@@ -57,7 +57,8 @@ class StatusNotificationUser extends Notification
     public function toArray($notifiable)
     {
         return [
-            //
+            'id' => $this->tasklist->id,
+            'title' => 'New ' . $this->tasklist->type . ' checksheet marked as due',
         ];
     }
 }

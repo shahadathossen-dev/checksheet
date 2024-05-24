@@ -29,7 +29,7 @@ class StatusNotificationAdmin extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -58,7 +58,9 @@ class StatusNotificationAdmin extends Notification
     public function toArray($notifiable)
     {
         return [
-            //
+            'id' => $this->tasklist->id,
+            'title' => 'New ' . $this->tasklist->type . ' checksheet marked as due',
+            'user' => $this->tasklist->assignee->name,
         ];
     }
 }

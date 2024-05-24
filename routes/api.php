@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\DashboardControlller;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\CheckSheetController;
 use App\Http\Controllers\DelegateController;
@@ -42,6 +43,9 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::get('/checksheets/details/{type}', [CheckSheetController::class, 'getDetails'])->name('checksheets.details');
     Route::get('/tasklists/details/{type}', [TaskListController::class, 'getDetails'])->name('tasklists.details');
     Route::get('/leaves/details/{type}', [LeaveController::class, 'getDetails'])->name('leaves.details');
+    Route::post('/notifications', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
+    Route::get('/notifications/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
+    Route::delete('/notifications', [NotificationController::class, 'deleteAll'])->name('notifications.delete-all');
 
     Route::get('/jobs/test/{tasklist}', [TaskListController::class, 'testJob'])->name('jobs.test.api');
 });

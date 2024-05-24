@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskListRequest;
 use App\Services\StatusUpdateService;
+use Illuminate\Notifications\DatabaseNotification;
 
 class TaskListController extends Controller
 {
@@ -115,6 +116,9 @@ class TaskListController extends Controller
         }
 
         // Start from here ...
+        // if($request->notification)
+        // DatabaseNotification::find($request->notification)->markAsRead();
+
         return Inertia::render('TaskLists/Show', [
             'tasklist' => $tasklist->load('checksheet', 'items.checksheetItem', 'assignee', 'author'),
         ]);

@@ -228,12 +228,12 @@ class TaskList extends Model
 
         $pendingItems = $this->items()->pending()->count();
 
-        if(!$pendingItems) {
-            $this->markAsDone();
-        } else if($this->due_date < today()->format('Y-m-d')) {
+        if($this->due_date < today()->format('Y-m-d')) {
             if($this->type == CheckSheetType::DAILY() || Carbon::parse($this->due_date)->diffInDays(today()) > 1)
             $this->markAsDue();
             DueStatusEvent::dispatch($this->fresh());
+        } else if(!$pendingItems) {
+            $this->markAsDone();
         }
     }
 
