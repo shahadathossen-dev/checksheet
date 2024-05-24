@@ -151,6 +151,19 @@
                         </div>
                     </template>
                 </template>
+                <template #footer>
+                    <form class="w-full flex items-center gap-5 block" @submit.prevent="submit(form, route('api.additional-tasks.store'), 'additionalTasks')" :action="route('api.additional-tasks.store')" method="POST">
+                        <div class="task-item flex-grow flex gap-2">
+                            <jet-text-input v-model="form.title" id="Title-AdditionalTask" type="text" class="mt-1 block w-2/3" placeholder="Title" required />
+                            <jet-text-input v-model="form.dueDate" id="Note-AdditionalTask" type="date" class="mt-1 block w-1/3" placeholder="Due Date" required />
+                        </div>
+                        <jet-label for="Save-AdditionalTask" class="p-2 rounded-md btn btn-success text-white">
+                            <span class="ti ti-save"></span>
+                            &nbsp;
+                            <jet-input id="Save-AdditionalTask" type="submit" value="Add" class="" />
+                        </jet-label>
+                    </form>
+                </template>
             </card>
         </div>
         <div class="purchase-requests w-1/2 bg-white overflow-hidden shadow-sm sm:rounded-lg p-4">
@@ -251,12 +264,17 @@ const toastify = (message, type = 'success') => toast(message, {
   "dangerouslyHTMLString": true
 })
 
-const submit = async (payload, route, type = '') => {
+const submit = async (payload, route, type = null) => {
     try {
         if(type == 'purchaseRequests') {
             const {data} = await axios.post(route, payload);
             form.title = null
             purchaseRequests.value.push(data.data)
+        }
+        if(type == 'additionalTasks') {
+            const {data} = await axios.post(route, payload);
+            form.title = null
+            additionalTasks.value.push(data.data)
         }
         
         const {data} = await axios.put(route, payload);

@@ -36,6 +36,7 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
 
     Route::get('/dashboard/details', [DashboardControlller::class, 'index'])->name('dashboard.details');
     Route::put('/task-items/{taskItem}', [DashboardControlller::class, 'updateTaskItem'])->name('api.task-items.update');
+    Route::post('/additional-tasks', [DashboardControlller::class, 'storeAdditionalTask'])->name('api.additional-tasks.store');
     Route::put('/additional-tasks/{additionalTask}', [DashboardControlller::class, 'updateAdditionalTask'])->name('api.additional-tasks.update');
     Route::post('/purchase-requests', [DashboardControlller::class, 'storePurchaseRequest'])->name('api.purchase-requests.store');
     Route::put('/purchase-requests/{purchaseRequest}', [DashboardControlller::class, 'updatePurchaseRequest'])->name('api.purchase-requests.update');

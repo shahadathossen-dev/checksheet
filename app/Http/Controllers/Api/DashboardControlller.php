@@ -9,6 +9,7 @@ use App\Models\TaskItem;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Events\DueStatusEvent;
+use App\Facades\Helper;
 use App\Models\AdditionalTask;
 use App\Models\PurchaseRequest;
 use App\Http\Controllers\Controller;
@@ -79,6 +80,21 @@ class DashboardControlller extends Controller
      * @param  \App\Models\AdditionalTask
      * @return \Illuminate\Http\JsonResponse
      */
+    public function storeAdditionalTask(DashboardItemRequest $request)
+    {
+        if ($request->user()->cannot('create', AdditionalTask::class)) {
+            abort(403);
+        }
+        
+        $purchaseRequest = AdditionalTask::create(Helper::toSnakeCase(array_merge($request->only('title', 'description', 'dueDate'), ['userId' => auth()->id()])));
+        return response()->json(['status' => 'success', 'message' => 'Crated successfully', 'data' => $purchaseRequest->fresh()]);
+    }
+
+    /**
+     * Update resource on db.
+     * @param  \App\Models\AdditionalTask
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateAdditionalTask(DashboardItemRequest $request, AdditionalTask $additionalTask)
     {
         if ($request->user()->cannot('update', $additionalTask)) {
@@ -105,8 +121,8 @@ class DashboardControlller extends Controller
             abort(403);
         }
         
-        $purchaseRequest = PurchaseRequest::create($request->only('title', 'description', 'dueDate'));
-        return response()->json(['status' => 'success', 'message' => 'Updated successfully', 'data' => $purchaseRequest->fresh()]);
+        $purchaseRequest = PurchaseRequest::create(Helper::toSnakeCase($request->only('title', 'description', 'dueDate')));
+        return response()->json(['status' => 'success', 'message' => 'Created successfully', 'data' => $purchaseRequest->fresh()]);
     }
 
     /**

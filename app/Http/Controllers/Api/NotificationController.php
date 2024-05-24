@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use Illuminate\Notifications\DatabaseNotification;
 
 class NotificationController extends Controller
@@ -27,7 +27,6 @@ class NotificationController extends Controller
     /**
      * Update the specified bulk resource.
      *
-     * @param  \App\Models\DatabaseNotification  $notification
      * @return \Illuminate\Http\JsonResponse
      */
     public function markAllAsRead(Request $request)
@@ -40,7 +39,6 @@ class NotificationController extends Controller
      /**
      * Delete the specified resource.
      *
-     * @param  \App\Models\DatabaseNotification  $notification
      * @return \Illuminate\Http\JsonResponse
      */
     public function deleteAll(Request $request)

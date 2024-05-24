@@ -59,6 +59,7 @@ class StatusNotificationAdmin extends Notification
     {
         return [
             'id' => $this->tasklist->id,
+            // 'type' => $this->tasklist->readableName,
             'title' => 'New ' . $this->tasklist->type . ' checksheet marked as due',
             'user' => $this->tasklist->assignee->name,
         ];
