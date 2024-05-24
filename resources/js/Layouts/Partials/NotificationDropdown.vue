@@ -43,7 +43,7 @@ const deleteAll = async () => {
         class="relative text-xl text-gray-800 rounded-full hover:text-primary-500 focus:outline-none focus:text-primary-600 transition duration-150 ease-in-out"
       >
         <NotificationIcon />
-        <span class="count absolute -top-1/2 super text-xs text-white p-1 rounded-full bg-primary-400">
+        <span class="count absolute -top-1/2 super text-xs text-white py-1 px-2 rounded-full bg-primary-400">
           {{ unreadCount }}
         </span>
       </button>

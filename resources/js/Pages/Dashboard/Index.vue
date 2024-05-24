@@ -268,21 +268,28 @@ const submit = async (payload, route, type = null) => {
     try {
         if(type == 'purchaseRequests') {
             const {data} = await axios.post(route, payload);
-            form.title = null
+            
             purchaseRequests.value.push(data.data)
-        }
-        if(type == 'additionalTasks') {
+        } else if(type == 'additionalTasks') {
             const {data} = await axios.post(route, payload);
             form.title = null
             additionalTasks.value.push(data.data)
+        } else {
+            const {data} = await axios.put(route, payload);
         }
-        
-        const {data} = await axios.put(route, payload);
 
+        resetForm();
         toastify(data.message);
     } catch (error) {
         console.log(error);
     }
+}
+
+const resetForm = () => {
+    form.title = null
+    form.note = null
+    form.done = null
+    form.dueDate = null
 }
 
 const removeItem = async (payload, route) => {

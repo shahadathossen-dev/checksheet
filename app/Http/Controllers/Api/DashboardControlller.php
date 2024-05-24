@@ -121,7 +121,7 @@ class DashboardControlller extends Controller
             abort(403);
         }
         
-        $purchaseRequest = PurchaseRequest::create(Helper::toSnakeCase($request->only('title', 'description', 'dueDate')));
+        $purchaseRequest = PurchaseRequest::create(Helper::toSnakeCase($request->only('title', 'description')));
         return response()->json(['status' => 'success', 'message' => 'Created successfully', 'data' => $purchaseRequest->fresh()]);
     }
 
