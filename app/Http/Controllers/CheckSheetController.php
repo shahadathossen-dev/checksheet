@@ -156,7 +156,7 @@ class CheckSheetController extends Controller
                     ['id' => $attribute['id'] ?? null],
                     [
                         'title' => $attribute['title'],
-                        'note_required' => $attribute['noteRequried']
+                        'note_required' => $attribute['noteRequried'] ?? 0
                     ]);
             });
 

@@ -1,5 +1,5 @@
 <template>
-	<form-view @submitted="update('additional-tasks.update', additionalTask.id)" title="Create Additional Task" :breadcrumb="breadcrumb">
+	<form-view @submitted="update('additional-tasks.update', additionalTask.id)" title="Update Additional Task" :breadcrumb="breadcrumb">
 		<template #form>
 			<form-group class="border-b gap-8">
 				<!-- User -->

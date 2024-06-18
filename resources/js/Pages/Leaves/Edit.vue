@@ -1,5 +1,5 @@
 <template>
-	<form-view @submitted="update('leaves.update', form.id)" title="Create Leave" :breadcrumb="breadcrumb">
+	<form-view @submitted="update('leaves.update', form.id)" title="Update Leave" :breadcrumb="breadcrumb">
 		<template #form>
 			<form-group class="border-b gap-8" v-if="hasRoles(['Super Admin', 'Admin'])">
 				<!-- Type -->

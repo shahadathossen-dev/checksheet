@@ -1,5 +1,5 @@
 <template>
-	<form-view @submitted="update('purchase-requests.update', purchaseRequest.id)" title="Create Pruchase Request" :breadcrumb="breadcrumb">
+	<form-view @submitted="update('purchase-requests.update', purchaseRequest.id)" title="Update Pruchase Request" :breadcrumb="breadcrumb">
 		<template #form>
 			<form-group class="border-b gap-8">
 				<!-- User -->
