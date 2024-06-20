@@ -1,5 +1,5 @@
 <template>
-	<form-view @submitted="form.model == 'checksheet' ? save('tasklists.store') : update('tasklists.update', form.id)" :title="form.model == 'checksheet' ? 'Create' : 'Update' + ' Task List'" :breadcrumb="breadcrumb">
+	<form-view @submitted="form.model == 'checksheet' ? save('tasklists.store') : update('tasklists.update', form.id)" :title="form.model == 'checksheet' ? 'Create' : 'Update' + ' Checksheet'" :breadcrumb="breadcrumb">
 		<template #form>
 			<form-group class="border-b gap-8">
 				<!-- Due Date -->

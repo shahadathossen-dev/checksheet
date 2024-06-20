@@ -82,29 +82,29 @@ const isActive = (routes) => routes.some((currentRoute) => route().current(curre
 
       <!-- Check Sheets -->
       <SidebarItem
-        title="Check Sheets"
+        title="Templates"
         :active="isActive(['checksheets.*'])"
         :href="route('checksheets.index')"
         :collapsed="collapsed"
         v-if="hasPermissions(['viewAnyCheckSheets'])"
       >
         <template #icon>
-          <i class="ti-layout-list-thumb" title="Check Sheets"></i>
+          <i class="ti-layout-list-thumb" title="Templates"></i>
         </template>
-        Check Sheets
+        Templates
       </SidebarItem>
 
       <SidebarItem
-        title="Task Lists"
+        title="Checksheets"
         :active="isActive(['tasklists.*'])"
         :href="route('tasklists.index')"
         :collapsed="collapsed"
         v-if="hasPermissions(['viewAnyTaskLists'])"
       >
         <template #icon>
-          <i class="ti-view-list-alt" title="Task List"></i>
+          <i class="ti-view-list-alt" title="Checksheets"></i>
         </template>
-        Task List
+        Checksheets
       </SidebarItem>
 
       <!-- Additional Tasks -->

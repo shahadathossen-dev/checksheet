@@ -1,5 +1,5 @@
 <template>
-	<form-view @submitted="update('tasklists.update', tasklist?.id)" :title="'Update Task List'" :breadcrumb="breadcrumb">
+	<form-view @submitted="update('tasklists.update', tasklist?.id)" :title="'Update Checksheet'" :breadcrumb="breadcrumb">
 		<template #form>
 			<form-group class="border-b gap-8">
 				<!-- Due Date -->

@@ -1,5 +1,5 @@
 <template>
-	<form-view @submitted="form.id ? update('checksheets.update', form.id) : save('checksheets.store')" title="Create Check Sheet" :breadcrumb="breadcrumb">
+	<form-view @submitted="form.id ? update('checksheets.update', form.id) : save('checksheets.store')" title="Create Template" :breadcrumb="breadcrumb">
 		<template #form>
 			<form-group class="border-b gap-8">
 				<!-- User -->

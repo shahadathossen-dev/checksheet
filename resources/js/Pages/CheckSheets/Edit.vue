@@ -1,5 +1,5 @@
 <template>
-	<form-view @submitted="update('checksheets.update', checksheet.id)" title="Update Check Sheet" :breadcrumb="breadcrumb">
+	<form-view @submitted="update('checksheets.update', checksheet.id)" title="Update Template" :breadcrumb="breadcrumb">
 		<template #form>
 			<form-group class="border-b gap-8">
 				<!-- Title -->
