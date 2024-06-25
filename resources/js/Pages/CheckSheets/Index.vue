@@ -33,7 +33,7 @@
 			<!-- Add New-->
 			<button-link class="px-6 py-3 ml-4" :href="route('checksheets.create')" v-if="$page.props.can.createCheckSheets">
 				<span class="mr-2">+ Add</span>
-				<span class="hidden md:inline">checksheets</span>
+				<span class="hidden md:inline">template</span>
 			</button-link>
 		</template>
 

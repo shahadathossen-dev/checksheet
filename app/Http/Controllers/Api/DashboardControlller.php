@@ -35,6 +35,7 @@ class DashboardControlller extends Controller
         //     ->with('tasklist:id,type,due_date', 'checksheetItem:id,title')->pending()->get()->groupBy('tasklist.type');
         
         $pendingChecksheets = TaskList::where('user_id', $authUser->id)->whereDate('due_date', '>=', today()->subDay())
+            ->pending()
             ->select('id', 'type', 'due_date', 'status')
             ->with([
                 // 'checksheet:id,title,created_at,updated_at',

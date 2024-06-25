@@ -51,7 +51,7 @@ class TaskList extends Model
      */
     protected $casts = [
         'due_date' => 'date',
-        'submit_date' => 'date',
+        'submit_date' => 'datetime',
         'created_at' => 'date',
         'udpated_at' => 'date',
     ];
@@ -106,12 +106,12 @@ class TaskList extends Model
         // Will fire everytime an User is created
         static::creating(function (Model $model) {
             $model->submitted_by = auth()->id();
-            $model->submit_date = Carbon::today();
+            $model->submit_date = Carbon::now();
         });
 
         static::updating(function (Model $model) {
             $model->submitted_by = auth()->id();
-            $model->submit_date = Carbon::today();
+            $model->submit_date = Carbon::now();
         });
     }
 
@@ -147,7 +147,7 @@ class TaskList extends Model
     protected function submitDate(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => Carbon::parse($value)->format('Y-m-d'),
+            get: fn ($value) => Carbon::parse($value),
         );
     }
 
@@ -308,7 +308,7 @@ class TaskList extends Model
      */
     public function getSubmitDateFormattedAttribute()
     {
-        return Carbon::parse($this->submit_date)->format('d, M Y');
+        return Carbon::parse($this->submit_date)->format('d, M Y H:i A');
     }
 
     /**

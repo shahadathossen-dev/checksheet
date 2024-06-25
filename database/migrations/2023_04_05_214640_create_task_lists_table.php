@@ -22,7 +22,7 @@ return new class extends Migration
             $table->unsignedBigInteger('checksheet_id');
             $table->unsignedBigInteger('user_id');
             $table->enum('type', CheckSheetType::toArray())->default(CheckSheetType::DAILY());
-            $table->date('submit_date')->default(Carbon::today())->index('submit_date_index');
+            $table->dateTime('submit_date')->default(Carbon::now())->index('submit_date_index');
             $table->unsignedBigInteger('submitted_by')->nullable();
             $table->date('due_date')->default(Carbon::today())->index('due_date_index');
             $table->enum('status', TaskListStatus::toArray())->default(TaskListStatus::PENDING());

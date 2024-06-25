@@ -43,7 +43,7 @@
 			<!-- Add New-->
 			<button-link class="px-6 py-3 ml-4" :href="route('tasklists.create')" v-if="$page.props.can.createTaskLists">
 				<span class="mr-2">+ Add</span>
-				<span class="hidden md:inline">tasklists</span>
+				<span class="hidden md:inline">checksheet</span>
 			</button-link>
 		</template>
 
