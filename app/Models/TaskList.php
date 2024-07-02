@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\CheckSheetType;
 use App\Enums\TaskListStatus;
+use App\Events\DoneStatusEvent;
 use App\Events\DueStatusEvent;
 use App\Traits\Sortable;
 use App\Traits\CamelCasing;
@@ -97,7 +98,7 @@ class TaskList extends Model
      *
      * @var array
      */
-    public static $permissions = ['view', 'view-any', 'create', 'update'];
+    public static $permissions = ['view', 'view-any', 'create', 'update', 'delete'];
 
     public static function boot(): void
     {
@@ -234,6 +235,7 @@ class TaskList extends Model
             DueStatusEvent::dispatch($this->fresh());
         } else if(!$pendingItems) {
             $this->markAsDone();
+            DoneStatusEvent::dispatch($this->fresh());
         }
     }
 

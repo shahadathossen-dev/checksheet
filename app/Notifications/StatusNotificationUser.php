@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\TaskList;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -16,7 +17,7 @@ class StatusNotificationUser extends Notification
      *
      * @return void
      */
-    public function __construct(public $tasklist)
+    public function __construct(public TaskList $tasklist)
     {
         //
     }
@@ -41,11 +42,11 @@ class StatusNotificationUser extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->greeting('Hello ' . $notifiable->name)
-                    ->line("We hope this mail finds you well. This is to inform you that new checksheet has been marked as due todday.")
-                    ->action('Check Details', route('tasklists.show', $this->tasklist->id))
-                    ->line("You are supposed to carefully review this update.")
-                    ->line('Thank you for using our application!');
+            ->greeting('Hello ' . $notifiable->name)
+            ->line("We hope this mail finds you well. This is to inform you that new checksheet has been marked as {$this->tasklist->status} todday.")
+            ->action('Check Details', route('tasklists.show', $this->tasklist->id))
+            ->line("You are supposed to carefully review this update.")
+            ->line('Thank you for using our application!');
     }
 
     /**
@@ -58,7 +59,8 @@ class StatusNotificationUser extends Notification
     {
         return [
             'id' => $this->tasklist->id,
-            'title' => 'New ' . $this->tasklist->type . ' checksheet marked as due',
+            'type' => $this->tasklist->readableName(),
+            'title' => "New {$this->tasklist->type} checksheet marked as {$this->tasklist->status}",
         ];
     }
 }

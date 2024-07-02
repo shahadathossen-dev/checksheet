@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Enums\TaskListStatus;
 use App\Models\TaskList;
 use App\Models\User;
 use App\Notifications\StatusNotificationAdmin;
@@ -37,6 +38,7 @@ class StatusNotificationJob implements ShouldQueue
         $assignee = $this->tasklist->assignee;
         $adminUsers = User::adminUsers()->get();
 
+        if($this->tasklist->status == TaskListStatus::DUE())
         $assignee->notify(new StatusNotificationUser($this->tasklist));
         Notification::send($adminUsers, new StatusNotificationAdmin($this->tasklist));
     }

@@ -26,11 +26,11 @@
 
                                 <div class="task-item flex-grow flex justify-between gap-4">
                                     <jet-input v-if="item.done != 1" v-model="item.note" :id="`dailyTaskItemNote-${item.id}`" type="text" class="flex-grow" placeholder="Note" :required="!!item.noteRequired" :disabled="dailyChecksheet.status != 'pending'" />
-                                    <jet-label v-else class="flex-grow" :value="`Note: ${item.note}`" />
+                                    <jet-label v-else class="flex-grow" :value="`Note: ${item.note || ''}`" />
 
                                     <jet-label class="min-w-16" :for="`dailyTaskItemDone-${item.id}`">
                                         <jet-input type="submit" value="submit" class="hidden" />
-                                        <jet-check-box value="1" :checked="item.done == 1" v-model="item.done" :id="`dailyTaskItemDone-${item.id}`" @change="($event) => $event.target.previousSibling.click()" :disabled="dailyChecksheet.status != 'pending'" />
+                                        <jet-check-box :checked="item.done == 1" v-model="item.done" :id="`dailyTaskItemDone-${item.id}`" @click="checkNote(item)" :disabled="dailyChecksheet.status != 'pending'" />
                                         <span class="px-2 align-middle">Done</span>
                                     </jet-label>
                                 </div>
@@ -69,7 +69,7 @@
 
                                     <jet-label class="min-w-16" :for="`weeklyTaskItemDone-${index}`">
                                         <jet-input type="submit" value="submit" class="hidden" />
-                                        <jet-check-box value="1" :checked="item.done == 1" v-model="item.done" :id="`weeklyTaskItemDone-${index}`" @change="($event) => $event.target.previousSibling.click()" :disabled="weeklyChecksheet.status != 'pending'" />
+                                        <jet-check-box value="1" :checked="item.done == 1" v-model="item.done" :id="`weeklyTaskItemDone-${index}`" @click="checkNote(item)" :disabled="weeklyChecksheet.status != 'pending'" />
                                         <span class="px-2 align-middle">Done</span>
                                     </jet-label>
                                 </div>
@@ -108,7 +108,7 @@
                                
                                     <jet-label class="min-w-16" :for="`monthlyTaskItemDone-${index}`">
                                         <jet-input type="submit" value="submit" class="hidden" />
-                                        <jet-check-box value="1" :checked="item.done == 1" v-model="item.done" :id="`monthlyTaskItemDone-${index}`" @change="($event) => $event.target.previousSibling.click()" :disabled="monthlyChecksheet.status != 'pending'" />
+                                        <jet-check-box value="1" :checked="item.done == 1" v-model="item.done" :id="`monthlyTaskItemDone-${index}`" @click="checkNote(item)" :disabled="monthlyChecksheet.status != 'pending'" />
                                         <span class="px-2 align-middle">Done</span>
                                     </jet-label>
                                 </div>
@@ -279,7 +279,7 @@ const submit = async (payload, route, type = null) => {
         }
 
         resetForm();
-        toastify(data.message);
+        // toastify(data.message);
     } catch (error) {
         console.log(error);
     }
@@ -306,6 +306,12 @@ const removeItem = async (payload, route) => {
     } catch (error) {
         console.log(error);
     }
+}
+
+const checkNote = (item) => {
+    if(item.noteRequired && !item.note)
+    event.preventDefault();
+    event.target.previousSibling.click()
 }
 
 

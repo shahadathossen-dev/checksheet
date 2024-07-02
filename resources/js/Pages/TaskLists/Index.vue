@@ -80,17 +80,16 @@
 						<td>{{ row.assignee?.name }}</td>
 						<td class="capitalize">{{ row.type }}</td>
 						<td class="capitalize">{{ row.status }}</td>
-						<td class="actions">
-							<div class="flex items-center gap-2 h-full">
-								<Link class="btn btn-success" title="Details" :href="route('tasklists.show', row.id)">
-									<detail-icon></detail-icon>
-								</Link>
-							</div>
-							<div class="flex items-center gap-2 h-full" v-if="hasPermissions(['updateTaskLists'])">
-								<Link class="btn btn-purple" :class="{disabled: !hasRoles(['Super Admin', 'Admin']) && row.status != 'pending'}" title="Edit" :href="route('tasklists.edit', row.id)">
-									<i class="ti-pencil-alt"></i>
-								</Link>
-							</div>
+						<td class="actions flex gap-1 justify-around">
+							<Link class="btn btn-success" title="Details" :href="route('tasklists.show', row.id)">
+								<detail-icon></detail-icon>
+							</Link>
+							<Link class="btn btn-purple" :class="{disabled: !hasRoles(['Super Admin', 'Admin']) && row.status != 'pending'}" title="Edit" :href="route('tasklists.edit', row.id)">
+								<i class="ti-pencil-alt"></i>
+							</Link>
+							<Link class="btn btn-danger" :class="{disabled: !hasRoles(['Super Admin', 'Admin']) && row.status != 'pending'}" title="Delete" @click="deleteResource(route('tasklists.destroy', row.id))">
+								<i class="ti-trash"></i>
+							</Link>
 						</td>
 					</tr>
 				</tbody>

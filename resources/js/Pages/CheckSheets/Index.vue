@@ -68,16 +68,18 @@
 						<td>{{ row.assignee?.name }}</td>
 						<td>{{ row.author?.name }}</td>
 						<td class="capitalize">{{ row.type }}</td>
-						<td class="actions">
-							<div class="flex items-center gap-2 h-full">
-								<Link class="btn btn-success" title="Details" :href="route('checksheets.show', row.id)">
-									<detail-icon></detail-icon>
-								</Link>
+						<td class="actions flex gap-1">
+							<Link class="btn btn-success" title="Details" :href="route('checksheets.show', row.id)">
+								<detail-icon></detail-icon>
+							</Link>
 
-								<Link class="btn btn-purple mr-2" title="Edit" :href="route('checksheets.edit', row.id)" v-if="$page.props.can.updateCheckSheets">
-									<i class="ti-pencil-alt"></i>
-								</Link>
-							</div>
+							<Link class="btn btn-purple" title="Edit" :href="route('checksheets.edit', row.id)" v-if="$page.props.can.updateCheckSheets">
+								<i class="ti-pencil-alt"></i>
+							</Link>
+
+							<Link class="btn btn-danger" title="Delete" @click="deleteResource(route('checksheets.destroy', row.id))" v-if="$page.props.can.deleteCheckSheets">
+								<i class="ti-trash"></i>
+							</Link>
 						</td>
 					</tr>
 				</tbody>
